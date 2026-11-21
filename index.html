@@ -25,7 +25,6 @@
 
   <!-- ==================== 類因材網風格：校園入口與帳號登入畫面 ==================== -->
   <div id="authScreen" class="fixed inset-0 portal-bg flex flex-col justify-between overflow-y-auto z-50">
-    <!-- 頂部校園平台導覽列 -->
     <header class="bg-white/90 backdrop-blur-md border-b border-sky-100 px-6 py-3.5 flex items-center justify-between sticky top-0 z-10">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-500 text-white flex items-center justify-center shadow-sm">
@@ -45,10 +44,7 @@
       </div>
     </header>
 
-    <!-- 中央雙欄登入主體 -->
     <div class="max-w-5xl w-full mx-auto px-4 py-8 my-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-      
-      <!-- 左側：教育平台視覺與系統公告欄（仿因材網入口資訊區） -->
       <div class="lg:col-span-6 space-y-5">
         <div class="inline-flex items-center gap-2 bg-white border border-sky-200 text-sky-700 px-3.5 py-1.5 rounded-full text-xs font-bold shadow-2xs">
           <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
@@ -56,13 +52,12 @@
         </div>
         <h2 class="text-3xl sm:text-4xl font-black text-slate-800 leading-tight">
           智慧化班級點名、<br>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">課表同步與師生互動</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">課表聯絡簿與考試行事曆</span>
         </h2>
         <p class="text-sm text-slate-600 leading-relaxed">
-          整合每日到校簽到打卡、班級課表查詢、即時課程公告、作業線上批改與師生一對一私訊輔導，依登入身分自動配置專屬操作權限。
+          整合每日到校簽到打卡、班級課表查詢、課程公告、隔日作業聯絡簿提醒、班級考試行事曆與師生一對一私訊輔導，依登入身分自動配置專屬操作權限。
         </p>
 
-        <!-- 權限差異說明卡片 -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
           <div class="bg-white/90 p-4 rounded-2xl border border-indigo-100 shadow-2xs">
             <div class="flex items-center gap-2 font-bold text-indigo-700 text-sm mb-1.5">
@@ -70,8 +65,8 @@
             </div>
             <ul class="text-xs text-slate-600 space-y-1">
               <li>• 檢視全班出缺勤與匯出報表</li>
-              <li>• 匯入／編輯班級課表與發布公告</li>
-              <li>• 派發作業、線上評分與管理名冊</li>
+              <li>• 匯入／編輯課表、公告與考試排程</li>
+              <li>• 發布隔日作業提醒與管理學生名冊</li>
             </ul>
           </div>
           <div class="bg-white/90 p-4 rounded-2xl border border-emerald-100 shadow-2xs">
@@ -79,19 +74,16 @@
               <i data-lucide="user-check" class="w-4 h-4"></i> 學生學習權限
             </div>
             <ul class="text-xs text-slate-600 space-y-1">
-              <li>• 每日上課簽到打卡與個人紀錄</li>
-              <li>• 檢視班級課表與確認最新公告</li>
-              <li>• 線上繳交作業與導師一對一私訊</li>
+              <li>• 每日上課簽到打卡與課表查詢</li>
+              <li>• 檢視隔日應交作業聯絡簿並勾選完成</li>
+              <li>• 查看班級考試行事曆與私訊導師</li>
             </ul>
           </div>
         </div>
       </div>
 
-      <!-- 右側：身分分流登入 / 註冊卡片 -->
       <div class="lg:col-span-6">
         <div class="bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden max-w-md mx-auto">
-          
-          <!-- 頂部身分大頁籤（類似因材網「教師登入 / 學生登入」頁籤） -->
           <div class="grid grid-cols-2 text-center font-bold text-sm border-b border-slate-200">
             <button type="button" id="portalRoleTeacher" onclick="selectPortalRole('teacher')" class="py-4 flex items-center justify-center gap-2 bg-indigo-600 text-white transition cursor-pointer">
               <i data-lucide="briefcase" class="w-4 h-4"></i>
@@ -104,7 +96,6 @@
           </div>
 
           <div class="p-7">
-            <!-- 登入 / 註冊切換標題 -->
             <div class="flex items-center justify-between mb-5">
               <div>
                 <h3 id="authFormTitle" class="text-lg font-bold text-slate-800">教師身分驗證登入</h3>
@@ -115,7 +106,6 @@
               </button>
             </div>
 
-            <!-- 登入表單 -->
             <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
               <div>
                 <label id="loginIdLabel" class="text-xs font-bold text-slate-600 block mb-1.5">教師帳號</label>
@@ -133,7 +123,6 @@
                 </div>
               </div>
 
-              <!-- 簡易圖形數字驗證碼（增加校園入口真實感） -->
               <div>
                 <label class="text-xs font-bold text-slate-600 block mb-1.5">安全驗證碼</label>
                 <div class="flex gap-2.5">
@@ -148,7 +137,6 @@
                 登入教師管理系統
               </button>
 
-              <!-- 快速體驗帳號列 -->
               <div class="pt-3 border-t border-slate-100">
                 <div class="text-[11px] text-slate-400 mb-2 font-medium">快速體驗（點擊自動帶入帳號密碼與驗證碼）：</div>
                 <div class="grid grid-cols-2 gap-2">
@@ -162,9 +150,7 @@
               </div>
             </form>
 
-            <!-- 註冊表單 -->
             <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-3.5 hidden">
-              <!-- 學生專屬註冊欄位 -->
               <div id="regStudentFields" class="grid grid-cols-2 gap-3 hidden">
                 <div>
                   <label class="text-xs font-bold text-slate-600 block mb-1">班級座號</label>
@@ -176,7 +162,6 @@
                 </div>
               </div>
 
-              <!-- 教師專屬註冊欄位 -->
               <div id="regTeacherFields" class="space-y-3">
                 <div>
                   <label class="text-xs font-bold text-slate-600 block mb-1">教師登入帳號</label>
@@ -212,12 +197,10 @@
     </footer>
   </div>
 
-  <!-- ==================== 主系統介面 (依權限動態渲染選單與功能) ==================== -->
+  <!-- ==================== 主系統介面 ==================== -->
   <div id="mainApp" class="h-screen flex overflow-hidden hidden">
-    <!-- 側邊導覽列 -->
     <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 z-20">
       <div>
-        <!-- Brand -->
         <div class="p-5 border-b border-slate-100 flex items-center gap-3">
           <div id="brandIconBox" class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shadow-sm">
             <i data-lucide="graduation-cap" class="w-5 h-5"></i>
@@ -228,7 +211,6 @@
           </div>
         </div>
 
-        <!-- 登入身分與權限狀態卡 -->
         <div class="p-4 bg-slate-50 border-b border-slate-200">
           <div class="flex items-center justify-between mb-1.5">
             <span id="sidebarRoleBadge" class="text-[11px] font-bold px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700">教師管理端</span>
@@ -240,20 +222,15 @@
           <div id="sidebarUserMeta" class="text-xs text-slate-400 font-mono mt-0.5">帳號：teacher</div>
         </div>
 
-        <!-- 動態權限導覽選單 -->
-        <nav id="sidebarNav" class="py-3 space-y-1">
-          <!-- 由 JS 依據教師/學生權限動態生成 -->
-        </nav>
+        <nav id="sidebarNav" class="py-3 space-y-1"></nav>
       </div>
 
-      <!-- 底部日期與連線狀態 -->
       <div class="p-4 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
         <span id="currentDateDisplay"></span>
         <span class="flex items-center gap-1 text-emerald-600 font-medium"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>權限已驗證</span>
       </div>
     </aside>
 
-    <!-- 主內容區塊 -->
     <main class="flex-1 flex flex-col h-full overflow-hidden">
       <header class="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-3">
@@ -276,8 +253,18 @@
   </div>
 
 <script>
-// ==================== 1. 資料庫與權限設定 ====================
-const TODAY_STR = new Date().toISOString().split('T')[0];
+// ==================== 1. 日期工具與初始資料庫 ====================
+function getOffsetDateStr(offsetDays) {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+const TODAY_STR = getOffsetDateStr(0);
+const TOMORROW_STR = getOffsetDateStr(1);
 const TEACHER_AUTH_CODE = '8888';
 
 const DEFAULT_DATA = {
@@ -316,9 +303,9 @@ const DEFAULT_DATA = {
   announcements: [
     {
       id: 'A01',
-      title: '下週三第一次段考範圍與座位表公告',
-      category: '考試日程',
-      content: '請各位同學注意，下週三、四舉行第一次期中考。國文考至第四課，請提前準備文言文注釋。',
+      title: '下週第二次段考範圍與座位表公告',
+      category: '重要通知',
+      content: '請各位同學注意，下週三、四舉行第二次期中考。請提前依照班級考試行事曆複習各科範圍。',
       pinned: true,
       author: '陳老師',
       date: TODAY_STR,
@@ -327,33 +314,78 @@ const DEFAULT_DATA = {
     {
       id: 'A02',
       title: '校外教學家長同意書繳交提醒',
-      category: '重要通知',
-      content: '請尚未繳交家長同意書的同學，於本週五放學前交給班長彙整。',
+      category: '班級活動',
+      content: '請尚未繳交家長同意書的同學，於本週五早自習前交給班長彙整。',
       pinned: false,
       author: '陳老師',
       date: TODAY_STR,
       readBy: ['S01']
     }
   ],
-  homework: [
+  // 隔日作業聯絡簿提醒（純提醒清單，不需上傳檔案，學生可自訂勾選確認）
+  homeworkReminders: [
     {
-      id: 'H01',
+      id: 'HW01',
       subject: '國文',
-      title: '〈赤壁賦〉課後學習單與心得 300 字',
-      dueDate: TODAY_STR,
-      description: '請簡述蘇軾在文中展現的人生曠達態度，可直接於線上填寫文字繳交。',
-      submissions: {
-        'S01': { content: '蘇軾透過水與月的變與不變，體悟到萬物各有其主，不必羨慕無窮的長江，轉而珍惜當下的清風明月。', time: '09:30', grade: '95', feedback: '觀點清晰，文筆流暢！' },
-        'S02': { content: '從主客問答中可以看到作者自我開解的過程，非常具有哲理。', time: '10:15', grade: '', feedback: '' }
-      }
+      title: '〈赤壁賦〉課後學習單（紙本）',
+      dueDate: TOMORROW_STR,
+      note: '早自習由國文小老師統一收齊交至辦公室',
+      checkedBy: ['S01']
     },
     {
-      id: 'H02',
+      id: 'HW02',
       subject: '數學',
-      title: '習作 2-1 三角函數練習題 (第1~10題)',
-      dueDate: '2026-11-28',
-      description: '請完成習作後拍照上傳雲端連結，或填寫計算答案。',
-      submissions: {}
+      title: '數學習作 2-1 第 1~10 題',
+      dueDate: TOMORROW_STR,
+      note: '請務必寫出完整計算過程，第一節數學課抽查',
+      checkedBy: []
+    },
+    {
+      id: 'HW03',
+      subject: '英文',
+      title: 'Unit 4 單字本默寫訂正簽名',
+      dueDate: getOffsetDateStr(2),
+      note: '未達 80 分者需請家長簽名',
+      checkedBy: []
+    }
+  ],
+  // 班級考試行事曆
+  exams: [
+    {
+      id: 'EX01',
+      date: getOffsetDateStr(2),
+      type: '平時小考',
+      subject: '英文',
+      title: 'Unit 4 單字與片語隨堂測驗',
+      scope: '課本 P.68 - P.75 單字表',
+      period: '第 1 節'
+    },
+    {
+      id: 'EX02',
+      date: getOffsetDateStr(4),
+      type: '平時小考',
+      subject: '數學',
+      title: '第二章 三角函數週考',
+      scope: '習作 2-1 至 2-2 全',
+      period: '第 3 節'
+    },
+    {
+      id: 'EX03',
+      date: getOffsetDateStr(10),
+      type: '期中段考',
+      subject: '全科段考',
+      title: '第二次期中評量（Day 1）',
+      scope: '國文(L1-L4)、英文(U1-U4)、物理(Ch1-Ch2)',
+      period: '全天依段考時程'
+    },
+    {
+      id: 'EX04',
+      date: getOffsetDateStr(11),
+      type: '期中段考',
+      subject: '全科段考',
+      title: '第二次期中評量（Day 2）',
+      scope: '數學(Ch1-Ch2)、歷史(Ch1-Ch3)、化學(Ch1-Ch2)',
+      period: '全天依段考時程'
     }
   ],
   messages: {
@@ -367,16 +399,21 @@ const DEFAULT_DATA = {
   }
 };
 
-let appData = JSON.parse(localStorage.getItem('eduCloud_v3')) || DEFAULT_DATA;
-let currentUser = JSON.parse(sessionStorage.getItem('eduCloudSession_v3')) || null;
-let portalRole = 'teacher'; // 'teacher' | 'student'
+let appData = JSON.parse(localStorage.getItem('eduCloud_v4')) || DEFAULT_DATA;
+let currentUser = JSON.parse(sessionStorage.getItem('eduCloudSession_v4')) || null;
+let portalRole = 'teacher';
 let isRegisterMode = false;
 let currentCaptcha = '';
 let currentTab = 'attendance';
 let selectedChatStudentId = appData.students[0]?.id || 'S01';
 
+// 考試行事曆目前檢視年月
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth(); // 0-11
+let selectedCalDate = null;
+
 function saveData() {
-  localStorage.setItem('eduCloud_v3', JSON.stringify(appData));
+  localStorage.setItem('eduCloud_v4', JSON.stringify(appData));
   if (currentUser) updateUnreadBadge();
 }
 
@@ -423,7 +460,7 @@ function selectPortalRole(role) {
     tabT.className = 'py-4 flex items-center justify-center gap-2 bg-indigo-600 text-white transition cursor-pointer';
     tabS.className = 'py-4 flex items-center justify-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200/70 transition cursor-pointer';
     title.textContent = isRegisterMode ? '建立教師管理帳戶' : '教師身分驗證登入';
-    subtitle.textContent = '具備全班點名管理、課表匯入、公告與批改權限';
+    subtitle.textContent = '具備全班點名管理、課表匯入、作業提醒與考試行事曆權限';
     idLabel.textContent = '教師帳號';
     idInput.placeholder = '請輸入教師帳號 (預設: teacher)';
     loginBtn.className = 'w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
@@ -436,7 +473,7 @@ function selectPortalRole(role) {
     tabS.className = 'py-4 flex items-center justify-center gap-2 bg-emerald-600 text-white transition cursor-pointer';
     tabT.className = 'py-4 flex items-center justify-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200/70 transition cursor-pointer';
     title.textContent = isRegisterMode ? '建立學生學習帳戶' : '學生身分驗證登入';
-    subtitle.textContent = '具備每日上課打卡、課表查詢、交作業與私訊功能';
+    subtitle.textContent = '具備每日打卡、隔日作業提醒、考試行事曆與私訊導師功能';
     idLabel.textContent = '學生學號';
     idInput.placeholder = '請輸入學生學號 (例如: S01)';
     loginBtn.className = 'w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
@@ -505,7 +542,7 @@ function handleLogin(e) {
     currentUser = { role: 'student', id: student.id, name: student.name, seat: student.seat };
   }
 
-  sessionStorage.setItem('eduCloudSession_v3', JSON.stringify(currentUser));
+  sessionStorage.setItem('eduCloudSession_v4', JSON.stringify(currentUser));
   enterMainApp();
 }
 
@@ -536,13 +573,13 @@ function handleRegister(e) {
     currentUser = { role: 'student', id: studentId, name, seat };
   }
 
-  sessionStorage.setItem('eduCloudSession_v3', JSON.stringify(currentUser));
-  alert(`帳戶建立成功！系統已自動為您登入（權限：${currentUser.role === 'teacher' ? '教師管理端' : '學生學習端'}）。`);
+  sessionStorage.setItem('eduCloudSession_v4', JSON.stringify(currentUser));
+  alert(`帳戶建立成功！系統已自動為您登入。`);
   enterMainApp();
 }
 
 function logout() {
-  sessionStorage.removeItem('eduCloudSession_v3');
+  sessionStorage.removeItem('eduCloudSession_v4');
   currentUser = null;
   document.getElementById('mainApp').classList.add('hidden');
   document.getElementById('authScreen').classList.remove('hidden');
@@ -574,7 +611,6 @@ function enterMainApp() {
     profileBadge.innerHTML = `<i data-lucide="shield-check" class="w-4 h-4"></i><span>教師權限：${currentUser.name}</span>`;
     profileBadge.className = 'flex items-center gap-2 bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full text-xs font-bold';
 
-    // 教師專屬導覽選單（包含學生帳號名冊管理）
     sidebarNav.innerHTML = `
       <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="clipboard-check" class="w-4 h-4"></i><span>全班點名與出缺勤</span>
@@ -582,11 +618,14 @@ function enterMainApp() {
       <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="calendar-cog" class="w-4 h-4"></i><span>班級課表編輯/匯入</span>
       </button>
+      <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="list-todo" class="w-4 h-4"></i><span>隔日作業聯絡簿發布</span>
+      </button>
+      <button onclick="switchTab('exams')" id="nav-exams" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="calendar-range" class="w-4 h-4"></i><span>班級考試行事曆管理</span>
+      </button>
       <button onclick="switchTab('announcements')" id="nav-announcements" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="megaphone" class="w-4 h-4"></i><span>課程公告發布管理</span>
-      </button>
-      <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <i data-lucide="file-check-2" class="w-4 h-4"></i><span>作業派發與線上批改</span>
       </button>
       <button onclick="switchTab('messages')" id="nav-messages" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <div class="flex items-center gap-3"><i data-lucide="message-square-text" class="w-4 h-4"></i><span>學生一對一私訊輔導</span></div>
@@ -605,7 +644,6 @@ function enterMainApp() {
     profileBadge.innerHTML = `<i data-lucide="user" class="w-4 h-4"></i><span>學生權限：${currentUser.seat}號 ${currentUser.name}</span>`;
     profileBadge.className = 'flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-bold';
 
-    // 學生專屬導覽選單（唯讀課表/公告、個人打卡/交作業/私訊導師）
     sidebarNav.innerHTML = `
       <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="fingerprint" class="w-4 h-4"></i><span>每日上課簽到打卡</span>
@@ -613,11 +651,14 @@ function enterMainApp() {
       <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="calendar-days" class="w-4 h-4"></i><span>班級課表查詢</span>
       </button>
+      <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="check-square" class="w-4 h-4"></i><span>隔日應交作業提醒</span>
+      </button>
+      <button onclick="switchTab('exams')" id="nav-exams" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="calendar-range" class="w-4 h-4"></i><span>班級考試行事曆</span>
+      </button>
       <button onclick="switchTab('announcements')" id="nav-announcements" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="bell" class="w-4 h-4"></i><span>課程最新公告</span>
-      </button>
-      <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <i data-lucide="book-open-check" class="w-4 h-4"></i><span>我的每日作業與成績</span>
       </button>
       <button onclick="switchTab('messages')" id="nav-messages" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <div class="flex items-center gap-3"><i data-lucide="message-circle" class="w-4 h-4"></i><span>與導師一對一私訊</span></div>
@@ -640,8 +681,9 @@ function switchTab(tab) {
   const teacherTitles = {
     attendance: ['全班點名與出缺勤管理', '教師可調整學生狀態並匯出報表'],
     timetable: ['班級課表管理系統', '教師可點擊編輯節次或批次匯入課表'],
+    homework: ['隔日作業聯絡簿發布', '發布隔天與近期應繳交的紙本/實體作業提醒'],
+    exams: ['班級考試行事曆管理', '登錄小考、週考與段考日期及考試範圍'],
     announcements: ['課程公告發布管理', '教師可發布、置頂與刪除班級公告'],
-    homework: ['作業派發與線上批改', '教師可派發新作業並批改學生繳交內容'],
     messages: ['學生一對一私訊輔導', '與班上每位學生的獨立私密對話頻道'],
     roster: ['學生帳號與名冊管理', '教師可檢視已註冊學生或重設學生密碼']
   };
@@ -649,8 +691,9 @@ function switchTab(tab) {
   const studentTitles = {
     attendance: ['每日上課簽到打卡', '學生每日線上回傳到校打卡狀態'],
     timetable: ['班級課表查詢', '唯讀檢視本學期班級每週課表'],
+    homework: ['隔日應交作業提醒', '確認明天與近期該帶到學校繳交的作業清單'],
+    exams: ['班級考試行事曆', '檢視近期小考與段考日程、倒數天數與範圍'],
     announcements: ['課程最新公告', '檢視老師發布的重要通知並標記已讀'],
-    homework: ['我的每日作業與成績', '線上繳交作業並檢視老師評分與評語'],
     messages: ['與導師一對一私訊', '僅你與班導師可見的專屬私密對話']
   };
 
@@ -664,8 +707,9 @@ function renderCurrentTab() {
   const container = document.getElementById('contentArea');
   if (currentTab === 'attendance') renderAttendance(container);
   else if (currentTab === 'timetable') renderTimetable(container);
+  else if (currentTab === 'homework') renderHomeworkReminders(container);
+  else if (currentTab === 'exams') renderExamCalendar(container);
   else if (currentTab === 'announcements') renderAnnouncements(container);
-  else if (currentTab === 'homework') renderHomework(container);
   else if (currentTab === 'messages') renderMessages(container);
   else if (currentTab === 'roster' && currentUser.role === 'teacher') renderRoster(container);
   lucide.createIcons();
@@ -984,7 +1028,392 @@ function processImportTimetable() {
   renderCurrentTab();
 }
 
-// ==================== 6. 模組三：課程公告發布 ====================
+// ==================== 6. 模組三：隔日作業聯絡簿提醒 (無上傳功能) ====================
+function renderHomeworkReminders(container) {
+  const isTeacher = currentUser.role === 'teacher';
+  const sortedList = [...appData.homeworkReminders].sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+  const tomorrowItems = sortedList.filter(item => item.dueDate === TOMORROW_STR);
+  const otherItems = sortedList.filter(item => item.dueDate !== TOMORROW_STR);
+
+  const renderCard = (hw, isTomorrow) => {
+    const isChecked = hw.checkedBy && hw.checkedBy.includes(currentUser.id);
+    return `
+      <div class="bg-white rounded-xl border ${isTomorrow ? 'border-amber-300 ring-2 ring-amber-50' : 'border-slate-200'} p-5 shadow-xs flex items-start justify-between gap-4">
+        <div class="flex items-start gap-3.5">
+          ${!isTeacher ? `
+            <button onclick="toggleHomeworkCheck('${hw.id}')" class="mt-0.5 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition cursor-pointer ${
+              isChecked ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-slate-300 hover:border-emerald-500 bg-white'
+            }" title="標記是否已準備完成">
+              ${isChecked ? '<i data-lucide="check" class="w-4 h-4"></i>' : ''}
+            </button>
+          ` : `
+            <div class="mt-0.5 w-8 h-8 rounded-lg ${isTomorrow ? 'bg-amber-100 text-amber-700' : 'bg-indigo-50 text-indigo-600'} flex items-center justify-center shrink-0">
+              <i data-lucide="book-marked" class="w-4 h-4"></i>
+            </div>
+          `}
+          <div>
+            <div class="flex flex-wrap items-center gap-2 mb-1">
+              ${isTomorrow ? `<span class="bg-amber-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-md">⏰ 明天應交 (${TOMORROW_STR})</span>` : `<span class="bg-slate-100 text-slate-600 text-xs font-mono font-bold px-2 py-0.5 rounded-md">繳交日：${hw.dueDate}</span>`}
+              <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-0.5 rounded-md">${hw.subject}</span>
+            </div>
+            <h4 class="text-base font-bold ${!isTeacher && isChecked ? 'line-through text-slate-400' : 'text-slate-800'}">${hw.title}</h4>
+            ${hw.note ? `<p class="text-xs text-slate-500 mt-1">備註說明：${hw.note}</p>` : ''}
+          </div>
+        </div>
+
+        <div class="shrink-0 flex items-center gap-2">
+          ${isTeacher ? `
+            <span class="text-xs text-slate-400 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200">
+              ${(hw.checkedBy || []).length}/${appData.students.length} 人已確認
+            </span>
+            <button onclick="deleteHomeworkReminder('${hw.id}')" class="text-slate-400 hover:text-rose-500 p-1.5 cursor-pointer" title="刪除此項提醒">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          ` : `
+            <span class="text-xs font-bold ${isChecked ? 'text-emerald-600' : 'text-slate-400'}">
+              ${isChecked ? '已備妥' : '待準備'}
+            </span>
+          `}
+        </div>
+      </div>
+    `;
+  };
+
+  container.innerHTML = `
+    <div class="max-w-4xl mx-auto space-y-6">
+      <!-- 頂部說明與教師發布按鈕 -->
+      <div class="bg-white p-4 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+        <div class="text-xs text-slate-600 flex items-center gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-indigo-500 shrink-0"></i>
+          <span>本區為<strong>班級數位聯絡簿</strong>，僅提醒隔日與近期需帶至學校繳交之紙本／實體作業（免線上上傳檔案）。</span>
+        </div>
+        ${isTeacher ? `
+          <button onclick="openNewHomeworkReminderModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="plus" class="w-4 h-4"></i> 新增隔日作業提醒
+          </button>
+        ` : ''}
+      </div>
+
+      <!-- 明天應交專區 -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-amber-700 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+          明日（${TOMORROW_STR}）應繳交作業清單（共 ${tomorrowItems.length} 項）
+        </h3>
+        ${tomorrowItems.length > 0 ? tomorrowItems.map(hw => renderCard(hw, true)).join('') : `
+          <div class="bg-white rounded-xl border border-slate-200 p-6 text-center text-sm text-slate-400">
+            🎉 明天目前沒有登記必須繳交的作業！
+          </div>
+        `}
+      </div>
+
+      <!-- 近期其他日期作業 -->
+      ${otherItems.length > 0 ? `
+        <div class="space-y-3 pt-2">
+          <h3 class="text-sm font-bold text-slate-600 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+            其他日期應交作業預告（共 ${otherItems.length} 項）
+          </h3>
+          ${otherItems.map(hw => renderCard(hw, false)).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function openNewHomeworkReminderModal() {
+  if (currentUser.role !== 'teacher') return;
+  showModal(`
+    <div class="p-6">
+      <h3 class="text-lg font-bold text-slate-800 mb-4">發布作業繳交提醒</h3>
+      <div class="space-y-3">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-bold text-slate-600 block mb-1">科目名稱</label>
+            <input id="hwRemSubj" type="text" placeholder="例如：國文、數學" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-600 block mb-1">應繳交日期（預設為明天）</label>
+            <input id="hwRemDate" type="date" value="${TOMORROW_STR}" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">作業項目名稱</label>
+          <input id="hwRemTitle" type="text" placeholder="例如：國文習作第三課、數學練習卷" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">繳交方式 / 備註提醒（選填）</label>
+          <input id="hwRemNote" type="text" placeholder="例如：早自習交給小老師、需家長簽名" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">取消</button>
+        <button onclick="createHomeworkReminder()" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700">發布提醒</button>
+      </div>
+    </div>
+  `);
+}
+
+function createHomeworkReminder() {
+  const subject = document.getElementById('hwRemSubj').value.trim();
+  const dueDate = document.getElementById('hwRemDate').value;
+  const title = document.getElementById('hwRemTitle').value.trim();
+  const note = document.getElementById('hwRemNote').value.trim();
+  if (!subject || !title || !dueDate) return alert('請填寫科目、繳交日期與作業名稱');
+
+  appData.homeworkReminders.push({
+    id: 'HW' + Date.now(),
+    subject, dueDate, title, note,
+    checkedBy: []
+  });
+  saveData();
+  closeModal();
+  renderCurrentTab();
+}
+
+function toggleHomeworkCheck(hwId) {
+  const hw = appData.homeworkReminders.find(h => h.id === hwId);
+  if (!hw) return;
+  if (!hw.checkedBy) hw.checkedBy = [];
+  const idx = hw.checkedBy.indexOf(currentUser.id);
+  if (idx === -1) hw.checkedBy.push(currentUser.id);
+  else hw.checkedBy.splice(idx, 1);
+  saveData();
+  renderCurrentTab();
+}
+
+function deleteHomeworkReminder(hwId) {
+  if (currentUser.role !== 'teacher') return;
+  appData.homeworkReminders = appData.homeworkReminders.filter(h => h.id !== hwId);
+  saveData();
+  renderCurrentTab();
+}
+
+// ==================== 7. 模組四（全新）：班級考試行事曆 ====================
+function renderExamCalendar(container) {
+  const isTeacher = currentUser.role === 'teacher';
+  const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+
+  // 計算當月第一天星期幾與總天數
+  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0(日)-6(六)
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+  // 取得近期即將到來的考試（大於等於今天）
+  const upcomingExams = [...appData.exams]
+    .filter(ex => ex.date >= TODAY_STR)
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  const getExamBadgeColor = (type) => {
+    if (type === '期中段考' || type === '期末段考') return 'bg-rose-100 text-rose-700 border-rose-200';
+    if (type === '模擬考') return 'bg-purple-100 text-purple-700 border-purple-200';
+    return 'bg-sky-100 text-sky-700 border-sky-200';
+  };
+
+  const calcDaysLeft = (dateStr) => {
+    const target = new Date(dateStr + 'T00:00:00');
+    const today = new Date(TODAY_STR + 'T00:00:00');
+    const diff = Math.round((target - today) / (1000 * 60 * 60 * 24));
+    if (diff === 0) return '今天考試';
+    if (diff === 1) return '明天考試';
+    return `倒數 ${diff} 天`;
+  };
+
+  // 生成月曆格子
+  let calendarCells = '';
+  for (let i = 0; i < firstDay; i++) {
+    calendarCells += `<div class="min-h-[92px] bg-slate-50/60 border-b border-r border-slate-200 p-1.5"></div>`;
+  }
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const dayExams = appData.exams.filter(ex => ex.date === dateStr);
+    const isToday = dateStr === TODAY_STR;
+
+    calendarCells += `
+      <div onclick="${isTeacher ? `openAddExamModal('${dateStr}')` : ''}" 
+           class="min-h-[92px] bg-white border-b border-r border-slate-200 p-1.5 transition flex flex-col justify-between ${isTeacher ? 'cursor-pointer hover:bg-indigo-50/40' : ''}">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center ${
+            isToday ? 'bg-indigo-600 text-white' : 'text-slate-700'
+          }">${day}</span>
+          ${isTeacher ? `<span class="text-[10px] text-slate-300 opacity-0 hover:opacity-100">+排考</span>` : ''}
+        </div>
+        <div class="space-y-1 mt-1">
+          ${dayExams.map(ex => `
+            <div class="text-[11px] font-bold px-1.5 py-0.5 rounded border truncate ${getExamBadgeColor(ex.type)}" title="${ex.subject} - ${ex.title} (${ex.scope})">
+              ${ex.subject}｜${ex.title}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  container.innerHTML = `
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- 左側 8 欄：月曆檢視 -->
+      <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+        <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/70">
+          <div class="flex items-center gap-3">
+            <button onclick="changeCalMonth(-1)" class="p-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 cursor-pointer">
+              <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            </button>
+            <h3 class="text-base font-bold text-slate-800">${calYear} 年 ${monthNames[calMonth]} 考試行事曆</h3>
+            <button onclick="changeCalMonth(1)" class="p-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 cursor-pointer">
+              <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+          ${isTeacher ? `
+            <button onclick="openAddExamModal('${TOMORROW_STR}')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i> 新增考試日程
+            </button>
+          ` : `
+            <span class="text-xs text-slate-400">可將滑鼠移至考試標籤查看範圍</span>
+          `}
+        </div>
+
+        <!-- 星期表頭 -->
+        <div class="grid grid-cols-7 bg-slate-100/80 border-b border-slate-200 text-center text-xs font-bold text-slate-600 py-2">
+          <div class="text-rose-500">週日</div>
+          <div>週一</div>
+          <div>週二</div>
+          <div>週三</div>
+          <div>週四</div>
+          <div>週五</div>
+          <div class="text-emerald-600">週六</div>
+        </div>
+
+        <!-- 日期網格 -->
+        <div class="grid grid-cols-7 border-l border-slate-200">
+          ${calendarCells}
+        </div>
+      </div>
+
+      <!-- 右側 4 欄：近期考試倒數與範圍清單 -->
+      <div class="lg:col-span-4 space-y-4">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+          <h3 class="font-bold text-slate-800 text-base mb-1 flex items-center gap-2">
+            <i data-lucide="timer" class="w-4 h-4 text-rose-500"></i> 近期考試日程與範圍
+          </h3>
+          <p class="text-xs text-slate-400 mb-4">依考試日期由近至遠自動排列</p>
+
+          <div class="space-y-3 max-h-[520px] overflow-y-auto pr-1">
+            ${upcomingExams.length === 0 ? `<div class="text-center text-xs text-slate-400 py-8">目前尚無排定的考試日程</div>` : ''}
+            ${upcomingExams.map(ex => `
+              <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[11px] font-bold px-2 py-0.5 rounded border ${getExamBadgeColor(ex.type)}">${ex.type}</span>
+                    <span class="text-xs font-bold text-slate-700">${ex.subject}</span>
+                  </div>
+                  <span class="text-[11px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">${calcDaysLeft(ex.date)}</span>
+                </div>
+                <div class="font-bold text-sm text-slate-800">${ex.title}</div>
+                <div class="text-xs text-slate-500">📅 日期：${ex.date}（${ex.period || '依課表'}）</div>
+                <div class="text-xs text-slate-600 bg-white p-2 rounded-lg border border-slate-100">
+                  <strong>考試範圍：</strong>${ex.scope}
+                </div>
+                ${isTeacher ? `
+                  <div class="flex justify-end pt-1">
+                    <button onclick="deleteExam('${ex.id}')" class="text-[11px] text-rose-500 hover:underline cursor-pointer">刪除此排考</button>
+                  </div>
+                ` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function changeCalMonth(delta) {
+  calMonth += delta;
+  if (calMonth < 0) {
+    calMonth = 11;
+    calYear--;
+  } else if (calMonth > 11) {
+    calMonth = 0;
+    calYear++;
+  }
+  renderCurrentTab();
+}
+
+function openAddExamModal(defaultDate) {
+  if (currentUser.role !== 'teacher') return;
+  showModal(`
+    <div class="p-6">
+      <h3 class="text-lg font-bold text-slate-800 mb-4">新增班級考試日程</h3>
+      <div class="space-y-3">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-bold text-slate-600 block mb-1">考試日期</label>
+            <input id="examDate" type="date" value="${defaultDate}" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-600 block mb-1">考試類別</label>
+            <select id="examType" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+              <option value="平時小考">平時小考</option>
+              <option value="週考/複習考">週考/複習考</option>
+              <option value="期中段考">期中段考</option>
+              <option value="期末段考">期末段考</option>
+              <option value="模擬考">模擬考</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-bold text-slate-600 block mb-1">考試科目</label>
+            <input id="examSubj" type="text" placeholder="例如：英文、數學" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-600 block mb-1">考試節次 / 時間</label>
+            <input id="examPeriod" type="text" placeholder="例如：早自習、第 2 節" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">考試名稱</label>
+          <input id="examTitle" type="text" placeholder="例如：第五課單字測驗" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">考試範圍說明</label>
+          <textarea id="examScope" rows="2" placeholder="請輸入課本頁數、章節或講義範圍..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></textarea>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">取消</button>
+        <button onclick="createExam()" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700">加入行事曆</button>
+      </div>
+    </div>
+  `);
+}
+
+function createExam() {
+  const date = document.getElementById('examDate').value;
+  const type = document.getElementById('examType').value;
+  const subject = document.getElementById('examSubj').value.trim();
+  const period = document.getElementById('examPeriod').value.trim();
+  const title = document.getElementById('examTitle').value.trim();
+  const scope = document.getElementById('examScope').value.trim();
+  if (!date || !subject || !title) return alert('請填寫考試日期、科目與名稱');
+
+  appData.exams.push({
+    id: 'EX' + Date.now(),
+    date, type, subject, period, title,
+    scope: scope || '依課堂宣布範圍'
+  });
+  saveData();
+  closeModal();
+  renderCurrentTab();
+}
+
+function deleteExam(id) {
+  if (currentUser.role !== 'teacher') return;
+  appData.exams = appData.exams.filter(ex => ex.id !== id);
+  saveData();
+  renderCurrentTab();
+}
+
+// ==================== 8. 模組五：課程公告發布 ====================
 function renderAnnouncements(container) {
   const sorted = [...appData.announcements].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
   const isTeacher = currentUser.role === 'teacher';
@@ -1053,9 +1482,9 @@ function openNewAnnouncementModal() {
             <label class="text-xs font-bold text-slate-600 block mb-1">公告分類</label>
             <select id="annCat" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
               <option value="重要通知">重要通知</option>
-              <option value="考試日程">考試日程</option>
               <option value="班級活動">班級活動</option>
               <option value="課程調整">課程調整</option>
+              <option value="事務提醒">事務提醒</option>
             </select>
           </div>
           <div class="flex items-end pb-2">
@@ -1112,189 +1541,7 @@ function deleteAnnouncement(id) {
   renderCurrentTab();
 }
 
-// ==================== 7. 模組四：每日作業與繳交 ====================
-function renderHomework(container) {
-  const isTeacher = currentUser.role === 'teacher';
-
-  container.innerHTML = `
-    <div class="max-w-4xl mx-auto space-y-5">
-      ${isTeacher ? `
-        <div class="flex justify-end">
-          <button onclick="openNewHomeworkModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold px-4 py-2.5 rounded-xl shadow-xs flex items-center gap-2 cursor-pointer">
-            <i data-lucide="file-plus-2" class="w-4 h-4"></i> 派發新作業
-          </button>
-        </div>
-      ` : ''}
-
-      <div class="space-y-4">
-        ${appData.homework.map(hw => {
-          const subCount = Object.keys(hw.submissions).length;
-          const mySub = hw.submissions[currentUser.id];
-
-          return `
-            <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-xs">
-              <div class="flex items-start justify-between gap-4">
-                <div>
-                  <div class="flex items-center gap-2 mb-1.5">
-                    <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-0.5 rounded-md">${hw.subject}</span>
-                    <span class="text-xs text-rose-500 font-bold">截止日期：${hw.dueDate}</span>
-                  </div>
-                  <h3 class="text-lg font-bold text-slate-800">${hw.title}</h3>
-                  <p class="text-sm text-slate-600 mt-2">${hw.description}</p>
-                </div>
-
-                ${isTeacher ? `
-                  <button onclick="openGradeHomeworkModal('${hw.id}')" class="shrink-0 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-3.5 py-2 rounded-lg cursor-pointer">
-                    檢視繳交與批改 (${subCount}/${appData.students.length})
-                  </button>
-                ` : `
-                  <button onclick="openSubmitHomeworkModal('${hw.id}')" class="shrink-0 ${mySub ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-emerald-600 text-white hover:bg-emerald-700'} text-xs font-bold px-4 py-2 rounded-lg cursor-pointer">
-                    ${mySub ? '✓ 已繳交 (檢視/修改)' : '線上繳交作業'}
-                  </button>
-                `}
-              </div>
-
-              ${!isTeacher && mySub ? `
-                <div class="mt-4 p-3.5 bg-slate-50 rounded-lg border border-slate-200 text-xs space-y-1">
-                  <div class="font-bold text-slate-700">我的繳交內容（${mySub.time}）：</div>
-                  <div class="text-slate-600">${mySub.content}</div>
-                  ${mySub.grade ? `<div class="mt-2 pt-2 border-t border-slate-200 text-indigo-700 font-bold">老師評分：${mySub.grade} 分 ｜ 評語：${mySub.feedback || '無'}</div>` : `<div class="text-slate-400 italic mt-1">老師尚未批改</div>`}
-                </div>
-              ` : ''}
-            </div>
-          `;
-        }).join('')}
-      </div>
-    </div>
-  `;
-}
-
-function openNewHomeworkModal() {
-  if (currentUser.role !== 'teacher') return;
-  showModal(`
-    <div class="p-6">
-      <h3 class="text-lg font-bold text-slate-800 mb-4">派發每日作業</h3>
-      <div class="space-y-3">
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="text-xs font-bold text-slate-600 block mb-1">科目</label>
-            <input id="hwSubj" type="text" placeholder="例如：國文、英文" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
-          </div>
-          <div>
-            <label class="text-xs font-bold text-slate-600 block mb-1">繳交截止日</label>
-            <input id="hwDue" type="date" value="${TODAY_STR}" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
-          </div>
-        </div>
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">作業名稱</label>
-          <input id="hwTitle" type="text" placeholder="請輸入作業標題..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">作業說明與要求</label>
-          <textarea id="hwDesc" rows="3" placeholder="請輸入作業範圍或繳交格式要求..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></textarea>
-        </div>
-      </div>
-      <div class="mt-6 flex justify-end gap-2">
-        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">取消</button>
-        <button onclick="createHomework()" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700">發布作業</button>
-      </div>
-    </div>
-  `);
-}
-
-function createHomework() {
-  const subject = document.getElementById('hwSubj').value.trim();
-  const dueDate = document.getElementById('hwDue').value;
-  const title = document.getElementById('hwTitle').value.trim();
-  const description = document.getElementById('hwDesc').value.trim();
-  if (!subject || !title) return alert('請填寫科目與作業名稱');
-
-  appData.homework.unshift({
-    id: 'H' + Date.now(),
-    subject, dueDate, title, description,
-    submissions: {}
-  });
-  saveData();
-  closeModal();
-  renderCurrentTab();
-}
-
-function openSubmitHomeworkModal(hwId) {
-  const hw = appData.homework.find(h => h.id === hwId);
-  const existing = hw.submissions[currentUser.id] || { content: '' };
-  showModal(`
-    <div class="p-6">
-      <h3 class="text-lg font-bold text-slate-800 mb-1">繳交作業：${hw.title}</h3>
-      <p class="text-xs text-slate-500 mb-4">${hw.description}</p>
-      <textarea id="studentHwInput" rows="5" placeholder="請輸入作業回答內容，或貼上雲端硬碟作業連結..." class="w-full border border-slate-300 rounded-lg p-3 text-sm">${existing.content}</textarea>
-      <div class="mt-5 flex justify-end gap-2">
-        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">取消</button>
-        <button onclick="submitHomework('${hwId}')" class="px-4 py-2 text-sm bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700">確認送出</button>
-      </div>
-    </div>
-  `);
-}
-
-function submitHomework(hwId) {
-  const content = document.getElementById('studentHwInput').value.trim();
-  if (!content) return alert('請輸入作業內容');
-  const hw = appData.homework.find(h => h.id === hwId);
-  const old = hw.submissions[currentUser.id] || {};
-  hw.submissions[currentUser.id] = {
-    content,
-    time: new Date().toTimeString().slice(0, 5),
-    grade: old.grade || '',
-    feedback: old.feedback || ''
-  };
-  saveData();
-  closeModal();
-  renderCurrentTab();
-}
-
-function openGradeHomeworkModal(hwId) {
-  if (currentUser.role !== 'teacher') return;
-  const hw = appData.homework.find(h => h.id === hwId);
-  showModal(`
-    <div class="p-6 max-h-[85vh] overflow-y-auto">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-slate-800">批改作業：${hw.title}</h3>
-        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-      <div class="space-y-4">
-        ${appData.students.map(s => {
-          const sub = hw.submissions[s.id];
-          return `
-            <div class="p-3.5 rounded-xl border ${sub ? 'border-slate-200 bg-white' : 'border-slate-100 bg-slate-50'}">
-              <div class="flex justify-between items-center mb-1">
-                <span class="font-bold text-sm text-slate-800">${s.seat}號 ${s.name}</span>
-                <span class="text-xs ${sub ? 'text-emerald-600 font-bold' : 'text-rose-400'}">${sub ? `已於 ${sub.time} 繳交` : '尚未繳交'}</span>
-              </div>
-              ${sub ? `
-                <p class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg my-2">${sub.content}</p>
-                <div class="flex gap-2 mt-2">
-                  <input id="grade-${hwId}-${s.id}" type="text" value="${sub.grade}" placeholder="分數 (如 95)" class="w-24 border border-slate-300 rounded-md px-2 py-1 text-xs">
-                  <input id="fb-${hwId}-${s.id}" type="text" value="${sub.feedback}" placeholder="輸入給學生的評語..." class="flex-1 border border-slate-300 rounded-md px-2 py-1 text-xs">
-                  <button onclick="saveGrade('${hwId}', '${s.id}')" class="bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-md hover:bg-indigo-700">儲存</button>
-                </div>
-              ` : ''}
-            </div>
-          `;
-        }).join('')}
-      </div>
-    </div>
-  `);
-  lucide.createIcons();
-}
-
-function saveGrade(hwId, studentId) {
-  const hw = appData.homework.find(h => h.id === hwId);
-  hw.submissions[studentId].grade = document.getElementById(`grade-${hwId}-${studentId}`).value.trim();
-  hw.submissions[studentId].feedback = document.getElementById(`fb-${hwId}-${studentId}`).value.trim();
-  saveData();
-  alert('評分與評語已儲存！');
-}
-
-// ==================== 8. 模組五：師生一對一私訊 ====================
+// ==================== 9. 模組六：師生一對一私訊 ====================
 function renderMessages(container) {
   if (currentUser.role === 'student') {
     const chatList = appData.messages[currentUser.id] || [];
@@ -1452,7 +1699,7 @@ function updateUnreadBadge() {
   }
 }
 
-// ==================== 9. 模組六（教師專屬權限）：學生帳號與名冊管理 ====================
+// ==================== 10. 模組七（教師專屬權限）：學生帳號與名冊管理 ====================
 function renderRoster(container) {
   if (currentUser.role !== 'teacher') return;
   container.innerHTML = `
@@ -1561,7 +1808,7 @@ function createStudentByTeacher() {
   renderCurrentTab();
 }
 
-// ==================== 10. 通用 Modal 控制 ====================
+// ==================== 11. 通用 Modal 控制 ====================
 function showModal(html) {
   const backdrop = document.getElementById('modalBackdrop');
   document.getElementById('modalContent').innerHTML = html;
