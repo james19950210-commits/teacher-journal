@@ -52,10 +52,10 @@
         </div>
         <h2 class="text-3xl sm:text-4xl font-black text-slate-800 leading-tight">
           智慧化班級點名、<br>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">情緒關懷與教學互動</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">情緒關懷與國際時事思辨</span>
         </h2>
         <p class="text-sm text-slate-600 leading-relaxed">
-          結合 Marc Brackett 情緒量表（Mood Meter）每日簽到打卡、班級課表查詢、隔日作業聯絡簿、考試行事曆與師生一對一私訊輔導，協助導師即時掌握學生身心狀態。
+          結合 Marc Brackett 情緒量表每日打卡、LINE TODAY 風格每日國際時事看板與 IG 互動討論串、班級課表、作業聯絡簿與師生私訊輔導，打造全方位班級數位學習空間。
         </p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
@@ -65,8 +65,8 @@
             </div>
             <ul class="text-xs text-slate-600 space-y-1">
               <li>• 全班點名與情緒量表四象限關懷總覽</li>
-              <li>• 匯入／編輯課表、作業提醒與考試排程</li>
-              <li>• 一鍵私訊關懷低愉悅度學生與名冊管理</li>
+              <li>• 發布每日國際時事專題與引導思辨討論</li>
+              <li>• 編輯課表、作業提醒、考試行事曆與私訊</li>
             </ul>
           </div>
           <div class="bg-white/90 p-4 rounded-2xl border border-emerald-100 shadow-2xs">
@@ -75,8 +75,8 @@
             </div>
             <ul class="text-xs text-slate-600 space-y-1">
               <li>• 每日點選情緒量表完成上課打卡</li>
-              <li>• 檢視班級課表、考試行事曆與公告</li>
-              <li>• 確認隔日應交作業與導師一對一私訊</li>
+              <li>• 閱讀每日國際新聞並於下方留言按讚思辨</li>
+              <li>• 查詢課表、考試日程、作業提醒與私訊導師</li>
             </ul>
           </div>
         </div>
@@ -144,7 +144,7 @@
                     👨‍🏫 教師 (teacher)
                   </button>
                   <button type="button" onclick="quickFill('student', 'S05', '1234')" class="py-1.5 px-2.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold text-center transition cursor-pointer">
-                    🎓 學生 (S05 王柏翰-未打卡)
+                    🎓 學生 (S05 王柏翰)
                   </button>
                 </div>
               </div>
@@ -222,7 +222,7 @@
           <div id="sidebarUserMeta" class="text-xs text-slate-400 font-mono mt-0.5">帳號：teacher</div>
         </div>
 
-        <nav id="sidebarNav" class="py-3 space-y-1"></nav>
+        <nav id="sidebarNav" class="py-3 space-y-1 overflow-y-auto max-h-[calc(100vh-220px)]"></nav>
       </div>
 
       <div class="p-4 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
@@ -235,7 +235,7 @@
       <header class="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-3">
           <h2 id="pageTitle" class="text-xl font-bold text-slate-800">每日點名與心情量表</h2>
-          <span id="permissionHint" class="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium"></span>
+          <span id="permissionHint" class="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium hidden md:inline-block"></span>
         </div>
         <div class="flex items-center gap-4">
           <div id="liveClock" class="text-sm font-mono bg-slate-100 px-3 py-1 rounded-md text-slate-600 font-medium"></div>
@@ -243,7 +243,7 @@
         </div>
       </header>
 
-      <div id="contentArea" class="flex-1 overflow-y-auto p-8"></div>
+      <div id="contentArea" class="flex-1 overflow-y-auto p-6 md:p-8"></div>
     </main>
   </div>
 
@@ -253,60 +253,44 @@
   </div>
 
 <script>
-// ==================== 1. Marc Brackett 情緒量表 (Mood Meter) 10x10 完整資料 ====================
-// row: 0(最高活力) ~ 9(最低活力), col: 0(最低愉悅) ~ 9(最高愉悅)
-// 象限定義:
-// red: row 0..4, col 0..4 (高活力、低愉悅 -> 紅區：需留意壓力/焦慮/生氣)
-// yellow: row 0..4, col 5..9 (高活力、高愉悅 -> 黃區：正向積極)
-// blue: row 5..9, col 0..4 (低活力、低愉悅 -> 藍區：需關心低落/疲憊/難過)
-// green: row 5..9, col 5..9 (低活力、高愉悅 -> 綠區：平靜安詳)
+// ==================== 1. Marc Brackett 情緒量表 (Mood Meter) 10x10 資料 ====================
 const MOOD_METER_GRID = [
-  // Row 0 (最高活力)
   [
     { zh: '勃然大怒的', en: 'Enraged', q: 'red' }, { zh: '驚慌失措的', en: 'Panicked', q: 'red' }, { zh: '備感壓力的', en: 'Stressful', q: 'red' }, { zh: '緊張不安的', en: 'Jittery', q: 'red' }, { zh: '震驚的', en: 'Shocked', q: 'red' },
     { zh: '驚喜的', en: 'Surprised', q: 'yellow' }, { zh: '振奮的', en: 'Upbeat', q: 'yellow' }, { zh: '歡慶的', en: 'Festive', q: 'yellow' }, { zh: '心花怒放的', en: 'Exhilarated', q: 'yellow' }, { zh: '欣喜若狂的', en: 'Ecstatic', q: 'yellow' }
   ],
-  // Row 1
   [
     { zh: '憤怒的', en: 'Livid', q: 'red' }, { zh: '氣沖沖地', en: 'Furious', q: 'red' }, { zh: '沮喪的', en: 'Frustrated', q: 'red' }, { zh: '神經緊繃的', en: 'Tense', q: 'red' }, { zh: '錯愕的', en: 'Stunned', q: 'red' },
     { zh: '亢奮的', en: 'Hyper', q: 'yellow' }, { zh: '愉悅的', en: 'Cheerful', q: 'yellow' }, { zh: '有動力的', en: 'Motivated', q: 'yellow' }, { zh: '受到啟發的', en: 'Inspired', q: 'yellow' }, { zh: '興高采烈的', en: 'Elated', q: 'yellow' }
   ],
-  // Row 2
   [
     { zh: '火冒三丈的', en: 'Fuming', q: 'red' }, { zh: '受到驚嚇的', en: 'Anxious', q: 'red' }, { zh: '生氣的', en: 'Angry', q: 'red' }, { zh: '緊張的', en: 'Nervous', q: 'red' }, { zh: '坐立難安的', en: 'Restless', q: 'red' },
     { zh: '精力充沛的', en: 'Energized', q: 'yellow' }, { zh: '生氣勃勃的', en: 'Lively', q: 'yellow' }, { zh: '興奮的', en: 'Excited', q: 'yellow' }, { zh: '樂觀的', en: 'Optimistic', q: 'yellow' }, { zh: '熱情洋溢的', en: 'Enthusiastic', q: 'yellow' }
   ],
-  // Row 3
   [
     { zh: '焦慮的', en: 'Anxious', q: 'red' }, { zh: '憂慮不安的', en: 'Apprehensive', q: 'red' }, { zh: '擔心的', en: 'Worried', q: 'red' }, { zh: '被激怒的', en: 'Irritated', q: 'red' }, { zh: '被惹惱的', en: 'Annoyed', q: 'red' },
     { zh: '開心的', en: 'Pleased', q: 'yellow' }, { zh: '集中的', en: 'Focused', q: 'yellow' }, { zh: '快樂的', en: 'Happy', q: 'yellow' }, { zh: '驕傲的', en: 'Proud', q: 'yellow' }, { zh: '興奮激動的', en: 'Thrilled', q: 'yellow' }
   ],
-  // Row 4
   [
     { zh: '反感的', en: 'Repulsed', q: 'red' }, { zh: '困擾的', en: 'Trouble', q: 'red' }, { zh: '在意的', en: 'Concerned', q: 'red' }, { zh: '忐忑不安的', en: 'Uneasy', q: 'red' }, { zh: '不太高興', en: 'Peeved', q: 'red' },
     { zh: '令人愉悅的', en: 'Pleasant', q: 'yellow' }, { zh: '欣喜的', en: 'Joyful', q: 'yellow' }, { zh: '有希望的', en: 'Hopeful', q: 'yellow' }, { zh: '好玩的', en: 'Playful', q: 'yellow' }, { zh: '幸福的', en: 'Blissful', q: 'yellow' }
   ],
-  // Row 5
   [
     { zh: '厭惡的', en: 'Disgusted', q: 'blue' }, { zh: '死氣沉沉', en: 'Glum', q: 'blue' }, { zh: '失望的', en: 'Disappointed', q: 'blue' }, { zh: '低落的', en: 'Down', q: 'blue' }, { zh: '提不起勁的', en: 'Apathetic', q: 'blue' },
     { zh: '自在的', en: 'At Ease', q: 'green' }, { zh: '隨和的', en: 'Easygoing', q: 'green' }, { zh: '知足的', en: 'Content', q: 'green' }, { zh: '充滿愛的', en: 'Loving', q: 'green' }, { zh: '心滿意足的', en: 'Fulfilled', q: 'green' }
   ],
-  // Row 6
   [
     { zh: '悲觀的', en: 'Pessimistic', q: 'blue' }, { zh: '鬱鬱寡歡', en: 'Morose', q: 'blue' }, { zh: '洩氣的', en: 'Discouraged', q: 'blue' }, { zh: '難過的', en: 'Sad', q: 'blue' }, { zh: '無聊的', en: 'Bored', q: 'blue' },
     { zh: '平靜的', en: 'Calm', q: 'green' }, { zh: '安全的', en: 'Secure', q: 'green' }, { zh: '滿意的', en: 'Satisfied', q: 'green' }, { zh: '滿懷感激的', en: 'Grateful', q: 'green' }, { zh: '感動的', en: 'Touched', q: 'green' }
   ],
-  // Row 7
   [
     { zh: '疏離的', en: 'Alienated', q: 'blue' }, { zh: '悲慘的', en: 'Miserable', q: 'blue' }, { zh: '孤單的', en: 'Lonely', q: 'blue' }, { zh: '心灰意冷', en: 'Disheartened', q: 'blue' }, { zh: '疲累的', en: 'Tired', q: 'blue' },
     { zh: '放鬆的', en: 'Relaxed', q: 'green' }, { zh: '冷靜的', en: 'Chill', q: 'green' }, { zh: '寧靜的', en: 'Restful', q: 'green' }, { zh: '有福氣的', en: 'Blessed', q: 'green' }, { zh: '平衡的', en: 'Balanced', q: 'green' }
   ],
-  // Row 8
   [
     { zh: '消沉的', en: 'Despondent', q: 'blue' }, { zh: '抑鬱的', en: 'Depressed', q: 'blue' }, { zh: '悶悶不樂', en: 'Sullen', q: 'blue' }, { zh: '精疲力竭', en: 'Exhausted', q: 'blue' }, { zh: '疲勞的', en: 'Fatigued', q: 'blue' },
     { zh: '柔和的', en: 'Mellow', q: 'green' }, { zh: '沉思的', en: 'Thoughtful', q: 'green' }, { zh: '平和的', en: 'Peaceful', q: 'green' }, { zh: '舒服的', en: 'Comfortable', q: 'green' }, { zh: '無憂無慮', en: 'Carefree', q: 'green' }
   ],
-  // Row 9 (最低活力)
   [
     { zh: '絕望的', en: 'Despairing', q: 'blue' }, { zh: '無望的', en: 'Hopeless', q: 'blue' }, { zh: '孤寂的', en: 'Desolate', q: 'blue' }, { zh: '疲憊不堪的', en: 'Spent', q: 'blue' }, { zh: '被榨乾的的', en: 'Drained', q: 'blue' },
     { zh: '昏昏欲睡', en: 'Sleepy', q: 'green' }, { zh: '安於現狀的', en: 'Complacent', q: 'green' }, { zh: '平靜的', en: 'Tranquil', q: 'green' }, { zh: '舒適的', en: 'Cozy', q: 'green' }, { zh: '安詳的', en: 'Serene', q: 'green' }
@@ -331,6 +315,7 @@ function getOffsetDateStr(offsetDays) {
 }
 
 const TODAY_STR = getOffsetDateStr(0);
+const YESTERDAY_STR = getOffsetDateStr(-1);
 const TOMORROW_STR = getOffsetDateStr(1);
 const TEACHER_AUTH_CODE = '8888';
 
@@ -366,6 +351,77 @@ const DEFAULT_DATA = {
       }
     }
   },
+  // 每日國際時事看板資料（LINE TODAY 風格頭條 + IG 留言討論區）
+  dailyNews: [
+    {
+      id: 'NEWS01',
+      date: TODAY_STR,
+      tag: '科技與倫理',
+      source: 'BBC / 路透社國際精選',
+      title: '歐盟《人工智慧法案》正式全面上路：生成式 AI 內容須強制標註浮水印',
+      summary: '歐盟近期正式實施全球首部全面性 AI 監管法規，要求所有大型語言模型與影像生成工具在產出內容時必須嵌入可識別的數位標記，並嚴格限制 AI 在校園與公共空間進行情緒辨識或生物特徵監控。此舉引發矽谷科技巨頭與學術界對於「創新速度」與「數位人權保護」之間平衡的熱烈辯論。',
+      discussionPrompt: '💡 思辨提問：如果你是設計師或創作者，你認為 AI 生成的圖片或文章「強制標註來源」會保護創作者，還是會限制創意發展？',
+      coverGradient: 'from-emerald-600 via-teal-600 to-cyan-700',
+      coverIcon: 'cpu',
+      likes: ['S01', 'S02', 'S04'],
+      comments: [
+        {
+          id: 'C101',
+          authorId: 'S01',
+          authorName: '01號 林子軒',
+          role: 'student',
+          text: '我覺得強制標註超重要！現在網路上假新聞跟深偽影片太多了，有浮水印大家才不會被誤導。',
+          time: '08:15',
+          likes: ['S02', 'teacher'],
+          replies: [
+            {
+              id: 'R101',
+              authorId: 'teacher',
+              authorName: '陳老師',
+              role: 'teacher',
+              text: '@01號 林子軒 切入點很棒！媒體識讀在 AI 時代確實是每位公民必備的能力。',
+              time: '08:25',
+              likes: ['S01']
+            }
+          ]
+        },
+        {
+          id: 'C102',
+          authorId: 'S02',
+          authorName: '02號 陳思妤',
+          role: 'student',
+          text: '同意樓上，不過如果是用 AI 輔助潤飾文法或發想大綱，也要算「AI 生成」嗎？界線好像很難劃分 🤔',
+          time: '08:19',
+          likes: ['S01', 'S03', 'teacher'],
+          replies: []
+        }
+      ]
+    },
+    {
+      id: 'NEWS02',
+      date: YESTERDAY_STR,
+      tag: '氣候與永續',
+      source: 'NHK / 衛報國際精選',
+      title: '日本京都試行「觀光客分流與碳排附加費」，盼緩解過度旅遊衝擊',
+      summary: '面對疫後暴增的國際觀光人潮，京都市政府宣布將於部分熱門古蹟周邊推行彈性交通費率與預約制，並研擬將住宿稅用於古蹟修復與低碳公車升級。當地居民普遍支持改善交通壅塞，但部分傳統商店街業者則擔憂會降低旅客消費意願。',
+      discussionPrompt: '💡 思辨提問：台灣許多熱門景點（如九份、阿里山、台南老街）也面臨人潮爆滿問題，你支持透過「以價制量」或「預約制」來保護環境嗎？',
+      coverGradient: 'from-amber-600 via-orange-600 to-rose-600',
+      coverIcon: 'globe-2',
+      likes: ['S01', 'S03', 'S06'],
+      comments: [
+        {
+          id: 'C201',
+          authorId: 'S04',
+          authorName: '04號 黃品妍',
+          role: 'student',
+          text: '上次去京都清水寺真的擠到水洩不通，如果收費能拿來維護古蹟跟改善公車路線，我覺得很合理！',
+          time: '昨日 16:40',
+          likes: ['S02', 'S06'],
+          replies: []
+        }
+      ]
+    }
+  ],
   timetable: {
     '1-1': { subject: '國文', teacher: '陳老師', room: '教室201' },
     '1-2': { subject: '英文', teacher: '林老師', room: '教室201' },
@@ -473,23 +529,27 @@ const DEFAULT_DATA = {
   }
 };
 
-let appData = JSON.parse(localStorage.getItem('eduCloud_v5')) || DEFAULT_DATA;
-let currentUser = JSON.parse(sessionStorage.getItem('eduCloudSession_v5')) || null;
+let appData = JSON.parse(localStorage.getItem('eduCloud_v6')) || DEFAULT_DATA;
+let currentUser = JSON.parse(sessionStorage.getItem('eduCloudSession_v6')) || null;
 let portalRole = 'teacher';
 let isRegisterMode = false;
 let currentCaptcha = '';
-let currentTab = 'attendance';
+let currentTab = 'news'; // 預設可直接體驗新增的「每日國際時事看板」，亦可隨時切換點名量表
 let selectedChatStudentId = appData.students[0]?.id || 'S01';
 
+// 每日時事看板狀態
+let selectedNewsId = appData.dailyNews[0]?.id || 'NEWS01';
+let replyingToCommentId = null; // 若不為 null，代表正在回覆某則 IG 留言
+
 // 學生打卡暫存選擇的情緒
-let tempSelectedMood = null; // { r, c, zh, en, q, energy, pleasantness }
+let tempSelectedMood = null;
 
 // 考試行事曆目前檢視年月
 let calYear = new Date().getFullYear();
 let calMonth = new Date().getMonth();
 
 function saveData() {
-  localStorage.setItem('eduCloud_v5', JSON.stringify(appData));
+  localStorage.setItem('eduCloud_v6', JSON.stringify(appData));
   if (currentUser) updateUnreadBadge();
 }
 
@@ -536,7 +596,7 @@ function selectPortalRole(role) {
     tabT.className = 'py-4 flex items-center justify-center gap-2 bg-indigo-600 text-white transition cursor-pointer';
     tabS.className = 'py-4 flex items-center justify-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200/70 transition cursor-pointer';
     title.textContent = isRegisterMode ? '建立教師管理帳戶' : '教師身分驗證登入';
-    subtitle.textContent = '具備全班點名與情緒關懷總覽、課表與考試管理權限';
+    subtitle.textContent = '具備點名關懷、發布每日國際時事、課表與考試管理權限';
     idLabel.textContent = '教師帳號';
     idInput.placeholder = '請輸入教師帳號 (預設: teacher)';
     loginBtn.className = 'w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
@@ -549,9 +609,9 @@ function selectPortalRole(role) {
     tabS.className = 'py-4 flex items-center justify-center gap-2 bg-emerald-600 text-white transition cursor-pointer';
     tabT.className = 'py-4 flex items-center justify-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200/70 transition cursor-pointer';
     title.textContent = isRegisterMode ? '建立學生學習帳戶' : '學生身分驗證登入';
-    subtitle.textContent = '具備每日心情打卡、課表查詢、作業提醒與私訊功能';
+    subtitle.textContent = '具備每日心情打卡、國際時事思辨留言、課表與作業查詢功能';
     idLabel.textContent = '學生學號';
-    idInput.placeholder = '請輸入學生學號 (例如: S01)';
+    idInput.placeholder = '請輸入學生學號 (例如: S05)';
     loginBtn.className = 'w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
     loginBtn.textContent = '登入學生學習系統';
     regBtn.className = 'w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
@@ -618,7 +678,7 @@ function handleLogin(e) {
     currentUser = { role: 'student', id: student.id, name: student.name, seat: student.seat };
   }
 
-  sessionStorage.setItem('eduCloudSession_v5', JSON.stringify(currentUser));
+  sessionStorage.setItem('eduCloudSession_v6', JSON.stringify(currentUser));
   enterMainApp();
 }
 
@@ -649,15 +709,16 @@ function handleRegister(e) {
     currentUser = { role: 'student', id: studentId, name, seat };
   }
 
-  sessionStorage.setItem('eduCloudSession_v5', JSON.stringify(currentUser));
+  sessionStorage.setItem('eduCloudSession_v6', JSON.stringify(currentUser));
   alert(`帳戶建立成功！系統已自動為您登入。`);
   enterMainApp();
 }
 
 function logout() {
-  sessionStorage.removeItem('eduCloudSession_v5');
+  sessionStorage.removeItem('eduCloudSession_v6');
   currentUser = null;
   tempSelectedMood = null;
+  replyingToCommentId = null;
   document.getElementById('mainApp').classList.add('hidden');
   document.getElementById('authScreen').classList.remove('hidden');
   document.getElementById('loginPassword').value = '';
@@ -692,6 +753,10 @@ function enterMainApp() {
       <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="heart-handshake" class="w-4 h-4"></i><span>每日點名與心情關懷</span>
       </button>
+      <button onclick="switchTab('news')" id="nav-news" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="newspaper" class="w-4 h-4 text-emerald-600"></i><span>每日國際時事看板</span></div>
+        <span class="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">TODAY</span>
+      </button>
       <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="calendar-cog" class="w-4 h-4"></i><span>班級課表編輯/匯入</span>
       </button>
@@ -725,6 +790,10 @@ function enterMainApp() {
       <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="smile-plus" class="w-4 h-4"></i><span>每日打卡與心情量表</span>
       </button>
+      <button onclick="switchTab('news')" id="nav-news" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="newspaper" class="w-4 h-4 text-emerald-600"></i><span>每日國際時事看板</span></div>
+        <span class="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">TODAY</span>
+      </button>
       <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="calendar-days" class="w-4 h-4"></i><span>班級課表查詢</span>
       </button>
@@ -745,7 +814,7 @@ function enterMainApp() {
   }
 
   updateUnreadBadge();
-  switchTab('attendance');
+  switchTab(currentTab);
 }
 
 function switchTab(tab) {
@@ -757,6 +826,7 @@ function switchTab(tab) {
 
   const teacherTitles = {
     attendance: ['每日點名與情緒量表關懷總覽', '即時掌握學生出缺勤與 Mood Meter 身心狀態'],
+    news: ['每日國際時事看板｜班級思辨討論區', 'LINE TODAY 風格每日精選新聞 + IG 互動留言板'],
     timetable: ['班級課表管理系統', '教師可點擊編輯節次或批次匯入課表'],
     homework: ['隔日作業聯絡簿發布', '發布隔天與近期應繳交的紙本/實體作業提醒'],
     exams: ['班級考試行事曆管理', '登錄小考、週考與段考日期及考試範圍'],
@@ -767,6 +837,7 @@ function switchTab(tab) {
 
   const studentTitles = {
     attendance: ['每日上課打卡與情緒量表', '透過 Mood Meter 覺察今日情緒並完成簽到'],
+    news: ['每日國際時事看板｜班級思辨討論區', '閱讀今日精選國際新聞，在下方留言分享你的觀點！'],
     timetable: ['班級課表查詢', '唯讀檢視本學期班級每週課表'],
     homework: ['隔日應交作業提醒', '確認明天與近期該帶到學校繳交的作業清單'],
     exams: ['班級考試行事曆', '檢視近期小考與段考日程、倒數天數與範圍'],
@@ -783,6 +854,7 @@ function switchTab(tab) {
 function renderCurrentTab() {
   const container = document.getElementById('contentArea');
   if (currentTab === 'attendance') renderAttendance(container);
+  else if (currentTab === 'news') renderDailyNewsBoard(container);
   else if (currentTab === 'timetable') renderTimetable(container);
   else if (currentTab === 'homework') renderHomeworkReminders(container);
   else if (currentTab === 'exams') renderExamCalendar(container);
@@ -792,7 +864,454 @@ function renderCurrentTab() {
   lucide.createIcons();
 }
 
-// ==================== 5. 模組一：每日點名與情緒量表 (Mood Meter) ====================
+// ==================== 5. 模組：每日國際時事看板 (LINE TODAY 風格 + IG 留言互動) ====================
+function renderDailyNewsBoard(container) {
+  const isTeacher = currentUser.role === 'teacher';
+  if (!appData.dailyNews || appData.dailyNews.length === 0) {
+    container.innerHTML = `<div class="text-center py-12 text-slate-400">目前尚無每日時事主題</div>`;
+    return;
+  }
+
+  const activeNews = appData.dailyNews.find(n => n.id === selectedNewsId) || appData.dailyNews[0];
+  selectedNewsId = activeNews.id;
+  const isLikedByMe = activeNews.likes.includes(currentUser.id);
+  const totalCommentsCount = activeNews.comments.reduce((acc, c) => acc + 1 + (c.replies ? c.replies.length : 0), 0);
+
+  // 頭像顏色與文字工具
+  const renderAvatar = (role, name) => {
+    if (role === 'teacher') {
+      return `<div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-500 text-white font-bold text-xs flex items-center justify-center shrink-0 ring-2 ring-indigo-100">師</div>`;
+    }
+    const shortName = name.includes(' ') ? name.split(' ')[1].slice(0, 1) : name.slice(0, 1);
+    return `<div class="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-white font-bold text-xs flex items-center justify-center shrink-0 ring-2 ring-emerald-50">${shortName}</div>`;
+  };
+
+  const renderSmallAvatar = (role, name) => {
+    if (role === 'teacher') {
+      return `<div class="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0">師</div>`;
+    }
+    const shortName = name.includes(' ') ? name.split(' ')[1].slice(0, 1) : name.slice(0, 1);
+    return `<div class="w-6 h-6 rounded-full bg-emerald-500 text-white font-bold text-[10px] flex items-center justify-center shrink-0">${shortName}</div>`;
+  };
+
+  container.innerHTML = `
+    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- 左側／上方：LINE TODAY 風格新聞焦點與 IG 互動留言區 (佔 8 欄) -->
+      <div class="lg:col-span-8 bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+        
+        <!-- LINE TODAY 頂部品牌識別條 -->
+        <div class="px-5 py-3 bg-[#06C755] text-white flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="font-black tracking-wider text-sm bg-white text-[#06C755] px-2 py-0.5 rounded">TODAY</span>
+            <span class="font-bold text-sm tracking-wide">每日國際時事焦點</span>
+          </div>
+          <span class="text-xs font-mono bg-black/15 px-2.5 py-0.5 rounded-full">${activeNews.date}</span>
+        </div>
+
+        <!-- 新聞視覺橫幅卡片 (LINE TODAY 頭條設計) -->
+        <div class="bg-gradient-to-br ${activeNews.coverGradient} p-6 sm:p-8 text-white relative overflow-hidden">
+          <div class="relative z-10 space-y-3">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="bg-white/20 backdrop-blur-xs text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                # ${activeNews.tag}
+              </span>
+              <span class="text-xs text-white/80 font-medium">來源：${activeNews.source}</span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-black leading-snug tracking-tight">
+              ${activeNews.title}
+            </h3>
+          </div>
+          <i data-lucide="${activeNews.coverIcon || 'globe'}" class="w-36 h-36 text-white/10 absolute -right-4 -bottom-6 pointer-events-none"></i>
+        </div>
+
+        <!-- 新聞報導內文與思辨提問框 -->
+        <div class="p-6 space-y-5 border-b border-slate-200">
+          <p class="text-sm sm:text-[15px] text-slate-700 leading-relaxed">
+            ${activeNews.summary}
+          </p>
+
+          <div class="bg-emerald-50/80 border-l-4 border-[#06C755] rounded-r-xl p-4">
+            <div class="text-xs font-bold text-emerald-800 mb-1">今日課堂思辨話題</div>
+            <p class="text-sm font-bold text-slate-800 leading-relaxed">${activeNews.discussionPrompt}</p>
+          </div>
+
+          <!-- Instagram 風格互動工具列（愛心、留言數、收藏/分享感） -->
+          <div class="pt-2 flex items-center justify-between">
+            <div class="flex items-center gap-5">
+              <button onclick="toggleNewsLike('${activeNews.id}')" class="flex items-center gap-1.5 group cursor-pointer">
+                <i data-lucide="heart" class="w-6 h-6 transition ${isLikedByMe ? 'fill-rose-500 text-rose-500 scale-110' : 'text-slate-700 group-hover:text-rose-500'}"></i>
+                <span class="text-sm font-bold ${isLikedByMe ? 'text-rose-600' : 'text-slate-700'}">${activeNews.likes.length} 個讚</span>
+              </button>
+              <button onclick="document.getElementById('igCommentInput').focus()" class="flex items-center gap-1.5 text-slate-700 hover:text-indigo-600 cursor-pointer">
+                <i data-lucide="message-circle" class="w-6 h-6"></i>
+                <span class="text-sm font-bold">${totalCommentsCount} 則觀點留言</span>
+              </button>
+            </div>
+            <div class="text-xs text-slate-400 font-medium">
+              班級互動討論區
+            </div>
+          </div>
+        </div>
+
+        <!-- Instagram 風格留言串列表 -->
+        <div class="bg-slate-50/50">
+          <div class="px-6 py-3 border-b border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500">同學與老師的觀點留言 (${totalCommentsCount})</span>
+            ${replyingToCommentId ? `
+              <button onclick="cancelReplyComment()" class="text-xs text-rose-500 font-bold hover:underline cursor-pointer">
+                ✕ 取消回覆模式
+              </button>
+            ` : ''}
+          </div>
+
+          <div class="p-6 space-y-5 max-h-[420px] overflow-y-auto" id="igCommentsContainer">
+            ${activeNews.comments.length === 0 ? `
+              <div class="text-center py-8 text-xs text-slate-400">
+                目前還沒有人留言，快來搶頭香發表你對這則國際新聞的看法吧！✨
+              </div>
+            ` : ''}
+
+            ${activeNews.comments.map(c => {
+              const cLiked = c.likes.includes(currentUser.id);
+              const canDelete = isTeacher || c.authorId === currentUser.id;
+              return `
+                <div class="space-y-2.5">
+                  <!-- 主留言 -->
+                  <div class="flex items-start gap-3 group">
+                    ${renderAvatar(c.role, c.authorName)}
+                    <div class="flex-1 min-w-0">
+                      <div class="text-sm leading-relaxed text-slate-800">
+                        <span class="font-bold mr-1.5 ${c.role === 'teacher' ? 'text-indigo-700' : 'text-slate-900'}">${c.authorName}</span>
+                        ${c.role === 'teacher' ? `<span class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-1.5 py-0.5 rounded mr-1.5">導師</span>` : ''}
+                        <span class="break-words">${c.text}</span>
+                      </div>
+                      <div class="flex items-center gap-4 mt-1.5 text-[11px] font-bold text-slate-400">
+                        <span class="font-normal">${c.time}</span>
+                        ${c.likes.length > 0 ? `<span class="text-slate-500">${c.likes.length} 個讚</span>` : ''}
+                        <button onclick="startReplyComment('${c.id}', '${c.authorName}')" class="hover:text-slate-700 cursor-pointer">回覆</button>
+                        ${canDelete ? `<button onclick="deleteNewsComment('${activeNews.id}', '${c.id}')" class="hover:text-rose-500 cursor-pointer">刪除</button>` : ''}
+                      </div>
+                    </div>
+                    <!-- IG 右側小愛心 -->
+                    <button onclick="toggleCommentLike('${activeNews.id}', '${c.id}')" class="pt-1 text-slate-400 hover:text-rose-500 cursor-pointer shrink-0">
+                      <i data-lucide="heart" class="w-4 h-4 ${cLiked ? 'fill-rose-500 text-rose-500' : ''}"></i>
+                    </button>
+                  </div>
+
+                  <!-- 子回覆串 (IG 縮排回覆) -->
+                  ${c.replies && c.replies.length > 0 ? `
+                    <div class="pl-12 space-y-2.5 border-l-2 border-slate-200/80 ml-4">
+                      ${c.replies.map(r => {
+                        const rLiked = r.likes.includes(currentUser.id);
+                        const canDelReply = isTeacher || r.authorId === currentUser.id;
+                        return `
+                          <div class="flex items-start gap-2.5">
+                            ${renderSmallAvatar(r.role, r.authorName)}
+                            <div class="flex-1 min-w-0">
+                              <div class="text-xs sm:text-sm leading-relaxed text-slate-800">
+                                <span class="font-bold mr-1 ${r.role === 'teacher' ? 'text-indigo-700' : 'text-slate-900'}">${r.authorName}</span>
+                                ${r.role === 'teacher' ? `<span class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-1.5 py-0.5 rounded mr-1">導師</span>` : ''}
+                                <span class="break-words">${r.text}</span>
+                              </div>
+                              <div class="flex items-center gap-3 mt-1 text-[11px] font-bold text-slate-400">
+                                <span class="font-normal">${r.time}</span>
+                                ${r.likes.length > 0 ? `<span class="text-slate-500">${r.likes.length} 個讚</span>` : ''}
+                                <button onclick="startReplyComment('${c.id}', '${r.authorName}')" class="hover:text-slate-700 cursor-pointer">回覆</button>
+                                ${canDelReply ? `<button onclick="deleteNewsReply('${activeNews.id}', '${c.id}', '${r.id}')" class="hover:text-rose-500 cursor-pointer">刪除</button>` : ''}
+                              </div>
+                            </div>
+                            <button onclick="toggleReplyLike('${activeNews.id}', '${c.id}', '${r.id}')" class="pt-1 text-slate-400 hover:text-rose-500 cursor-pointer shrink-0">
+                              <i data-lucide="heart" class="w-3.5 h-3.5 ${rLiked ? 'fill-rose-500 text-rose-500' : ''}"></i>
+                            </button>
+                          </div>
+                        `;
+                      }).join('')}
+                    </div>
+                  ` : ''}
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <!-- Instagram 底部固定發佈留言輸入框 -->
+          <div class="p-4 bg-white border-t border-slate-200">
+            ${replyingToCommentId ? `
+              <div id="replyBanner" class="text-xs text-indigo-600 font-bold mb-2 flex items-center justify-between bg-indigo-50 px-3 py-1.5 rounded-lg">
+                <span id="replyBannerText">正在回覆留言...</span>
+                <button type="button" onclick="cancelReplyComment()" class="text-slate-400 hover:text-slate-600 cursor-pointer">✕</button>
+              </div>
+            ` : ''}
+            <form onsubmit="submitNewsComment(event, '${activeNews.id}')" class="flex items-center gap-3">
+              ${renderAvatar(currentUser.role, currentUser.role === 'teacher' ? currentUser.name : `${currentUser.seat}號 ${currentUser.name}`)}
+              <input id="igCommentInput" type="text" required placeholder="以「${currentUser.role === 'teacher' ? currentUser.name : currentUser.seat + '號 ' + currentUser.name}」的身分新增留言，分享你的看法..." class="flex-1 bg-slate-100 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#06C755]">
+              <button type="submit" class="text-sm font-black text-[#06C755] hover:text-emerald-700 px-3 py-2 cursor-pointer shrink-0">
+                發佈
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右側：LINE TODAY 每日新聞期數列表與教師出題區 (佔 4 欄) -->
+      <div class="lg:col-span-4 space-y-4">
+        ${isTeacher ? `
+          <button onclick="openNewDailyNewsModal()" class="w-full py-3.5 bg-[#06C755] hover:bg-emerald-600 text-white font-bold rounded-2xl shadow-sm flex items-center justify-center gap-2 text-sm cursor-pointer transition">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i> 發布今日國際時事主題
+          </button>
+        ` : ''}
+
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+          <div class="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+            <span class="font-bold text-sm text-slate-800 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-[#06C755]"></span> 每日國際時事檔案庫
+            </span>
+            <span class="text-xs text-slate-400">共 ${appData.dailyNews.length} 則</span>
+          </div>
+          <div class="divide-y divide-slate-100">
+            ${appData.dailyNews.map(item => {
+              const isSelected = item.id === activeNews.id;
+              const cCount = item.comments.reduce((acc, c) => acc + 1 + (c.replies ? c.replies.length : 0), 0);
+              return `
+                <div onclick="selectDailyNews('${item.id}')" class="p-4 transition cursor-pointer ${isSelected ? 'bg-emerald-50/70 border-l-4 border-[#06C755]' : 'hover:bg-slate-50'}">
+                  <div class="flex items-center justify-between text-[11px] mb-1">
+                    <span class="font-bold text-[#06C755]">${item.tag}</span>
+                    <span class="font-mono text-slate-400">${item.date}</span>
+                  </div>
+                  <h4 class="font-bold text-sm text-slate-800 line-clamp-2 leading-snug">${item.title}</h4>
+                  <div class="flex items-center justify-between mt-2 text-xs text-slate-400">
+                    <span>❤️ ${item.likes.length} · 💬 ${cCount} 則討論</span>
+                    ${isTeacher && appData.dailyNews.length > 1 ? `
+                      <button onclick="event.stopPropagation(); deleteDailyNews('${item.id}')" class="text-rose-400 hover:text-rose-600 cursor-pointer">刪除</button>
+                    ` : ''}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 text-xs text-slate-500 space-y-2">
+          <div class="font-bold text-slate-700 flex items-center gap-1.5">
+            <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i> 班級時事討論公約
+          </div>
+          <p class="leading-relaxed">1. 尊重不同立場的同學，理性表達觀點並提出理由。</p>
+          <p class="leading-relaxed">2. 可對認同的同學留言按 ❤️ 或點擊「回覆」進行延伸對話。</p>
+        </div>
+      </div>
+
+    </div>
+  `;
+}
+
+function selectDailyNews(id) {
+  selectedNewsId = id;
+  replyingToCommentId = null;
+  renderCurrentTab();
+}
+
+function toggleNewsLike(newsId) {
+  const news = appData.dailyNews.find(n => n.id === newsId);
+  if (!news) return;
+  const idx = news.likes.indexOf(currentUser.id);
+  if (idx === -1) news.likes.push(currentUser.id);
+  else news.likes.splice(idx, 1);
+  saveData();
+  renderCurrentTab();
+}
+
+function startReplyComment(commentId, targetAuthorName) {
+  replyingToCommentId = commentId;
+  renderCurrentTab();
+  const bannerText = document.getElementById('replyBannerText');
+  if (bannerText) bannerText.textContent = `正在回覆 ${targetAuthorName} 的留言...`;
+  const input = document.getElementById('igCommentInput');
+  if (input) {
+    input.value = `@${targetAuthorName} `;
+    input.focus();
+  }
+}
+
+function cancelReplyComment() {
+  replyingToCommentId = null;
+  renderCurrentTab();
+}
+
+function submitNewsComment(e, newsId) {
+  e.preventDefault();
+  const input = document.getElementById('igCommentInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const news = appData.dailyNews.find(n => n.id === newsId);
+  if (!news) return;
+
+  const authorDisplayName = currentUser.role === 'teacher'
+    ? currentUser.name
+    : `${currentUser.seat}號 ${currentUser.name}`;
+  const nowTime = new Date().toTimeString().slice(0, 5);
+
+  if (replyingToCommentId) {
+    const parentComment = news.comments.find(c => c.id === replyingToCommentId);
+    if (parentComment) {
+      if (!parentComment.replies) parentComment.replies = [];
+      parentComment.replies.push({
+        id: 'R' + Date.now(),
+        authorId: currentUser.id,
+        authorName: authorDisplayName,
+        role: currentUser.role,
+        text,
+        time: nowTime,
+        likes: []
+      });
+    }
+    replyingToCommentId = null;
+  } else {
+    news.comments.push({
+      id: 'C' + Date.now(),
+      authorId: currentUser.id,
+      authorName: authorDisplayName,
+      role: currentUser.role,
+      text,
+      time: nowTime,
+      likes: [],
+      replies: []
+    });
+  }
+
+  saveData();
+  renderCurrentTab();
+  const box = document.getElementById('igCommentsContainer');
+  if (box) box.scrollTop = box.scrollHeight;
+}
+
+function toggleCommentLike(newsId, commentId) {
+  const news = appData.dailyNews.find(n => n.id === newsId);
+  const comment = news?.comments.find(c => c.id === commentId);
+  if (!comment) return;
+  const idx = comment.likes.indexOf(currentUser.id);
+  if (idx === -1) comment.likes.push(currentUser.id);
+  else comment.likes.splice(idx, 1);
+  saveData();
+  renderCurrentTab();
+}
+
+function toggleReplyLike(newsId, commentId, replyId) {
+  const news = appData.dailyNews.find(n => n.id === newsId);
+  const comment = news?.comments.find(c => c.id === commentId);
+  const reply = comment?.replies?.find(r => r.id === replyId);
+  if (!reply) return;
+  const idx = reply.likes.indexOf(currentUser.id);
+  if (idx === -1) reply.likes.push(currentUser.id);
+  else reply.likes.splice(idx, 1);
+  saveData();
+  renderCurrentTab();
+}
+
+function deleteNewsComment(newsId, commentId) {
+  const news = appData.dailyNews.find(n => n.id === newsId);
+  if (!news) return;
+  news.comments = news.comments.filter(c => c.id !== commentId);
+  saveData();
+  renderCurrentTab();
+}
+
+function deleteNewsReply(newsId, commentId, replyId) {
+  const news = appData.dailyNews.find(n => n.id === newsId);
+  const comment = news?.comments.find(c => c.id === commentId);
+  if (!comment || !comment.replies) return;
+  comment.replies = comment.replies.filter(r => r.id !== replyId);
+  saveData();
+  renderCurrentTab();
+}
+
+function openNewDailyNewsModal() {
+  if (currentUser.role !== 'teacher') return;
+  showModal(`
+    <div class="p-6">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="bg-[#06C755] text-white text-xs font-black px-2 py-0.5 rounded">TODAY</span>
+        <h3 class="text-lg font-bold text-slate-800">發布每日國際時事主題</h3>
+      </div>
+      <div class="space-y-3">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-bold text-slate-600 block mb-1">議題標籤</label>
+            <input id="newsTagInput" type="text" placeholder="如：科技與倫理、國際經濟" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-600 block mb-1">新聞來源</label>
+            <input id="newsSourceInput" type="text" placeholder="如：路透社 / 聯合報國際" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">新聞頭條標題</label>
+          <input id="newsTitleInput" type="text" placeholder="請輸入國際新聞標題..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">新聞事件摘要</label>
+          <textarea id="newsSummaryInput" rows="3" placeholder="簡述新聞背景與正反雙方觀點..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></textarea>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">引導學生思辨提問</label>
+          <input id="newsPromptInput" type="text" placeholder="例如：💡 思辨提問：你支持這項政策嗎？為什麼？" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">取消</button>
+        <button onclick="createDailyNews()" class="px-4 py-2 text-sm bg-[#06C755] text-white font-bold rounded-lg hover:bg-emerald-600">立即上架看板</button>
+      </div>
+    </div>
+  `);
+}
+
+function createDailyNews() {
+  const tag = document.getElementById('newsTagInput').value.trim() || '國際焦點';
+  const source = document.getElementById('newsSourceInput').value.trim() || '精選國際新聞';
+  const title = document.getElementById('newsTitleInput').value.trim();
+  const summary = document.getElementById('newsSummaryInput').value.trim();
+  const discussionPrompt = document.getElementById('newsPromptInput').value.trim() || '💡 思辨提問：看完這則新聞，你有什麼想法？歡迎在下方留言分享！';
+
+  if (!title || !summary) return alert('請填寫新聞標題與事件摘要');
+
+  const gradients = [
+    'from-blue-600 via-indigo-600 to-violet-700',
+    'from-emerald-600 via-teal-600 to-cyan-700',
+    'from-rose-600 via-pink-600 to-orange-600'
+  ];
+  const randomGrad = gradients[Math.floor(Math.random() * gradients.length)];
+
+  const newPost = {
+    id: 'NEWS' + Date.now(),
+    date: TODAY_STR,
+    tag,
+    source,
+    title,
+    summary,
+    discussionPrompt,
+    coverGradient: randomGrad,
+    coverIcon: 'newspaper',
+    likes: [],
+    comments: []
+  };
+
+  appData.dailyNews.unshift(newPost);
+  selectedNewsId = newPost.id;
+  saveData();
+  closeModal();
+  renderCurrentTab();
+}
+
+function deleteDailyNews(id) {
+  if (currentUser.role !== 'teacher') return;
+  if (!confirm('確定要刪除這則時事看板主題嗎？')) return;
+  appData.dailyNews = appData.dailyNews.filter(n => n.id !== id);
+  selectedNewsId = appData.dailyNews[0]?.id || null;
+  saveData();
+  renderCurrentTab();
+}
+
+// ==================== 6. 模組：每日點名與情緒量表 (Mood Meter) ====================
 function renderAttendance(container) {
   if (!appData.attendance[TODAY_STR]) appData.attendance[TODAY_STR] = {};
   const todayRecords = appData.attendance[TODAY_STR];
@@ -800,7 +1319,6 @@ function renderAttendance(container) {
   if (currentUser.role === 'student') {
     const myRec = todayRecords[currentUser.id];
     if (myRec) {
-      // 學生已完成今日打卡與情緒回報
       const m = myRec.mood;
       const qInfo = m ? QUADRANT_INFO[m.q] : null;
       container.innerHTML = `
@@ -839,15 +1357,12 @@ function renderAttendance(container) {
       return;
     }
 
-    // 學生尚未打卡：顯示完整 10x10 情緒量表 (Mood Meter) 互動網格
     let gridHtml = '';
     for (let r = 0; r < 10; r++) {
       for (let c = 0; c < 10; c++) {
         const item = MOOD_METER_GRID[r][c];
         const qStyle = QUADRANT_INFO[item.q].cellBg;
         const isSelected = tempSelectedMood && tempSelectedMood.r === r && tempSelectedMood.c === c;
-        const energyVal = 10 - r;
-        const pleasantVal = c + 1;
         gridHtml += `
           <button type="button"
             onclick="selectMoodCell(${r}, ${c})"
@@ -866,10 +1381,8 @@ function renderAttendance(container) {
         <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
           <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
             <div>
-              <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                <span>🎯 步驟一：請點選最符合你現在感受的「情緒量表 (Mood Meter)」格子</span>
-              </h3>
-              <p class="text-xs text-slate-500 mt-0.5">參考 Marc Brackett 情緒量表：越上方代表「活力越高」，越右方代表「愉悅度越高」。老師會透過你的選擇了解是否需要關心你喔！</p>
+              <h3 class="text-lg font-bold text-slate-800">🎯 步驟一：請點選最符合你現在感受的「情緒量表 (Mood Meter)」格子</h3>
+              <p class="text-xs text-slate-500 mt-0.5">參考 Marc Brackett 情緒量表：越上方代表「活力越高」，越右方代表「愉悅度越高」。</p>
             </div>
             <div class="flex flex-wrap gap-1.5 text-[11px] font-bold">
               <span class="px-2 py-1 rounded bg-rose-100 text-rose-800">紅區：高活力/低愉悅</span>
@@ -879,9 +1392,7 @@ function renderAttendance(container) {
             </div>
           </div>
 
-          <!-- 座標軸與 10x10 情緒網格 -->
           <div class="flex gap-2 items-stretch overflow-x-auto pb-2">
-            <!-- Y 軸：活力指標 -->
             <div class="flex flex-col justify-between items-center py-2 px-1 bg-slate-100 rounded-lg text-[11px] font-bold text-slate-600 shrink-0 select-none">
               <span>高活力</span>
               <span class="text-slate-400">↑</span>
@@ -894,7 +1405,6 @@ function renderAttendance(container) {
               <div class="grid grid-cols-10 gap-1">
                 ${gridHtml}
               </div>
-              <!-- X 軸：愉悅度指標 -->
               <div class="mt-2 flex items-center justify-between px-3 py-1.5 bg-slate-100 rounded-lg text-[11px] font-bold text-slate-600 select-none">
                 <span>← 低愉悅度 (Low Pleasantness)</span>
                 <span class="text-slate-700">愉悅程度</span>
@@ -903,7 +1413,6 @@ function renderAttendance(container) {
             </div>
           </div>
 
-          <!-- 步驟二：確認選擇並填寫一句話 -->
           <div class="mt-5 pt-5 border-t border-slate-200 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
             <div class="flex-1">
               ${tempSelectedMood ? `
@@ -914,7 +1423,7 @@ function renderAttendance(container) {
                   </span>
                   <span class="text-xs text-slate-400 font-mono">活力 ${tempSelectedMood.energy}/10 ・ 愉悅 ${tempSelectedMood.pleasantness}/10</span>
                 </div>
-                <input id="moodNoteInput" type="text" placeholder="想跟老師補充的原因或悄悄話（選填，例如：昨晚沒睡好、期待體育課...）" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <input id="moodNoteInput" type="text" placeholder="想跟老師補充的原因或悄悄話（選填）" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
               ` : `
                 <div class="text-sm text-amber-600 font-bold flex items-center gap-2">
                   <i data-lucide="mouse-pointer-click" class="w-4 h-4"></i>
@@ -934,10 +1443,9 @@ function renderAttendance(container) {
       </div>
     `;
   } else {
-    // ==================== 教師端：點名統計 + 情緒量表關懷雷達 ====================
     let presentCount = 0, lateCount = 0, leaveCount = 0, absentCount = 0;
     let qCounts = { red: 0, yellow: 0, blue: 0, green: 0 };
-    let careStudents = []; // 紅區或藍區需要老師關心的學生
+    let careStudents = [];
 
     appData.students.forEach(s => {
       const r = todayRecords[s.id];
@@ -956,7 +1464,6 @@ function renderAttendance(container) {
 
     container.innerHTML = `
       <div class="space-y-6">
-        <!-- 1. 出缺勤與情緒象限統計卡 -->
         <div class="grid grid-cols-2 lg:grid-cols-6 gap-3">
           <div class="bg-white p-4 rounded-xl border border-slate-200">
             <div class="text-xs font-bold text-slate-400">準時 / 遲到 / 未到</div>
@@ -984,7 +1491,6 @@ function renderAttendance(container) {
           </div>
         </div>
 
-        <!-- 2. 優先關懷提醒區（自動篩選紅區與藍區學生） -->
         ${careStudents.length > 0 ? `
           <div class="bg-gradient-to-r from-rose-50 via-amber-50/50 to-sky-50 rounded-2xl border border-rose-200/80 p-5">
             <div class="flex items-center justify-between mb-3">
@@ -1020,7 +1526,6 @@ function renderAttendance(container) {
           </div>
         ` : ''}
 
-        <!-- 3. 全班點名與今日心情完整名冊 -->
         <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
           <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
             <span class="font-bold text-slate-700">今日班級點名與心情紀錄總表 (${TODAY_STR})</span>
@@ -1178,7 +1683,7 @@ function exportAttendanceCSV() {
   link.click();
 }
 
-// ==================== 6. 模組二：班級課表系統 ====================
+// ==================== 7. 模組：班級課表系統 ====================
 function renderTimetable(container) {
   const days = ['週一', '週二', '週三', '週四', '週五'];
   const periods = [
@@ -1334,7 +1839,7 @@ function processImportTimetable() {
   renderCurrentTab();
 }
 
-// ==================== 7. 模組三：隔日作業聯絡簿提醒 (無上傳功能) ====================
+// ==================== 8. 模組：隔日作業聯絡簿提醒 ====================
 function renderHomeworkReminders(container) {
   const isTeacher = currentUser.role === 'teacher';
   const sortedList = [...appData.homeworkReminders].sort((a, b) => a.dueDate.localeCompare(b.dueDate));
@@ -1492,7 +1997,7 @@ function deleteHomeworkReminder(hwId) {
   renderCurrentTab();
 }
 
-// ==================== 8. 模組四：班級考試行事曆 ====================
+// ==================== 9. 模組：班級考試行事曆 ====================
 function renderExamCalendar(container) {
   const isTeacher = currentUser.role === 'teacher';
   const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
@@ -1708,7 +2213,7 @@ function deleteExam(id) {
   renderCurrentTab();
 }
 
-// ==================== 9. 模組五：課程公告發布 ====================
+// ==================== 10. 模組：課程公告發布 ====================
 function renderAnnouncements(container) {
   const sorted = [...appData.announcements].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
   const isTeacher = currentUser.role === 'teacher';
@@ -1836,7 +2341,7 @@ function deleteAnnouncement(id) {
   renderCurrentTab();
 }
 
-// ==================== 10. 模組六：師生一對一私訊 ====================
+// ==================== 11. 模組：師生一對一私訊 ====================
 function renderMessages(container) {
   if (currentUser.role === 'student') {
     const chatList = appData.messages[currentUser.id] || [];
@@ -2016,7 +2521,7 @@ function updateUnreadBadge() {
   }
 }
 
-// ==================== 11. 模組七（教師專屬權限）：學生帳號與名冊管理 ====================
+// ==================== 12. 模組：學生帳號與名冊管理 ====================
 function renderRoster(container) {
   if (currentUser.role !== 'teacher') return;
   container.innerHTML = `
@@ -2125,7 +2630,7 @@ function createStudentByTeacher() {
   renderCurrentTab();
 }
 
-// ==================== 12. 通用 Modal 控制 ====================
+// ==================== 13. 通用 Modal 控制 ====================
 function showModal(html) {
   const backdrop = document.getElementById('modalBackdrop');
   document.getElementById('modalContent').innerHTML = html;
