@@ -2331,4 +2331,637 @@ function openCleaningModal() {
 }
 function saveCleaning() {
   const zone = document.getElementById('clnZoneInput').value.trim();
-  const time = document.getElementById('cln
+  const time = document.getElementById('clnTimeInput').value.trim();
+  const tools = document.getElementById('clnToolsInput').value.trim();
+  const note = document.getElementById('clnNoteInput').value.trim();
+  const studentIds = Array.from(document.querySelectorAll('input[name="clnStudentCheck"]:checked')).map(el => el.value);
+  if (!zone || studentIds.length === 0) return;
+  appData.cleaningDuties.push({ id: 'CLN' + Date.now(), zone, studentIds, time, tools, note });
+  saveData(); closeModal(); renderCurrentTab();
+}
+
+// ==================== 11. 班級行事曆（直式精簡月曆＋日程清單／橫式完整月曆） ====================
+function renderExamCalendar(container) {
+  const isTeacher = currentUser.role === 'teacher';
+  const isPortrait = effectiveLayout === 'portrait';
+  const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+  const currentMonthStr = String(calMonth + 1).padStart(2, '0');
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+  const monthBirthdays = appData.students
+    .filter(s => s.privateInfo && s.privateInfo.birthday && s.privateInfo.birthday.split('-')[1] === currentMonthStr)
+    .map(s => {
+      const parts = s.privateInfo.birthday.split('-');
+      return { studentId: s.id, seat: s.seat, name: s.name, monthDay: `${parts[1]}-${parts[2]}`, dayNum: parseInt(parts[2], 10) };
+    }).sort((a, b) => a.dayNum - b.dayNum);
+
+  const upcomingExams = [...appData.exams].filter(ex => ex.date >= TODAY_STR).sort((a, b) => a.date.localeCompare(b.date));
+
+  let calendarCells = '';
+  for (let i = 0; i < firstDay; i++) calendarCells += `<div class="${isPortrait ? 'min-h-[54px]' : 'min-h-[100px]'} bg-slate-50/60 border-b border-r border-slate-200 p-1"></div>`;
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dayPad = String(day).padStart(2, '0');
+    const dateStr = `${calYear}-${currentMonthStr}-${dayPad}`;
+    const dayExams = appData.exams.filter(ex => ex.date === dateStr);
+    const dayBirthdays = showBirthdaysOnCalendar ? monthBirthdays.filter(b => b.dayNum === day) : [];
+    const isToday = dateStr === TODAY_STR;
+
+    calendarCells += `
+      <div onclick="${isTeacher ? `openAddExamModal('${dateStr}')` : ''}" class="${isPortrait ? 'min-h-[54px]' : 'min-h-[100px]'} bg-white border-b border-r border-slate-200 p-1 sm:p-1.5 flex flex-col justify-between ${isTeacher ? 'cursor-pointer hover:bg-indigo-50/40' : ''}">
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] sm:text-xs font-bold w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center ${isToday ? 'bg-indigo-600 text-white' : 'text-slate-700'}">${day}</span>
+          ${dayBirthdays.length > 0 ? `<span class="text-[11px]">🎂</span>` : ''}
+        </div>
+        ${isPortrait ? `
+          <div class="flex items-center gap-1 mt-1">
+            ${dayBirthdays.length > 0 ? `<span class="w-2 h-2 rounded-full bg-pink-500"></span>` : ''}
+            ${dayExams.length > 0 ? `<span class="w-2 h-2 rounded-full bg-sky-500"></span>` : ''}
+          </div>
+        ` : `
+          <div class="space-y-1 mt-1">
+            ${dayBirthdays.map(b => `<div onclick="event.stopPropagation(); jumpToStudentProfile('${b.studentId}')" class="text-[11px] font-bold px-1.5 py-0.5 rounded border bg-pink-50 text-pink-700 border-pink-200 truncate cursor-pointer">🎂 ${b.name} 生日</div>`).join('')}
+            ${dayExams.map(ex => `<div class="text-[11px] font-bold px-1.5 py-0.5 rounded border truncate bg-sky-100 text-sky-700 border-sky-200">${ex.subject}｜${ex.title}</div>`).join('')}
+          </div>
+        `}
+      </div>
+    `;
+  }
+
+  container.innerHTML = `
+    <div class="grid grid-cols-1 ${isPortrait ? '' : 'lg:grid-cols-12'} gap-5 sm:gap-6">
+      <div class="${isPortrait ? '' : 'lg:col-span-8'} bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+        <div class="p-3.5 sm:p-4 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2.5 bg-slate-50/70">
+          <div class="flex items-center gap-2 sm:gap-3">
+            <button onclick="changeCalMonth(-1)" class="p-1.5 rounded-lg border border-slate-300 bg-white cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+            <h3 class="text-sm sm:text-base font-bold text-slate-800">${calYear} 年 ${monthNames[calMonth]}</h3>
+            <button onclick="changeCalMonth(1)" class="p-1.5 rounded-lg border border-slate-300 bg-white cursor-pointer"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="showBirthdaysOnCalendar=!showBirthdaysOnCalendar; renderCurrentTab();" class="text-xs font-bold px-2.5 py-1.5 rounded-lg border bg-pink-50 text-pink-700 border-pink-200 cursor-pointer">
+              🎂 生日：${showBirthdaysOnCalendar ? '開' : '關'}
+            </button>
+            ${isTeacher ? `<button onclick="openAddExamModal('${TOMORROW_STR}')" class="bg-indigo-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer">+ 新增考試</button>` : ''}
+          </div>
+        </div>
+        <div class="grid grid-cols-7 bg-slate-100/80 border-b border-slate-200 text-center text-[11px] sm:text-xs font-bold text-slate-600 py-2">
+          <div class="text-rose-500">日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div class="text-emerald-600">六</div>
+        </div>
+        <div class="grid grid-cols-7 border-l border-slate-200">${calendarCells}</div>
+      </div>
+
+      <div class="${isPortrait ? '' : 'lg:col-span-4'} space-y-5">
+        <div class="bg-pink-50 rounded-2xl border border-pink-200 p-4 sm:p-5">
+          <h3 class="font-black text-pink-900 text-sm mb-3">🎂 ${monthNames[calMonth]}班級壽星榜</h3>
+          <div class="space-y-2">
+            ${monthBirthdays.map(b => `
+              <div onclick="jumpToStudentProfile('${b.studentId}')" class="bg-white p-3 rounded-xl border border-pink-200 flex items-center justify-between cursor-pointer">
+                <span class="font-bold text-sm text-slate-800">${b.monthDay} · ${b.seat}號 ${b.name}</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-pink-400"></i>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5">
+          <h3 class="font-bold text-slate-800 text-sm sm:text-base mb-3">近期考試日程</h3>
+          <div class="space-y-2.5">
+            ${upcomingExams.map(ex => `<div class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs"><strong>${ex.date} ${ex.subject}</strong>：${ex.title}（${ex.scope}）</div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function changeCalMonth(delta) {
+  calMonth += delta;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  else if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCurrentTab();
+}
+function openAddExamModal(defaultDate) {
+  showModal(`
+    <div class="p-6">
+      <h3 class="text-lg font-bold text-slate-800 mb-4">新增班級考試日程</h3>
+      <div class="space-y-3">
+        <input id="examDate" type="date" value="${defaultDate}" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <input id="examSubj" type="text" placeholder="考試科目" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <input id="examTitle" type="text" placeholder="考試名稱" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <textarea id="examScope" rows="2" placeholder="考試範圍" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></textarea>
+      </div>
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600">取消</button>
+        <button onclick="createExam()" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg">儲存</button>
+      </div>
+    </div>
+  `);
+}
+function createExam() {
+  const date = document.getElementById('examDate').value;
+  const subject = document.getElementById('examSubj').value.trim();
+  const title = document.getElementById('examTitle').value.trim();
+  const scope = document.getElementById('examScope').value.trim();
+  if (!date || !subject || !title) return;
+  appData.exams.push({ id: 'EX' + Date.now(), date, type: '平時小考', subject, period: '依課表', title, scope: scope || '依課堂宣布' });
+  saveData(); closeModal(); renderCurrentTab();
+}
+
+// ==================== 12. 自我介紹設定與個資 ====================
+function renderStudentProfilesHub(container) {
+  const isTeacher = currentUser.role === 'teacher';
+  const isPortrait = effectiveLayout === 'portrait';
+  const targetStudent = appData.students.find(s => s.id === viewingStudentProfileId) || appData.students[0];
+  viewingStudentProfileId = targetStudent.id;
+  const isViewingSelf = !isTeacher && targetStudent.id === currentUser.id;
+  const canViewSensitiveInfo = isTeacher || isViewingSelf;
+
+  const pub = targetStudent.publicProfile || {};
+  const priv = targetStudent.privateInfo || {};
+
+  container.innerHTML = `
+    <div class="max-w-5xl mx-auto space-y-5 sm:space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-slate-500">高二忠班同學錄</span>
+          ${!isTeacher ? `<button onclick="openEditStudentProfileModal('${currentUser.id}', false)" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200 cursor-pointer">編輯我的自介</button>` : ''}
+        </div>
+        <div class="flex items-center gap-3.5 overflow-x-auto pb-1">
+          ${appData.students.map(s => `
+            <button onclick="viewingStudentProfileId='${s.id}'; renderCurrentTab();" class="flex flex-col items-center gap-1 shrink-0 cursor-pointer">
+              <div class="w-12 h-12 rounded-full ${s.id===targetStudent.id ? 'ig-ring' : 'bg-slate-200 p-[2px]'}">
+                <div class="w-full h-full rounded-full bg-gradient-to-tr ${s.publicProfile?.avatarGrad || 'from-slate-500 to-slate-700'} text-white font-black text-sm flex items-center justify-center border-2 border-white">
+                  ${s.name.slice(-1)}
+                </div>
+              </div>
+              <span class="text-xs font-bold">${s.seat} ${s.name}</span>
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 ${isPortrait ? '' : 'lg:grid-cols-12'} gap-5 sm:gap-6">
+        <div class="${isPortrait ? '' : 'lg:col-span-7'} bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-full ig-ring shrink-0">
+              <div class="w-full h-full rounded-full bg-gradient-to-tr ${pub.avatarGrad || 'from-indigo-500 to-purple-600'} text-white font-black text-xl flex items-center justify-center border-2 border-white">
+                ${targetStudent.name.slice(-2)}
+              </div>
+            </div>
+            <div>
+              <h3 class="text-lg font-black text-slate-900">${targetStudent.seat}號 ${targetStudent.name}</h3>
+              <div class="text-xs text-slate-500">MBTI：${pub.mbti || '未設定'} ｜ 榮譽點數：⭐ ${targetStudent.points || 0} 點</div>
+            </div>
+          </div>
+          <p class="text-sm text-slate-700 whitespace-pre-line bg-slate-50 p-4 rounded-2xl">${pub.bio || '尚未填寫自介'}</p>
+        </div>
+
+        <div class="${isPortrait ? '' : 'lg:col-span-5'}">
+          ${canViewSensitiveInfo ? `
+            <div class="bg-white rounded-3xl border-2 border-indigo-200 p-5 space-y-2 text-xs">
+              <div class="font-black text-indigo-700 text-sm mb-2">🔒 導師專用基本個資</div>
+              <div>🎂 出生年月日：<strong>${priv.birthday || '未填寫'}</strong></div>
+              <div>👨‍👩‍👦 家長姓名：<strong>${priv.parentName || '未填寫'}</strong></div>
+              <div class="text-rose-700 font-bold">📞 父母電話：${priv.parentPhone || '未填寫'}</div>
+              <div>🏠 住址：${priv.address || '未填寫'}</div>
+              <div>🏥 健康備註：${priv.healthNote || '無'}</div>
+            </div>
+          ` : `
+            <div class="bg-white rounded-3xl border border-slate-200 p-6 text-center text-xs text-slate-500">
+              🔒 父母電話與個資僅限班導師查閱
+            </div>
+          `}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function openEditStudentProfileModal(studentId, isFirstTimeGuide = false) {
+  const st = appData.students.find(s => s.id === studentId);
+  if (!st) return;
+  const pub = st.publicProfile || { bio: '' };
+  const priv = st.privateInfo || { birthday: '', parentPhone: '' };
+  showModal(`
+    <div class="p-6">
+      <h3 class="text-lg font-black text-slate-800 mb-4">${st.seat}號 ${st.name} 的個人檔案設定</h3>
+      <form onsubmit="saveStudentProfile(event, '${st.id}')" class="space-y-4">
+        <textarea id="profBio" rows="3" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">${pub.bio}</textarea>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input id="privBirth" type="date" required value="${priv.birthday}" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm">
+          <input id="privParentPhone" type="tel" required value="${priv.parentPhone}" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm">
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          ${!isFirstTimeGuide ? `<button type="button" onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600">取消</button>` : ''}
+          <button type="submit" class="px-5 py-2 text-sm bg-emerald-600 text-white font-bold rounded-xl">儲存</button>
+        </div>
+      </form>
+    </div>
+  `);
+}
+
+function saveStudentProfile(e, studentId) {
+  e.preventDefault();
+  const st = appData.students.find(s => s.id === studentId);
+  st.publicProfile.bio = document.getElementById('profBio').value.trim();
+  st.privateInfo.birthday = document.getElementById('privBirth').value;
+  st.privateInfo.parentPhone = document.getElementById('privParentPhone').value.trim();
+  st.profileCompleted = true;
+  saveData(); closeModal(); enterMainApp(); switchTab('profiles');
+}
+
+// ==================== 13. 每日時事看板・課表（直式單日分段／橫式週課表）・作業・公告・私訊 ====================
+function renderDailyNewsBoard(container) {
+  const activeNews = appData.dailyNews.find(n => n.id === selectedNewsId) || appData.dailyNews[0];
+  const isLikedByMe = activeNews.likes.includes(currentUser.id);
+  container.innerHTML = `
+    <div class="max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+      <div class="px-5 py-3 bg-[#06C755] text-white flex items-center justify-between">
+        <span class="font-black text-sm">TODAY 每日國際時事焦點</span>
+        <span class="text-xs font-mono">${activeNews.date}</span>
+      </div>
+      <div class="bg-gradient-to-br ${activeNews.coverGradient} p-5 sm:p-6 text-white">
+        <span class="bg-white/20 text-xs font-bold px-2.5 py-1 rounded-full"># ${activeNews.tag}</span>
+        <h3 class="text-lg sm:text-xl font-black mt-2">${activeNews.title}</h3>
+      </div>
+      <div class="p-5 sm:p-6 space-y-4">
+        <p class="text-sm text-slate-700 leading-relaxed">${activeNews.summary}</p>
+        <div class="bg-emerald-50 border-l-4 border-[#06C755] p-4 rounded-r-xl text-sm font-bold text-slate-800">${activeNews.discussionPrompt}</div>
+        <button onclick="toggleNewsLike('${activeNews.id}')" class="flex items-center gap-1.5 text-sm font-bold ${isLikedByMe ? 'text-rose-600' : 'text-slate-600'} cursor-pointer">
+          <i data-lucide="heart" class="w-5 h-5 ${isLikedByMe ? 'fill-rose-500 text-rose-500' : ''}"></i> ${activeNews.likes.length} 個讚
+        </button>
+        <div class="pt-4 border-t border-slate-100 space-y-3">
+          ${activeNews.comments.map(c => `<div class="text-sm bg-slate-50 p-3 rounded-xl"><strong>${c.authorName}：</strong><span>${c.text}</span></div>`).join('')}
+          <form onsubmit="submitNewsComment(event, '${activeNews.id}')" class="flex gap-2 pt-2">
+            <input id="igCommentInput" type="text" required placeholder="發表你的觀點..." class="flex-1 bg-slate-100 rounded-full px-4 py-2 text-sm">
+            <button type="submit" class="text-sm font-black text-[#06C755] px-3 cursor-pointer">發佈</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleNewsLike(newsId) {
+  const news = appData.dailyNews.find(n => n.id === newsId);
+  const idx = news.likes.indexOf(currentUser.id);
+  if (idx === -1) news.likes.push(currentUser.id);
+  else news.likes.splice(idx, 1);
+  saveData(); renderCurrentTab();
+}
+
+function submitNewsComment(e, newsId) {
+  e.preventDefault();
+  const text = document.getElementById('igCommentInput').value.trim();
+  if (!text) return;
+  const news = appData.dailyNews.find(n => n.id === newsId);
+  news.comments.push({
+    id: 'C' + Date.now(),
+    authorId: currentUser.id,
+    authorName: currentUser.role === 'teacher' ? currentUser.name : `${currentUser.seat}號 ${currentUser.name}`,
+    text,
+    time: new Date().toTimeString().slice(0, 5)
+  });
+  saveData(); renderCurrentTab();
+}
+
+function jumpToStudentProfile(studentId) {
+  if (!appData.students.some(s => s.id === studentId)) return;
+  viewingStudentProfileId = studentId;
+  switchTab('profiles');
+}
+
+function openCareChat(studentId) {
+  selectedChatStudentId = studentId;
+  switchTab('messages');
+  if (effectiveLayout === 'portrait') {
+    document.body.classList.add('chat-viewing-thread');
+  }
+}
+
+function renderTimetable(container) {
+  const days = ['週一', '週二', '週三', '週四', '週五'];
+  const periods = [1, 2, 3, 4, 5, 6, 7];
+  const isTeacher = currentUser.role === 'teacher';
+  const isPortrait = effectiveLayout === 'portrait';
+
+  if (isPortrait) {
+    // 直式手機版：頂部「週一～週五」分段切換列＋單日大字節次卡片
+    container.innerHTML = `
+      <div class="space-y-4">
+        <div class="grid grid-cols-5 gap-1.5 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-2xs">
+          ${days.map((d, idx) => {
+            const dayNum = idx + 1;
+            const active = selectedTimetableDay === dayNum;
+            return `
+              <button onclick="selectedTimetableDay=${dayNum}; renderCurrentTab();" class="py-2 rounded-xl text-xs font-black transition cursor-pointer ${
+                active ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-600 hover:bg-slate-100'
+              }">${d}</button>
+            `;
+          }).join('')}
+        </div>
+
+        <div class="space-y-2.5">
+          ${periods.map(p => {
+            const key = `${selectedTimetableDay}-${p}`;
+            const cell = appData.timetable[key];
+            return `
+              <div onclick="${isTeacher ? `openEditCellModal('${key}')` : ''}" class="bg-white rounded-2xl border border-slate-200 p-4 flex items-center justify-between ${isTeacher ? 'cursor-pointer active:bg-indigo-50' : ''}">
+                <div class="flex items-center gap-3.5">
+                  <span class="w-12 h-12 rounded-xl bg-slate-100 text-slate-700 font-black text-xs flex items-center justify-center shrink-0">第 ${p} 節</span>
+                  <div>
+                    ${cell && cell.subject
+                      ? `<div class="font-black text-base text-indigo-950">${cell.subject}</div>
+                         <div class="text-xs text-slate-500 mt-0.5">👨‍🏫 ${cell.teacher || '未設定'} ｜ 📍 ${cell.room || '教室201'}</div>`
+                      : `<div class="text-sm font-bold text-slate-400">空堂／自習</div>`
+                    }
+                  </div>
+                </div>
+                ${isTeacher ? `<i data-lucide="edit-3" class="w-4 h-4 text-slate-400"></i>` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // 橫式版：完整週一至週五 7 節課大表格
+  container.innerHTML = `
+    <div class="bg-white rounded-xl border border-slate-200 overflow-x-auto shadow-xs">
+      <table class="w-full text-center border-collapse min-w-[650px]">
+        <thead>
+          <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-600">
+            <th class="py-3 px-4 border-r border-slate-200">節次</th>
+            ${days.map(d => `<th class="py-3 px-4 border-r border-slate-200">${d}</th>`).join('')}
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 text-sm">
+          ${periods.map(p => `
+            <tr>
+              <td class="py-3 px-3 border-r border-slate-200 bg-slate-50/50 font-bold">第 ${p} 節</td>
+              ${[1,2,3,4,5].map(dayIdx => {
+                const key = `${dayIdx}-${p}`;
+                const cell = appData.timetable[key];
+                return `
+                  <td onclick="${isTeacher ? `openEditCellModal('${key}')` : ''}" class="p-2.5 border-r border-slate-200 ${isTeacher ? 'cursor-pointer hover:bg-indigo-50/60' : ''}">
+                    ${cell && cell.subject ? `<div class="font-bold text-indigo-900">${cell.subject}</div><div class="text-xs text-slate-400">${cell.teacher || ''}</div>` : '-'}
+                  </td>
+                `;
+              }).join('')}
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function openEditCellModal(key) {
+  const cell = appData.timetable[key] || { subject: '', teacher: '', room: '' };
+  showModal(`
+    <div class="p-6">
+      <h3 class="text-lg font-bold text-slate-800 mb-4">編輯課表節次</h3>
+      <div class="space-y-3">
+        <input id="editSubj" type="text" value="${cell.subject}" placeholder="科目名稱" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <input id="editTeach" type="text" value="${cell.teacher}" placeholder="任課教師" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <input id="editRoom" type="text" value="${cell.room}" placeholder="上課地點" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+      </div>
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600">取消</button>
+        <button onclick="saveTimetableCell('${key}')" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg">儲存</button>
+      </div>
+    </div>
+  `);
+}
+
+function saveTimetableCell(key) {
+  const subject = document.getElementById('editSubj').value.trim();
+  const teacher = document.getElementById('editTeach').value.trim();
+  const room = document.getElementById('editRoom').value.trim();
+  if (!subject) delete appData.timetable[key];
+  else appData.timetable[key] = { subject, teacher, room };
+  saveData(); closeModal(); renderCurrentTab();
+}
+
+function renderHomeworkReminders(container) {
+  const isTeacher = currentUser.role === 'teacher';
+  container.innerHTML = `
+    <div class="max-w-4xl mx-auto space-y-4">
+      ${isTeacher ? `<div class="flex justify-end"><button onclick="openNewHomeworkReminderModal()" class="bg-indigo-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer">+ 新增作業提醒</button></div>` : ''}
+      ${appData.homeworkReminders.map(hw => {
+        const isChecked = hw.checkedBy && hw.checkedBy.includes(currentUser.id);
+        return `
+          <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <span class="text-xs font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">${hw.subject}</span>
+              <span class="text-xs font-mono text-slate-400 ml-2">繳交日：${hw.dueDate}</span>
+              <h4 class="font-bold text-slate-800 mt-1">${hw.title}</h4>
+              <p class="text-xs text-slate-500 mt-0.5">${hw.note || ''}</p>
+            </div>
+            ${!isTeacher ? `
+              <button onclick="toggleHomeworkCheck('${hw.id}')" class="text-xs font-bold px-3.5 py-2 rounded-lg border ${isChecked ? 'bg-emerald-600 text-white' : 'bg-white text-slate-600'} cursor-pointer">
+                ${isChecked ? '✓ 已備妥' : '標記已備妥'}
+              </button>
+            ` : ''}
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function openNewHomeworkReminderModal() {
+  showModal(`
+    <div class="p-6">
+      <h3 class="text-lg font-bold text-slate-800 mb-4">新增作業繳交提醒</h3>
+      <div class="space-y-3">
+        <input id="hwRemSubj" type="text" placeholder="科目名稱" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <input id="hwRemDate" type="date" value="${TOMORROW_STR}" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <input id="hwRemTitle" type="text" placeholder="作業項目名稱" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <input id="hwRemNote" type="text" placeholder="備註提醒" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+      </div>
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600">取消</button>
+        <button onclick="createHomeworkReminder()" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg">發布</button>
+      </div>
+    </div>
+  `);
+}
+
+function createHomeworkReminder() {
+  const subject = document.getElementById('hwRemSubj').value.trim();
+  const dueDate = document.getElementById('hwRemDate').value;
+  const title = document.getElementById('hwRemTitle').value.trim();
+  const note = document.getElementById('hwRemNote').value.trim();
+  if (!subject || !title) return;
+  appData.homeworkReminders.push({ id: 'HW' + Date.now(), subject, dueDate, title, note, checkedBy: [] });
+  saveData(); closeModal(); renderCurrentTab();
+}
+
+function toggleHomeworkCheck(hwId) {
+  const hw = appData.homeworkReminders.find(h => h.id === hwId);
+  if (!hw.checkedBy) hw.checkedBy = [];
+  const idx = hw.checkedBy.indexOf(currentUser.id);
+  if (idx === -1) hw.checkedBy.push(currentUser.id);
+  else hw.checkedBy.splice(idx, 1);
+  saveData(); renderCurrentTab();
+}
+
+function renderAnnouncements(container) {
+  const isTeacher = currentUser.role === 'teacher';
+  container.innerHTML = `
+    <div class="max-w-4xl mx-auto space-y-4">
+      ${isTeacher ? `<div class="flex justify-end"><button onclick="openNewAnnouncementModal()" class="bg-indigo-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer">+ 發布新公告</button></div>` : ''}
+      ${appData.announcements.map(ann => `
+        <div class="bg-white rounded-xl border border-slate-200 p-5 sm:p-6">
+          <div class="text-xs text-slate-400 mb-1">${ann.category} · ${ann.date}</div>
+          <h3 class="text-base sm:text-lg font-bold text-slate-800">${ann.title}</h3>
+          <p class="text-sm text-slate-600 mt-2 leading-relaxed">${ann.content}</p>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function openNewAnnouncementModal() {
+  showModal(`
+    <div class="p-6">
+      <h3 class="text-lg font-bold text-slate-800 mb-4">發布每日課程最新公告</h3>
+      <div class="space-y-3">
+        <input id="annTitle" type="text" placeholder="公告標題" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <textarea id="annContent" rows="4" placeholder="公告內容" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></textarea>
+      </div>
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600">取消</button>
+        <button onclick="createAnnouncement()" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg">發布</button>
+      </div>
+    </div>
+  `);
+}
+
+function createAnnouncement() {
+  const title = document.getElementById('annTitle').value.trim();
+  const content = document.getElementById('annContent').value.trim();
+  if (!title || !content) return;
+  appData.announcements.unshift({ id: 'A' + Date.now(), title, category: '重要通知', content, pinned: false, author: currentUser.name, date: TODAY_STR, readBy: [] });
+  saveData(); closeModal(); renderCurrentTab();
+}
+
+function renderMessages(container) {
+  const isTeacher = currentUser.role === 'teacher';
+  const targetId = !isTeacher ? currentUser.id : selectedChatStudentId;
+  const targetStudent = appData.students.find(s => s.id === targetId);
+  const chatList = appData.messages[targetId] || [];
+
+  // 學生端永遠直接顯示與導師的對話視窗
+  if (!isTeacher && effectiveLayout === 'portrait') {
+    document.body.classList.add('chat-viewing-thread');
+  }
+
+  container.innerHTML = `
+    <div class="max-w-4xl mx-auto h-full flex bg-white rounded-2xl border border-slate-200 overflow-hidden">
+      ${isTeacher ? `
+        <div id="chatStudentSidebar" class="w-56 border-r border-slate-200 bg-slate-50 overflow-y-auto">
+          <div class="p-3 text-xs font-black text-slate-400 border-b border-slate-200">選擇對話學生</div>
+          ${appData.students.map(s => {
+            const lastMsg = (appData.messages[s.id] || []).slice(-1)[0];
+            return `
+              <button onclick="selectMobileChatStudent('${s.id}')" class="w-full p-3.5 text-left border-b border-slate-100 ${selectedChatStudentId===s.id?'bg-white text-indigo-700':'text-slate-700'} cursor-pointer">
+                <div class="font-bold text-sm">${s.seat}號 ${s.name}</div>
+                <div class="text-[11px] text-slate-400 truncate mt-0.5">${lastMsg ? lastMsg.text : '尚無私訊紀錄'}</div>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      ` : ''}
+      <div id="chatConversationPane" class="flex-1 flex flex-col min-w-0">
+        <div class="px-4 py-3 border-b border-slate-200 bg-white flex items-center gap-2.5">
+          ${isTeacher ? `
+            <button id="chatBackBtn" onclick="backToMobileChatList()" class="p-1.5 -ml-1 rounded-lg bg-slate-100 text-slate-700 items-center justify-center cursor-pointer">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            </button>
+          ` : ''}
+          <div class="font-black text-sm text-slate-800">
+            ${isTeacher ? `與 ${targetStudent?.seat}號 ${targetStudent?.name} 的一對一私訊` : `與導師（${appData.teachers[0]?.name || '陳老師'}）一對一私訊`}
+          </div>
+        </div>
+        <div class="flex-1 p-4 sm:p-5 overflow-y-auto space-y-3 bg-slate-50/40">
+          ${chatList.map(m => `
+            <div class="flex ${m.sender === currentUser.role ? 'justify-end' : 'justify-start'}">
+              <div class="max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${m.sender === currentUser.role ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-800'}">
+                <div>${m.text}</div>
+                <div class="text-[10px] opacity-70 mt-1 text-right">${m.time}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <form onsubmit="sendPrivateMessage(event, '${targetId}')" class="p-3 border-t border-slate-200 flex gap-2 bg-white">
+          <input id="msgInput" type="text" placeholder="輸入私訊內容..." class="flex-1 bg-slate-100 rounded-xl px-4 py-2 text-sm">
+          <button type="submit" class="bg-indigo-600 text-white font-bold px-4 sm:px-5 py-2 rounded-xl text-sm cursor-pointer shrink-0">發送</button>
+        </form>
+      </div>
+    </div>
+  `;
+}
+
+function selectMobileChatStudent(studentId) {
+  selectedChatStudentId = studentId;
+  if (effectiveLayout === 'portrait') {
+    document.body.classList.add('chat-viewing-thread');
+  }
+  renderCurrentTab();
+}
+
+function backToMobileChatList() {
+  document.body.classList.remove('chat-viewing-thread');
+}
+
+function sendPrivateMessage(e, studentId) {
+  e.preventDefault();
+  const text = document.getElementById('msgInput').value.trim();
+  if (!text) return;
+  if (!appData.messages[studentId]) appData.messages[studentId] = [];
+  appData.messages[studentId].push({ sender: currentUser.role, authorName: currentUser.name, text, time: new Date().toTimeString().slice(0, 5), read: false });
+  saveData(); renderCurrentTab();
+}
+
+function updateUnreadBadge() {
+  if (!currentUser) return;
+  let count = 0;
+  if (currentUser.role === 'teacher') {
+    Object.values(appData.messages).forEach(list => { count += list.filter(m => m.sender === 'student' && !m.read).length; });
+  } else {
+    const list = appData.messages[currentUser.id] || [];
+    count = list.filter(m => m.sender === 'teacher' && !m.read).length;
+  }
+  const badge = document.getElementById('unreadBadge');
+  const mobileBadge = document.getElementById('mobileUnreadBadge');
+  if (badge) {
+    badge.textContent = count;
+    badge.classList.toggle('hidden', count === 0);
+  }
+  if (mobileBadge) {
+    mobileBadge.textContent = count;
+    mobileBadge.classList.toggle('hidden', count === 0);
+  }
+}
+
+// ==================== 14. 通用 Modal 控制 ====================
+function showModal(html) {
+  const backdrop = document.getElementById('modalBackdrop');
+  document.getElementById('modalContent').innerHTML = html;
+  backdrop.classList.remove('hidden');
+  backdrop.classList.add('flex');
+}
+
+function closeModal() {
+  const backdrop = document.getElementById('modalBackdrop');
+  backdrop.classList.add('hidden');
+  backdrop.classList.remove('flex');
+}
+
+init();
+</script>
+</body>
+</html>
