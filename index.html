@@ -19,6 +19,20 @@
       background-size: 40px 40px;
       background-position: 0 0, 20px 20px;
     }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(1.5deg); }
+    }
+    .meme-float { animation: floatSlow 3.5s ease-in-out infinite; }
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.85) translateY(12px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .pop-in { animation: popIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .ig-ring {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      padding: 3px;
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-screen overflow-hidden">
@@ -39,7 +53,7 @@
         </div>
       </div>
       <div class="hidden sm:flex items-center gap-4 text-xs text-slate-500 font-medium">
-        <span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i> 師生單一帳號驗證</span>
+        <span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i> 個資分級權限保護</span>
         <span id="portalDate" class="font-mono bg-slate-100 px-2.5 py-1 rounded-md"></span>
       </div>
     </header>
@@ -52,10 +66,10 @@
         </div>
         <h2 class="text-3xl sm:text-4xl font-black text-slate-800 leading-tight">
           智慧化班級點名、<br>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">情緒關懷與國際時事思辨</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">學生個人檔案與班級互動</span>
         </h2>
         <p class="text-sm text-slate-600 leading-relaxed">
-          結合 Marc Brackett 情緒量表每日打卡、LINE TODAY 風格每日國際時事看板與 IG 互動討論串、班級課表、作業聯絡簿與師生私訊輔導，打造全方位班級數位學習空間。
+          結合 IG 風格班級個人自介牆、敏感個資（家長電話、緊急聯絡人、生日）教師專屬加密檢視、Marc Brackett 情緒量表每日打卡抽幸運迷因籤，以及 LINE TODAY 每日國際時事討論區。
         </p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
@@ -64,9 +78,9 @@
               <i data-lucide="award" class="w-4 h-4"></i> 教師管理權限
             </div>
             <ul class="text-xs text-slate-600 space-y-1">
+              <li>• 查閱全班學生基本個資（父母電話/生日/住址）</li>
               <li>• 全班點名與情緒量表四象限關懷總覽</li>
-              <li>• 發布每日國際時事專題與引導思辨討論</li>
-              <li>• 編輯課表、作業提醒、考試行事曆與私訊</li>
+              <li>• 發布國際時事、管理迷因籤與課表考試</li>
             </ul>
           </div>
           <div class="bg-white/90 p-4 rounded-2xl border border-emerald-100 shadow-2xs">
@@ -74,9 +88,9 @@
               <i data-lucide="user-check" class="w-4 h-4"></i> 學生學習權限
             </div>
             <ul class="text-xs text-slate-600 space-y-1">
-              <li>• 每日點選情緒量表完成上課打卡</li>
-              <li>• 閱讀每日國際新聞並於下方留言按讚思辨</li>
-              <li>• 查詢課表、考試日程、作業提醒與私訊導師</li>
+              <li>• 編輯 IG 個人自介牆並填寫導師專用聯絡資料</li>
+              <li>• 同學間僅能瀏覽公開自介，隱私個資完全保密</li>
+              <li>• 每日心情打卡抽迷因籤、國際時事思辨留言</li>
             </ul>
           </div>
         </div>
@@ -141,10 +155,10 @@
                 <div class="text-[11px] text-slate-400 mb-2 font-medium">快速體驗（點擊自動帶入帳號密碼與驗證碼）：</div>
                 <div class="grid grid-cols-2 gap-2">
                   <button type="button" onclick="quickFill('teacher', 'teacher', '1234')" class="py-1.5 px-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold text-center transition cursor-pointer">
-                    👨‍🏫 教師 (teacher)
+                    👨‍🏫 教師 (查閱全班個資)
                   </button>
                   <button type="button" onclick="quickFill('student', 'S05', '1234')" class="py-1.5 px-2.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold text-center transition cursor-pointer">
-                    🎓 學生 (S05 王柏翰)
+                    🎓 學生 (S05 首次填資料)
                   </button>
                 </div>
               </div>
@@ -227,7 +241,7 @@
 
       <div class="p-4 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
         <span id="currentDateDisplay"></span>
-        <span class="flex items-center gap-1 text-emerald-600 font-medium"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>權限已驗證</span>
+        <span class="flex items-center gap-1 text-emerald-600 font-medium"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>個資分級加密</span>
       </div>
     </aside>
 
@@ -248,8 +262,8 @@
   </div>
 
   <!-- 通用 Modal 彈窗 -->
-  <div id="modalBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center z-50 p-4">
-    <div id="modalContent" class="bg-white rounded-2xl shadow-xl max-w-lg w-full overflow-hidden"></div>
+  <div id="modalBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center z-50 p-4 overflow-y-auto">
+    <div id="modalContent" class="bg-white rounded-2xl shadow-xl max-w-lg w-full overflow-hidden my-auto"></div>
   </div>
 
 <script>
@@ -304,7 +318,161 @@ const QUADRANT_INFO = {
   green: { label: '綠區｜低活力・高愉悅', careNeeded: false, badge: 'bg-emerald-100 text-emerald-800 border-emerald-300', cellBg: 'bg-emerald-200/80 hover:bg-emerald-300 text-emerald-950 border-emerald-300/60', tip: '情緒穩定平和、適合專注學習' }
 };
 
-// ==================== 2. 日期工具與初始資料庫 ====================
+// ==================== 2. 每日幸運迷因籤詩圖庫 ====================
+const DEFAULT_MEME_FORTUNES = [
+  {
+    id: 'M01',
+    luck: '大吉・學霸附體籤',
+    luckColor: 'bg-rose-600 text-white',
+    borderColor: 'border-rose-300',
+    bgGrad: 'from-amber-100 via-orange-50 to-rose-100',
+    topCaption: '當老師突然說要隨堂小考',
+    bottomCaption: '而你昨晚剛好有複習那一頁',
+    advice: '宜：主動舉手回答問題、幫同學解題｜忌：過度謙虛',
+    luckyItem: '藍色原子筆',
+    svg: `<svg viewBox="0 0 240 150" class="w-full h-36 rounded-xl bg-gradient-to-b from-sky-200 to-amber-100 border border-slate-200">
+      <circle cx="195" cy="32" r="18" fill="#FBBF24" opacity="0.85"/>
+      <ellipse cx="120" cy="112" rx="54" ry="34" fill="#F97316"/>
+      <circle cx="120" cy="70" r="34" fill="#FB923C"/>
+      <polygon points="90,48 98,22 112,42" fill="#FB923C"/>
+      <polygon points="150,48 142,22 128,42" fill="#FB923C"/>
+      <polygon points="94,45 99,28 108,42" fill="#FED7AA"/>
+      <polygon points="146,45 141,28 132,42" fill="#FED7AA"/>
+      <rect x="88" y="60" width="28" height="12" rx="3" fill="#0F172A"/>
+      <rect x="124" y="60" width="28" height="12" rx="3" fill="#0F172A"/>
+      <line x1="116" y1="64" x2="124" y2="64" stroke="#0F172A" stroke-width="3"/>
+      <line x1="92" y1="63" x2="102" y2="63" stroke="#FFF" stroke-width="2"/>
+      <line x1="128" y1="63" x2="138" y2="63" stroke="#FFF" stroke-width="2"/>
+      <polygon points="116,76 124,76 120,81" fill="#7C2D12"/>
+      <path d="M111,85 Q120,93 129,85" stroke="#7C2D12" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <text x="24" y="42" font-size="18" fill="#F59E0B">✦</text>
+      <text x="165" y="95" font-size="16" fill="#F59E0B">✦</text>
+    </svg>`
+  },
+  {
+    id: 'M02',
+    luck: '中吉・水豚君穩定發揮籤',
+    luckColor: 'bg-emerald-600 text-white',
+    borderColor: 'border-emerald-300',
+    bgGrad: 'from-emerald-100 via-teal-50 to-cyan-100',
+    topCaption: '就算外面風雨再大、作業再多',
+    bottomCaption: '我依然頭頂橘子保持情緒穩定',
+    advice: '宜：按部就班完成待辦、喝杯溫開水｜忌：跟著別人一起慌張',
+    luckyItem: '橘子口味軟糖',
+    svg: `<svg viewBox="0 0 240 150" class="w-full h-36 rounded-xl bg-gradient-to-b from-teal-100 to-emerald-200 border border-slate-200">
+      <ellipse cx="120" cy="132" rx="95" ry="14" fill="#38BDF8" opacity="0.55"/>
+      <ellipse cx="120" cy="105" rx="58" ry="32" fill="#A16207"/>
+      <rect x="85" y="55" width="70" height="48" rx="22" fill="#B45309"/>
+      <circle cx="94" cy="56" r="8" fill="#78350F"/>
+      <circle cx="146" cy="56" r="8" fill="#78350F"/>
+      <line x1="98" y1="73" x2="110" y2="73" stroke="#451A03" stroke-width="3" stroke-linecap="round"/>
+      <line x1="130" y1="73" x2="142" y2="73" stroke="#451A03" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="120" cy="84" rx="14" ry="9" fill="#78350F"/>
+      <circle cx="120" cy="43" r="12" fill="#F97316"/>
+      <path d="M120,31 Q127,25 131,31 Q125,35 120,31" fill="#16A34A"/>
+      <text x="35" y="45" font-size="14" fill="#0D9488">♨</text>
+      <text x="190" y="48" font-size="14" fill="#0D9488">♨</text>
+    </svg>`
+  },
+  {
+    id: 'M03',
+    luck: '上上吉・滿血復活能量籤',
+    luckColor: 'bg-amber-500 text-white',
+    borderColor: 'border-amber-300',
+    bgGrad: 'from-yellow-100 via-amber-50 to-orange-100',
+    topCaption: '早八準時踏進教室的那一刻',
+    bottomCaption: '今日份的幸運值已經直接拉滿',
+    advice: '宜：微笑打招呼、挑戰難題｜忌：趴在桌上打瞌睡',
+    luckyItem: '冰涼微糖綠茶',
+    svg: `<svg viewBox="0 0 240 150" class="w-full h-36 rounded-xl bg-gradient-to-tr from-amber-200 to-yellow-100 border border-slate-200">
+      <circle cx="120" cy="75" r="46" fill="#FACC15" stroke="#EAB308" stroke-width="3"/>
+      <circle cx="104" cy="65" r="5" fill="#1E293B"/>
+      <circle cx="136" cy="65" r="5" fill="#1E293B"/>
+      <circle cx="106" cy="63" r="1.5" fill="#FFF"/>
+      <circle cx="138" cy="63" r="1.5" fill="#FFF"/>
+      <ellipse cx="94" cy="76" rx="7" ry="4" fill="#FB7185" opacity="0.7"/>
+      <ellipse cx="146" cy="76" rx="7" ry="4" fill="#FB7185" opacity="0.7"/>
+      <path d="M105,82 Q120,98 135,82" stroke="#1E293B" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <circle cx="172" cy="82" r="14" fill="#FDE047" stroke="#CA8A04" stroke-width="2"/>
+      <path d="M168,72 L168,58 Q172,53 176,58 L176,72" fill="#FDE047" stroke="#CA8A04" stroke-width="2"/>
+      <text x="42" y="45" font-size="20">⚡</text>
+      <text x="180" y="42" font-size="18">✨</text>
+    </svg>`
+  },
+  {
+    id: 'M04',
+    luck: '吉・神隊友助攻籤',
+    luckColor: 'bg-indigo-600 text-white',
+    borderColor: 'border-indigo-300',
+    bgGrad: 'from-indigo-100 via-sky-50 to-purple-100',
+    topCaption: '分組報告不知道怎麼開頭時',
+    bottomCaption: '隔壁同學突然靈感大爆發凱瑞全場',
+    advice: '宜：與同學交流想法、參與時事討論｜忌：單打獨鬥硬撐',
+    luckyItem: '便利貼',
+    svg: `<svg viewBox="0 0 240 150" class="w-full h-36 rounded-xl bg-gradient-to-b from-indigo-100 to-sky-100 border border-slate-200">
+      <circle cx="85" cy="78" r="28" fill="#60A5FA"/>
+      <circle cx="77" cy="73" r="3.5" fill="#0F172A"/>
+      <circle cx="93" cy="73" r="3.5" fill="#0F172A"/>
+      <path d="M78,84 Q85,91 92,84" stroke="#0F172A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <circle cx="155" cy="78" r="28" fill="#818CF8"/>
+      <circle cx="147" cy="73" r="3.5" fill="#0F172A"/>
+      <circle cx="163" cy="73" r="3.5" fill="#0F172A"/>
+      <path d="M148,84 Q155,91 162,84" stroke="#0F172A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M113,75 L127,75" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="120" cy="40" r="14" fill="#FDE047"/>
+      <rect x="115" y="52" width="10" height="6" rx="2" fill="#94A3B8"/>
+      <text x="114" y="45" font-size="14">💡</text>
+    </svg>`
+  },
+  {
+    id: 'M05',
+    luck: '小吉・慢慢來比較快籤',
+    luckColor: 'bg-sky-600 text-white',
+    borderColor: 'border-sky-300',
+    bgGrad: 'from-sky-100 via-blue-50 to-indigo-100',
+    topCaption: '雖然腦袋開機進度目前 15%',
+    bottomCaption: '但只要撐過第一節課就會順利起飛',
+    advice: '宜：深呼吸三次、伸展肩頸｜忌：忘記帶明天要交的作業',
+    luckyItem: '薄荷涼糖',
+    svg: `<svg viewBox="0 0 240 150" class="w-full h-36 rounded-xl bg-gradient-to-b from-slate-200 to-sky-100 border border-slate-200">
+      <ellipse cx="120" cy="92" rx="45" ry="38" fill="#94A3B8"/>
+      <ellipse cx="120" cy="98" rx="32" ry="26" fill="#F8FAFC"/>
+      <circle cx="106" cy="78" r="6" fill="#1E293B"/>
+      <circle cx="134" cy="78" r="6" fill="#1E293B"/>
+      <rect x="98" y="70" width="16" height="6" fill="#94A3B8"/>
+      <rect x="126" y="70" width="16" height="6" fill="#94A3B8"/>
+      <polygon points="116,84 124,84 120,91" fill="#F59E0B"/>
+      <rect x="155" y="65" width="26" height="22" rx="3" fill="#FFF" stroke="#64748B" stroke-width="2"/>
+      <path d="M181,70 Q189,70 189,76 Q189,82 181,82" fill="none" stroke="#64748B" stroke-width="2"/>
+      <text x="52" y="55" font-size="13" fill="#475569" font-weight="bold">Loading...</text>
+    </svg>`
+  },
+  {
+    id: 'M06',
+    luck: '大吉・直覺神準選擇題籤',
+    luckColor: 'bg-purple-600 text-white',
+    borderColor: 'border-purple-300',
+    bgGrad: 'from-purple-100 via-fuchsia-50 to-pink-100',
+    topCaption: '選擇題在 B 跟 C 之間猶豫三秒',
+    bottomCaption: '最後改的那個選項居然真的對了',
+    advice: '宜：相信第一直覺、仔細審題｜忌：交卷前最後一秒亂改答案',
+    luckyItem: '2B 鉛筆與橡皮擦',
+    svg: `<svg viewBox="0 0 240 150" class="w-full h-36 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 border border-slate-200">
+      <circle cx="120" cy="78" r="38" fill="#F472B6"/>
+      <polygon points="90,52 96,26 112,45" fill="#F472B6"/>
+      <polygon points="150,52 144,26 128,45" fill="#F472B6"/>
+      <text x="99" y="75" font-size="16" fill="#FFF" font-weight="bold">★</text>
+      <text x="127" y="75" font-size="16" fill="#FFF" font-weight="bold">★</text>
+      <path d="M108,90 Q120,102 132,90" stroke="#831843" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <rect x="35" y="45" width="32" height="32" rx="8" fill="#8B5CF6"/>
+      <text x="45" y="67" font-size="18" fill="#FFF" font-weight="bold">✓</text>
+      <rect x="173" y="45" width="32" height="32" rx="8" fill="#EC4899"/>
+      <text x="181" y="67" font-size="16" fill="#FFF" font-weight="bold">100</text>
+    </svg>`
+  }
+];
+
+// ==================== 3. 日期工具與初始資料庫（含公開 IG 自介 + 僅教師可見基本個資） ====================
 function getOffsetDateStr(offsetDays) {
   const d = new Date();
   d.setDate(d.getDate() + offsetDays);
@@ -324,34 +492,166 @@ const DEFAULT_DATA = {
     { username: 'teacher', password: '1234', name: '陳老師', title: '高二忠班導師' }
   ],
   students: [
-    { id: 'S01', password: '1234', seat: '01', name: '林子軒' },
-    { id: 'S02', password: '1234', seat: '02', name: '陳思妤' },
-    { id: 'S03', password: '1234', seat: '03', name: '張宇翔' },
-    { id: 'S04', password: '1234', seat: '04', name: '黃品妍' },
-    { id: 'S05', password: '1234', seat: '05', name: '王柏翰' },
-    { id: 'S06', password: '1234', seat: '06', name: '吳佳穎' }
+    {
+      id: 'S01', password: '1234', seat: '01', name: '林子軒',
+      profileCompleted: true,
+      // 公開 IG 風格自介資料（全班師生皆可看到）
+      publicProfile: {
+        nickname: 'zixuan.lin_01',
+        mbti: 'ENTJ',
+        avatarGrad: 'from-blue-500 to-indigo-600',
+        bio: '籃球社副社長 🏀｜數學小老師\n「把每一天當成最後一場延長賽來打！」\n歡迎找我討論微積分或約打球 👋',
+        tags: ['籃球', '程式設計', '推理小說', '抹茶控'],
+        igHandle: '@zixuan_hoops'
+      },
+      // 敏感基本個資（嚴格限定僅老師端可見，其他同學完全無法存取）
+      privateInfo: {
+        birthday: '2009-05-14',
+        studentPhone: '0912-345-601',
+        parentName: '林建宏（父親）',
+        parentPhone: '0928-111-201',
+        emergencyRelation: '母親（陳美玲）',
+        emergencyPhone: '0933-222-301',
+        address: '高雄市鼓山區美術東二路 88 號 5F',
+        healthNote: '無特殊疾病，偶爾季節性過敏'
+      }
+    },
+    {
+      id: 'S02', password: '1234', seat: '02', name: '陳思妤',
+      profileCompleted: true,
+      publicProfile: {
+        nickname: 'siyu_art.22',
+        mbti: 'INFJ',
+        avatarGrad: 'from-pink-500 to-rose-500',
+        bio: '設計群選手 🎨｜喜歡底片攝影與獨立音樂\n最近在研究生成式 AI 與版權議題 ✨',
+        tags: ['插畫手繪', '底片相機', '獨立音樂', '貓派'],
+        igHandle: '@siyu.sketchbook'
+      },
+      privateInfo: {
+        birthday: '2009-08-23',
+        studentPhone: '0918-456-702',
+        parentName: '陳志豪（父親）',
+        parentPhone: '0910-555-802',
+        emergencyRelation: '母親（王淑芬）',
+        emergencyPhone: '0922-666-902',
+        address: '高雄市左營區博愛二路 310 號 12F',
+        healthNote: '對海鮮（蝦蟹類）輕微過敏'
+      }
+    },
+    {
+      id: 'S03', password: '1234', seat: '03', name: '張宇翔',
+      profileCompleted: true,
+      publicProfile: {
+        nickname: 'yuxiang_run',
+        mbti: 'ENFP',
+        avatarGrad: 'from-amber-500 to-orange-600',
+        bio: '田徑隊 400m 跨欄 🏃‍♂️｜早起搭公車困難戶\n目標是這次英文單字小考及格！',
+        tags: ['田徑隊', '電競', '拉麵巡禮', '迷因收集家'],
+        igHandle: '@yuxiang.track'
+      },
+      privateInfo: {
+        birthday: '2009-11-02',
+        studentPhone: '0955-789-103',
+        parentName: '張文彬（父親）',
+        parentPhone: '0935-888-103',
+        emergencyRelation: '祖母（張李阿玉）',
+        emergencyPhone: '07-551-2203',
+        address: '高雄市三民區河堤路 512 號',
+        healthNote: '無'
+      }
+    },
+    {
+      id: 'S04', password: '1234', seat: '04', name: '黃品妍',
+      profileCompleted: true,
+      publicProfile: {
+        nickname: 'pinyan_read',
+        mbti: 'ISFJ',
+        avatarGrad: 'from-emerald-500 to-teal-600',
+        bio: '圖書館常駐人口 📚｜喜歡日本旅遊與京都抹茶\n有筆記問題都可以私訊問我～',
+        tags: ['閱讀', '京都旅遊', '手帳拼貼', '烏克麗麗'],
+        igHandle: '@pinyan.journal'
+      },
+      privateInfo: {
+        birthday: '2009-03-19',
+        studentPhone: '0966-112-404',
+        parentName: '黃國棟（父親）',
+        parentPhone: '0911-223-404',
+        emergencyRelation: '母親（林雅婷）',
+        emergencyPhone: '0919-334-404',
+        address: '高雄市鼓山區明誠三路 660 號 8F',
+        healthNote: '無'
+      }
+    },
+    {
+      id: 'S05', password: '1234', seat: '05', name: '王柏翰',
+      profileCompleted: false, // 預設尚未完成首次基本資料與自介填寫，方便演示App初次引導填表體驗！
+      publicProfile: {
+        nickname: 'bohan_05',
+        mbti: 'ISTP',
+        avatarGrad: 'from-cyan-500 to-blue-600',
+        bio: '剛加入智學雲，正在整理我的個人簡介中 ✌️',
+        tags: ['羽球', '電影'],
+        igHandle: ''
+      },
+      privateInfo: {
+        birthday: '',
+        studentPhone: '',
+        parentName: '',
+        parentPhone: '',
+        emergencyRelation: '',
+        emergencyPhone: '',
+        address: '',
+        healthNote: ''
+      }
+    },
+    {
+      id: 'S06', password: '1234', seat: '06', name: '吳佳穎',
+      profileCompleted: true,
+      publicProfile: {
+        nickname: 'jiaying_dance',
+        mbti: 'ESFJ',
+        avatarGrad: 'from-purple-500 to-fuchsia-600',
+        bio: '熱舞社 💃｜班級康樂股長\n最喜歡跟大家一起討論時事跟吃美食！',
+        tags: ['街舞', '咖啡廳探店', '攝影', '甜點'],
+        igHandle: '@jiaying.moves'
+      },
+      privateInfo: {
+        birthday: '2009-07-30',
+        studentPhone: '0977-889-606',
+        parentName: '吳明哲（父親）',
+        parentPhone: '0932-445-606',
+        emergencyRelation: '母親（蔡佳玲）',
+        emergencyPhone: '0988-556-606',
+        address: '高雄市苓雅區四維三路 198 號',
+        healthNote: '輕微氣喘，隨身備有吸入劑'
+      }
+    }
   ],
+  memeFortunes: DEFAULT_MEME_FORTUNES,
   attendance: {
     [TODAY_STR]: {
       'S01': {
         status: 'present', time: '08:05', note: '',
-        mood: { zh: '集中的', en: 'Focused', q: 'yellow', energy: 7, pleasantness: 7, note: '昨晚睡得很飽，準備好上數學課！' }
+        mood: { zh: '集中的', en: 'Focused', q: 'yellow', energy: 7, pleasantness: 7, note: '昨晚睡得很飽，準備好上數學課！' },
+        fortuneId: 'M01'
       },
       'S02': {
         status: 'present', time: '08:12', note: '',
-        mood: { zh: '平靜的', en: 'Calm', q: 'green', energy: 4, pleasantness: 6, note: '' }
+        mood: { zh: '平靜的', en: 'Calm', q: 'green', energy: 4, pleasantness: 6, note: '' },
+        fortuneId: 'M02'
       },
       'S03': {
         status: 'late', time: '08:42', note: '公車誤點',
-        mood: { zh: '備感壓力的', en: 'Stressful', q: 'red', energy: 10, pleasantness: 3, note: '早起趕公車又想到下週要考英文，有點緊張' }
+        mood: { zh: '備感壓力的', en: 'Stressful', q: 'red', energy: 10, pleasantness: 3, note: '早起趕公車又想到下週要考英文，有點緊張' },
+        fortuneId: 'M05'
       },
       'S04': {
         status: 'present', time: '08:20', note: '',
-        mood: { zh: '精疲力竭', en: 'Exhausted', q: 'blue', energy: 2, pleasantness: 4, note: '昨晚複習功課到比較晚，今天有點累' }
+        mood: { zh: '精疲力竭', en: 'Exhausted', q: 'blue', energy: 2, pleasantness: 4, note: '昨晚複習功課到比較晚，今天有點累' },
+        fortuneId: 'M04'
       }
     }
   },
-  // 每日國際時事看板資料（LINE TODAY 風格頭條 + IG 留言討論區）
   dailyNews: [
     {
       id: 'NEWS01',
@@ -529,17 +829,22 @@ const DEFAULT_DATA = {
   }
 };
 
-let appData = JSON.parse(localStorage.getItem('eduCloud_v6')) || DEFAULT_DATA;
-let currentUser = JSON.parse(sessionStorage.getItem('eduCloudSession_v6')) || null;
-let portalRole = 'teacher';
+let appData = JSON.parse(localStorage.getItem('eduCloud_v8')) || DEFAULT_DATA;
+if (!appData.memeFortunes) appData.memeFortunes = DEFAULT_MEME_FORTUNES;
+
+let currentUser = JSON.parse(sessionStorage.getItem('eduCloudSession_v8')) || null;
+let portalRole = 'student';
 let isRegisterMode = false;
 let currentCaptcha = '';
-let currentTab = 'news'; // 預設可直接體驗新增的「每日國際時事看板」，亦可隨時切換點名量表
+let currentTab = 'profiles'; // 預設進入「IG班級自介牆與個人檔案」方便立即體驗
 let selectedChatStudentId = appData.students[0]?.id || 'S01';
+
+// 班級個人檔案牆檢視狀態
+let viewingStudentProfileId = appData.students[0]?.id || 'S01';
 
 // 每日時事看板狀態
 let selectedNewsId = appData.dailyNews[0]?.id || 'NEWS01';
-let replyingToCommentId = null; // 若不為 null，代表正在回覆某則 IG 留言
+let replyingToCommentId = null;
 
 // 學生打卡暫存選擇的情緒
 let tempSelectedMood = null;
@@ -549,11 +854,11 @@ let calYear = new Date().getFullYear();
 let calMonth = new Date().getMonth();
 
 function saveData() {
-  localStorage.setItem('eduCloud_v6', JSON.stringify(appData));
+  localStorage.setItem('eduCloud_v8', JSON.stringify(appData));
   if (currentUser) updateUnreadBadge();
 }
 
-// ==================== 3. 登入入口與驗證邏輯 ====================
+// ==================== 4. 登入入口與驗證邏輯 ====================
 function init() {
   document.getElementById('portalDate').textContent = TODAY_STR;
   document.getElementById('currentDateDisplay').textContent = TODAY_STR;
@@ -568,6 +873,7 @@ function init() {
   if (currentUser) {
     enterMainApp();
   } else {
+    selectPortalRole('teacher');
     document.getElementById('authScreen').classList.remove('hidden');
     document.getElementById('mainApp').classList.add('hidden');
     lucide.createIcons();
@@ -596,7 +902,7 @@ function selectPortalRole(role) {
     tabT.className = 'py-4 flex items-center justify-center gap-2 bg-indigo-600 text-white transition cursor-pointer';
     tabS.className = 'py-4 flex items-center justify-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200/70 transition cursor-pointer';
     title.textContent = isRegisterMode ? '建立教師管理帳戶' : '教師身分驗證登入';
-    subtitle.textContent = '具備點名關懷、發布每日國際時事、課表與考試管理權限';
+    subtitle.textContent = '具備查閱學生家長電話/生日個資、點名關懷與課程管理權限';
     idLabel.textContent = '教師帳號';
     idInput.placeholder = '請輸入教師帳號 (預設: teacher)';
     loginBtn.className = 'w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
@@ -609,7 +915,7 @@ function selectPortalRole(role) {
     tabS.className = 'py-4 flex items-center justify-center gap-2 bg-emerald-600 text-white transition cursor-pointer';
     tabT.className = 'py-4 flex items-center justify-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200/70 transition cursor-pointer';
     title.textContent = isRegisterMode ? '建立學生學習帳戶' : '學生身分驗證登入';
-    subtitle.textContent = '具備每日心情打卡、國際時事思辨留言、課表與作業查詢功能';
+    subtitle.textContent = '具備編輯 IG 個人自介、填寫導師專用基本資料與打卡抽籤功能';
     idLabel.textContent = '學生學號';
     idInput.placeholder = '請輸入學生學號 (例如: S05)';
     loginBtn.className = 'w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
@@ -676,9 +982,10 @@ function handleLogin(e) {
       return;
     }
     currentUser = { role: 'student', id: student.id, name: student.name, seat: student.seat };
+    viewingStudentProfileId = student.id;
   }
 
-  sessionStorage.setItem('eduCloudSession_v6', JSON.stringify(currentUser));
+  sessionStorage.setItem('eduCloudSession_v8', JSON.stringify(currentUser));
   enterMainApp();
 }
 
@@ -703,19 +1010,35 @@ function handleRegister(e) {
     if (!seat || !studentId) return alert('請填寫班級座號與學號');
     if (appData.students.some(s => s.id.toUpperCase() === studentId)) return alert('此學號已註冊，請直接登入！');
 
-    appData.students.push({ id: studentId, password, seat, name });
+    appData.students.push({
+      id: studentId, password, seat, name,
+      profileCompleted: false,
+      publicProfile: {
+        nickname: `${studentId.toLowerCase()}_student`,
+        mbti: 'ENFP',
+        avatarGrad: 'from-emerald-500 to-teal-600',
+        bio: '大家好！我剛加入智學雲，請多多指教 ✨',
+        tags: ['新同學'],
+        igHandle: ''
+      },
+      privateInfo: {
+        birthday: '', studentPhone: '', parentName: '', parentPhone: '',
+        emergencyRelation: '', emergencyPhone: '', address: '', healthNote: ''
+      }
+    });
     appData.students.sort((a, b) => a.seat.localeCompare(b.seat));
     saveData();
     currentUser = { role: 'student', id: studentId, name, seat };
+    viewingStudentProfileId = studentId;
   }
 
-  sessionStorage.setItem('eduCloudSession_v6', JSON.stringify(currentUser));
-  alert(`帳戶建立成功！系統已自動為您登入。`);
+  sessionStorage.setItem('eduCloudSession_v8', JSON.stringify(currentUser));
+  alert(`帳戶建立成功！請先完善您的個人簡介與導師聯絡資料。`);
   enterMainApp();
 }
 
 function logout() {
-  sessionStorage.removeItem('eduCloudSession_v6');
+  sessionStorage.removeItem('eduCloudSession_v8');
   currentUser = null;
   tempSelectedMood = null;
   replyingToCommentId = null;
@@ -727,7 +1050,7 @@ function logout() {
   lucide.createIcons();
 }
 
-// ==================== 4. 權限分流初始化主介面 ====================
+// ==================== 5. 權限分流初始化主介面 ====================
 function enterMainApp() {
   document.getElementById('authScreen').classList.add('hidden');
   document.getElementById('mainApp').classList.remove('hidden');
@@ -752,6 +1075,14 @@ function enterMainApp() {
     sidebarNav.innerHTML = `
       <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="heart-handshake" class="w-4 h-4"></i><span>每日點名與心情關懷</span>
+      </button>
+      <button onclick="switchTab('profiles')" id="nav-profiles" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="contact-2" class="w-4 h-4 text-indigo-600"></i><span>學生檔案與個資總覽</span></div>
+        <span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded">🔒個資</span>
+      </button>
+      <button onclick="switchTab('memes')" id="nav-memes" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i><span>迷因幸運籤詩圖庫</span></div>
+        <span class="bg-amber-100 text-amber-700 text-[10px] font-bold px-1.5 py-0.5 rounded">${appData.memeFortunes.length}張</span>
       </button>
       <button onclick="switchTab('news')" id="nav-news" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <div class="flex items-center gap-3"><i data-lucide="newspaper" class="w-4 h-4 text-emerald-600"></i><span>每日國際時事看板</span></div>
@@ -778,6 +1109,9 @@ function enterMainApp() {
       </button>
     `;
   } else {
+    const me = appData.students.find(s => s.id === currentUser.id);
+    const needSetup = me && !me.profileCompleted;
+
     brandBox.className = 'w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold shadow-sm';
     roleBadge.textContent = '🎓 學生學習端';
     roleBadge.className = 'text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700';
@@ -787,8 +1121,13 @@ function enterMainApp() {
     profileBadge.className = 'flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-bold';
 
     sidebarNav.innerHTML = `
-      <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <i data-lucide="smile-plus" class="w-4 h-4"></i><span>每日打卡與心情量表</span>
+      <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="smile-plus" class="w-4 h-4"></i><span>每日打卡與幸運迷因籤</span></div>
+        <span class="bg-amber-400 text-slate-900 text-[10px] font-black px-1.5 py-0.5 rounded">抽籤</span>
+      </button>
+      <button onclick="switchTab('profiles')" id="nav-profiles" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="instagram" class="w-4 h-4 text-pink-600"></i><span>班級自介牆與我的資料</span></div>
+        ${needSetup ? `<span class="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded animate-pulse">待填寫</span>` : ''}
       </button>
       <button onclick="switchTab('news')" id="nav-news" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <div class="flex items-center gap-3"><i data-lucide="newspaper" class="w-4 h-4 text-emerald-600"></i><span>每日國際時事看板</span></div>
@@ -811,6 +1150,11 @@ function enterMainApp() {
         <span id="unreadBadge" class="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
       </button>
     `;
+
+    // 若學生首次登入尚未填寫基本資料，自動跳出 App 風格的首次資料填寫精靈
+    if (needSetup) {
+      setTimeout(() => openEditStudentProfileModal(currentUser.id, true), 250);
+    }
   }
 
   updateUnreadBadge();
@@ -825,7 +1169,9 @@ function switchTab(tab) {
   if (targetNav) targetNav.classList.add(activeClass);
 
   const teacherTitles = {
-    attendance: ['每日點名與情緒量表關懷總覽', '即時掌握學生出缺勤與 Mood Meter 身心狀態'],
+    attendance: ['每日點名與情緒量表關懷總覽', '即時掌握學生出缺勤、Mood Meter 狀態與今日抽到的迷因籤'],
+    profiles: ['學生 IG 個人檔案與導師專用個資總覽', '可檢視全班同學公開自介與家長電話、生日、緊急聯絡人等私密個資'],
+    memes: ['迷因幸運籤詩圖庫管理', '預覽學生每日打卡後隨機抽取的幽默迷因籤詩並新增自訂籤'],
     news: ['每日國際時事看板｜班級思辨討論區', 'LINE TODAY 風格每日精選新聞 + IG 互動留言板'],
     timetable: ['班級課表管理系統', '教師可點擊編輯節次或批次匯入課表'],
     homework: ['隔日作業聯絡簿發布', '發布隔天與近期應繳交的紙本/實體作業提醒'],
@@ -836,7 +1182,8 @@ function switchTab(tab) {
   };
 
   const studentTitles = {
-    attendance: ['每日上課打卡與情緒量表', '透過 Mood Meter 覺察今日情緒並完成簽到'],
+    attendance: ['每日心情打卡與幸運迷因籤', '選擇今日情緒量表完成簽到，即可抽取今日專屬幸運迷因籤詩！'],
+    profiles: ['班級 IG 自介牆與我的基本資料', '認識全班同學的公開自介；父母電話與生日僅供導師查閱，同學之間完全保密'],
     news: ['每日國際時事看板｜班級思辨討論區', '閱讀今日精選國際新聞，在下方留言分享你的觀點！'],
     timetable: ['班級課表查詢', '唯讀檢視本學期班級每週課表'],
     homework: ['隔日應交作業提醒', '確認明天與近期該帶到學校繳交的作業清單'],
@@ -854,6 +1201,8 @@ function switchTab(tab) {
 function renderCurrentTab() {
   const container = document.getElementById('contentArea');
   if (currentTab === 'attendance') renderAttendance(container);
+  else if (currentTab === 'profiles') renderStudentProfilesHub(container);
+  else if (currentTab === 'memes' && currentUser.role === 'teacher') renderMemeManager(container);
   else if (currentTab === 'news') renderDailyNewsBoard(container);
   else if (currentTab === 'timetable') renderTimetable(container);
   else if (currentTab === 'homework') renderHomeworkReminders(container);
@@ -864,7 +1213,990 @@ function renderCurrentTab() {
   lucide.createIcons();
 }
 
-// ==================== 5. 模組：每日國際時事看板 (LINE TODAY 風格 + IG 留言互動) ====================
+// ==================== 6. 核心新增模組：IG 風格班級個人檔案牆 + 教師限定敏感個資 ====================
+function renderStudentProfilesHub(container) {
+  const isTeacher = currentUser.role === 'teacher';
+  const targetStudent = appData.students.find(s => s.id === viewingStudentProfileId) || appData.students[0];
+  viewingStudentProfileId = targetStudent.id;
+
+  const isViewingSelf = !isTeacher && targetStudent.id === currentUser.id;
+  // 隱私權限判定：只有「老師端」或「學生本人」能看到 privateInfo，其他同學一律看不到！
+  const canViewSensitiveInfo = isTeacher || isViewingSelf;
+
+  const pub = targetStudent.publicProfile || {
+    nickname: targetStudent.id.toLowerCase(),
+    mbti: 'ENFP',
+    avatarGrad: 'from-indigo-500 to-purple-600',
+    bio: '尚未填寫個人簡介',
+    tags: [],
+    igHandle: ''
+  };
+  const priv = targetStudent.privateInfo || {};
+
+  // 統計該生在時事看板的留言數與打卡次數
+  let commentCount = 0;
+  appData.dailyNews.forEach(n => {
+    n.comments.forEach(c => {
+      if (c.authorId === targetStudent.id) commentCount++;
+      (c.replies || []).forEach(r => { if (r.authorId === targetStudent.id) commentCount++; });
+    });
+  });
+
+  container.innerHTML = `
+    <div class="max-w-5xl mx-auto space-y-6">
+      
+      <!-- 頂部：IG 限時動態圓圈列（快速切換班上每位同學的個人檔案） -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
+        <div class="flex items-center justify-between mb-3 px-1">
+          <span class="text-xs font-bold text-slate-500 flex items-center gap-1.5">
+            <i data-lucide="users" class="w-3.5 h-3.5 text-pink-500"></i>
+            高二忠班同學錄（點擊頭像瀏覽公開自介${isTeacher ? '與導師專用個資' : ''}）
+          </span>
+          ${isTeacher ? `
+            <button onclick="exportAllStudentsPrivateCSV()" class="text-xs font-bold text-indigo-600 hover:bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200 flex items-center gap-1 cursor-pointer">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> 匯出全班聯絡個資清冊 (CSV)
+            </button>
+          ` : `
+            <button onclick="openEditStudentProfileModal('${currentUser.id}', false)" class="text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-1 rounded-lg border border-emerald-200 flex items-center gap-1 cursor-pointer">
+              <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> 編輯我的自介與基本資料
+            </button>
+          `}
+        </div>
+
+        <div class="flex items-center gap-4 overflow-x-auto pb-2 pt-1 px-1">
+          ${appData.students.map(s => {
+            const isSelected = s.id === targetStudent.id;
+            const sPub = s.publicProfile || {};
+            return `
+              <button onclick="selectStudentProfile('${s.id}')" class="flex flex-col items-center gap-1.5 shrink-0 group cursor-pointer">
+                <div class="w-14 h-14 rounded-full ${isSelected ? 'ig-ring scale-105' : 'p-[2px] bg-slate-200 group-hover:bg-pink-300'} transition">
+                  <div class="w-full h-full rounded-full bg-gradient-to-tr ${sPub.avatarGrad || 'from-slate-500 to-slate-700'} text-white font-black text-base flex items-center justify-center border-2 border-white">
+                    ${s.name.slice(-1)}
+                  </div>
+                </div>
+                <span class="text-xs ${isSelected ? 'font-black text-slate-900' : 'font-medium text-slate-600'}">
+                  ${s.seat} ${s.name}
+                </span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      <!-- 主體：IG 風格個人主頁卡片 -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- 左側／上方：Instagram 個人公開主頁 (佔 7 欄，全班皆可見) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+          <div class="px-6 py-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
+            <div class="flex items-center gap-2">
+              <span class="font-mono font-bold text-sm text-slate-800">${pub.nickname || targetStudent.id.toLowerCase()}</span>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">公開個人檔案</span>
+            </div>
+            ${isViewingSelf ? `
+              <button onclick="openEditStudentProfileModal('${targetStudent.id}', false)" class="text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-1.5 rounded-lg cursor-pointer transition">
+                編輯個人主頁
+              </button>
+            ` : isTeacher ? `
+              <button onclick="openCareChat('${targetStudent.id}')" class="text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg cursor-pointer flex items-center gap-1">
+                <i data-lucide="send" class="w-3 h-3"></i> 發送私訊
+              </button>
+            ` : ''}
+          </div>
+
+          <div class="p-6 sm:p-7 space-y-5">
+            <!-- 頭像 + IG 三大數據欄 -->
+            <div class="flex items-center gap-6">
+              <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full ig-ring shrink-0 shadow-sm">
+                <div class="w-full h-full rounded-full bg-gradient-to-tr ${pub.avatarGrad || 'from-indigo-500 to-purple-600'} text-white font-black text-2xl sm:text-3xl flex items-center justify-center border-4 border-white">
+                  ${targetStudent.name.slice(-2)}
+                </div>
+              </div>
+
+              <div class="flex-1 grid grid-cols-3 text-center divide-x divide-slate-100">
+                <div>
+                  <div class="text-lg sm:text-xl font-black text-slate-800">${targetStudent.seat}號</div>
+                  <div class="text-xs text-slate-400 mt-0.5">班級座號</div>
+                </div>
+                <div>
+                  <div class="text-lg sm:text-xl font-black text-indigo-600">${pub.mbti || '未設定'}</div>
+                  <div class="text-xs text-slate-400 mt-0.5">MBTI 人格</div>
+                </div>
+                <div>
+                  <div class="text-lg sm:text-xl font-black text-emerald-600">${commentCount}</div>
+                  <div class="text-xs text-slate-400 mt-0.5">時事觀點</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 姓名、IG 帳號與自我介紹 Bio -->
+            <div class="space-y-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <h3 class="text-lg font-black text-slate-900">${targetStudent.name}</h3>
+                <span class="text-xs font-mono text-slate-400">(${targetStudent.id})</span>
+                ${pub.igHandle ? `
+                  <span class="inline-flex items-center gap-1 text-xs font-bold text-pink-600 bg-pink-50 px-2.5 py-0.5 rounded-full">
+                    <i data-lucide="instagram" class="w-3 h-3"></i> ${pub.igHandle}
+                  </span>
+                ` : ''}
+              </div>
+
+              <p class="text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50/80 p-4 rounded-2xl border border-slate-100">
+                ${pub.bio || '這位同學還沒有填寫自我介紹喔～'}
+              </p>
+            </div>
+
+            <!-- 興趣與個性標籤 Tags -->
+            <div>
+              <div class="text-xs font-bold text-slate-400 mb-2">興趣與關鍵字標籤</div>
+              <div class="flex flex-wrap gap-2">
+                ${(pub.tags && pub.tags.length > 0) ? pub.tags.map(tag => `
+                  <span class="text-xs font-bold px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
+                    # ${tag}
+                  </span>
+                `).join('') : `<span class="text-xs text-slate-400">尚未設定興趣標籤</span>`}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右側／下方：學生基本個資卡片（嚴格權限隔離：僅老師端與學生本人可見！） (佔 5 欄) -->
+        <div class="lg:col-span-5">
+          ${canViewSensitiveInfo ? `
+            <div class="bg-white rounded-3xl border-2 border-indigo-200 shadow-xs overflow-hidden">
+              <div class="px-5 py-3.5 bg-indigo-600 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                  <span class="font-bold text-sm">${isTeacher ? '導師專用｜學生基本個資檔案' : '我的基本資料（僅導師可見）'}</span>
+                </div>
+                <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-bold">同學不可見</span>
+              </div>
+
+              <div class="p-5 space-y-3.5 text-sm">
+                <div class="p-3 rounded-xl bg-amber-50 border border-amber-200/80 text-xs text-amber-800 flex items-start gap-2">
+                  <i data-lucide="lock" class="w-4 h-4 shrink-0 mt-0.5 text-amber-600"></i>
+                  <span>${isTeacher
+                    ? '此區塊包含家長聯絡方式與出生年月日等敏感個資，系統已設定為「僅教師權限」可查閱。'
+                    : '以下資料僅提供給班導師緊急聯繫與建立學籍檔案使用，其他同學瀏覽你的自介時完全看不到此區塊。'
+                  }</span>
+                </div>
+
+                <div class="divide-y divide-slate-100 text-xs sm:text-sm">
+                  <div class="py-2.5 flex justify-between gap-2">
+                    <span class="text-slate-400 font-bold shrink-0">🎂 出生年月日</span>
+                    <span class="font-mono font-bold text-slate-800">${priv.birthday || '<span class="text-rose-500">尚未填寫</span>'}</span>
+                  </div>
+                  <div class="py-2.5 flex justify-between gap-2">
+                    <span class="text-slate-400 font-bold shrink-0">📱 學生本人手機</span>
+                    <span class="font-mono font-bold text-slate-800">${priv.studentPhone || '<span class="text-slate-400">未填寫</span>'}</span>
+                  </div>
+                  <div class="py-2.5 flex justify-between gap-2">
+                    <span class="text-slate-400 font-bold shrink-0">👨‍👩‍👦 家長／監護人</span>
+                    <span class="font-bold text-slate-800">${priv.parentName || '<span class="text-rose-500">尚未填寫</span>'}</span>
+                  </div>
+                  <div class="py-2.5 flex justify-between gap-2 bg-rose-50/60 px-2.5 rounded-lg my-1">
+                    <span class="text-rose-700 font-bold shrink-0">📞 父母聯絡電話</span>
+                    <span class="font-mono font-black text-rose-700">${priv.parentPhone || '<span class="text-rose-400 font-normal">尚未填寫</span>'}</span>
+                  </div>
+                  <div class="py-2.5 flex justify-between gap-2">
+                    <span class="text-slate-400 font-bold shrink-0">🆘 緊急聯絡人</span>
+                    <span class="font-bold text-slate-800">${priv.emergencyRelation || '-'}</span>
+                  </div>
+                  <div class="py-2.5 flex justify-between gap-2">
+                    <span class="text-slate-400 font-bold shrink-0">☎️ 緊急聯絡電話</span>
+                    <span class="font-mono font-bold text-slate-800">${priv.emergencyPhone || '-'}</span>
+                  </div>
+                  <div class="py-2.5 space-y-1">
+                    <div class="text-slate-400 font-bold">🏠 通訊住址</div>
+                    <div class="text-slate-700 text-xs bg-slate-50 p-2 rounded-lg">${priv.address || '尚未填寫'}</div>
+                  </div>
+                  <div class="py-2.5 space-y-1">
+                    <div class="text-slate-400 font-bold">🏥 健康與過敏備註</div>
+                    <div class="text-slate-700 text-xs bg-slate-50 p-2 rounded-lg">${priv.healthNote || '無特殊備註'}</div>
+                  </div>
+                </div>
+
+                ${isViewingSelf ? `
+                  <button onclick="openEditStudentProfileModal('${targetStudent.id}', false)" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-xs cursor-pointer transition">
+                    更新我的基本資料與自介
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          ` : `
+            <!-- 其他同學檢視時顯示的隱私保護鎖定卡 -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-7 text-center space-y-3 shadow-xs">
+              <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+                <i data-lucide="lock" class="w-7 h-7"></i>
+              </div>
+              <h4 class="font-bold text-slate-700 text-base">基本個資已受隱私權限保護</h4>
+              <p class="text-xs text-slate-500 leading-relaxed">
+                依據校園個資保護規範，<strong>${targetStudent.name}</strong> 的生日、父母電話、緊急聯絡人與住址等資料<strong>僅限班導師端查閱</strong>，同學之間僅能瀏覽左側的 IG 公開自我介紹。
+              </p>
+            </div>
+          `}
+        </div>
+
+      </div>
+    </div>
+  `;
+}
+
+function selectStudentProfile(studentId) {
+  viewingStudentProfileId = studentId;
+  renderCurrentTab();
+}
+
+function openEditStudentProfileModal(studentId, isFirstTimeGuide = false) {
+  const st = appData.students.find(s => s.id === studentId);
+  if (!st) return;
+  const pub = st.publicProfile || { nickname: '', mbti: 'ENFP', avatarGrad: 'from-emerald-500 to-teal-600', bio: '', tags: [], igHandle: '' };
+  const priv = st.privateInfo || { birthday: '', studentPhone: '', parentName: '', parentPhone: '', emergencyRelation: '', emergencyPhone: '', address: '', healthNote: '' };
+
+  const grads = [
+    { label: '翠綠清新', val: 'from-emerald-500 to-teal-600' },
+    { label: '星空藍紫', val: 'from-blue-500 to-indigo-600' },
+    { label: '落日粉橘', val: 'from-pink-500 to-rose-500' },
+    { label: '暖陽金橘', val: 'from-amber-500 to-orange-600' },
+    { label: '夢幻紫羅蘭', val: 'from-purple-500 to-fuchsia-600' }
+  ];
+
+  showModal(`
+    <div class="p-6 max-h-[88vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+            ${isFirstTimeGuide ? '👋 歡迎加入！初次使用請完善個人資料' : '✏️ 編輯個人檔案'}
+          </span>
+          <h3 class="text-lg font-black text-slate-800 mt-1">${st.seat}號 ${st.name} 的個人檔案設定</h3>
+        </div>
+        ${!isFirstTimeGuide ? `<button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer">✕</button>` : ''}
+      </div>
+
+      <form onsubmit="saveStudentProfile(event, '${st.id}')" class="space-y-5">
+        <!-- 第一部分：IG 公開自介設定 -->
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black text-pink-600 flex items-center gap-1.5">
+              <i data-lucide="instagram" class="w-4 h-4"></i> 一、IG 風格公開個人簡介（全班同學可見）
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-bold text-slate-600 block mb-1">個人代號 / 暱稱</label>
+              <input id="profNickname" type="text" required value="${pub.nickname}" placeholder="如：bohan_05" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
+            </div>
+            <div>
+              <label class="text-xs font-bold text-slate-600 block mb-1">MBTI 人格類型</label>
+              <select id="profMbti" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
+                ${['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTJ','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP'].map(m =>
+                  `<option value="${m}" ${pub.mbti===m?'selected':''}>${m}</option>`
+                ).join('')}
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-bold text-slate-600 block mb-1">頭像背景配色</label>
+              <select id="profGrad" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
+                ${grads.map(g => `<option value="${g.val}" ${pub.avatarGrad===g.val?'selected':''}>${g.label}</option>`).join('')}
+              </select>
+            </div>
+            <div>
+              <label class="text-xs font-bold text-slate-600 block mb-1">Instagram 帳號 (選填)</label>
+              <input id="profIg" type="text" value="${pub.igHandle || ''}" placeholder="如：@your_ig" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xs font-bold text-slate-600 block mb-1">自我介紹 Bio（社團、個性、想說的話）</label>
+            <textarea id="profBio" rows="3" required placeholder="寫一段像 IG 一樣的自我介紹讓同學認識你吧..." class="w-full border border-slate-300 bg-white rounded-lg px-3 py-2 text-sm">${pub.bio}</textarea>
+          </div>
+
+          <div>
+            <label class="text-xs font-bold text-slate-600 block mb-1">興趣標籤（請用逗號分隔）</label>
+            <input id="profTags" type="text" value="${(pub.tags || []).join(', ')}" placeholder="例如：籃球, 攝影, 動漫, 咖啡廳" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
+          </div>
+        </div>
+
+        <!-- 第二部分：僅導師可見之基本個資 -->
+        <div class="bg-indigo-50/70 p-4 rounded-2xl border border-indigo-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black text-indigo-800 flex items-center gap-1.5">
+              <i data-lucide="lock" class="w-4 h-4"></i> 二、學生基本聯絡資料（🔒 僅班導師端可見，同學看不到）
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-bold text-slate-700 block mb-1">出生年月日 <span class="text-rose-500">*</span></label>
+              <input id="privBirth" type="date" required value="${priv.birthday}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
+            </div>
+            <div>
+              <label class="text-xs font-bold text-slate-700 block mb-1">學生本人手機</label>
+              <input id="privStPhone" type="tel" value="${priv.studentPhone}" placeholder="09xx-xxx-xxx" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-bold text-slate-700 block mb-1">家長／監護人姓名與稱謂 <span class="text-rose-500">*</span></label>
+              <input id="privParentName" type="text" required value="${priv.parentName}" placeholder="如：王大明（父親）" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
+            </div>
+            <div>
+              <label class="text-xs font-bold text-slate-700 block mb-1">父母聯絡電話 <span class="text-rose-500">*</span></label>
+              <input id="privParentPhone" type="tel" required value="${priv.parentPhone}" placeholder="09xx-xxx-xxx" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-bold text-slate-700 block mb-1">第二緊急聯絡人</label>
+              <input id="privEmergRel" type="text" value="${priv.emergencyRelation}" placeholder="如：母親（林小美）" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
+            </div>
+            <div>
+              <label class="text-xs font-bold text-slate-700 block mb-1">緊急聯絡電話</label>
+              <input id="privEmergPhone" type="tel" value="${priv.emergencyPhone}" placeholder="09xx-xxx-xxx" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xs font-bold text-slate-700 block mb-1">通訊住址</label>
+            <input id="privAddress" type="text" value="${priv.address}" placeholder="請填寫完整居住地址" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
+          </div>
+
+          <div>
+            <label class="text-xs font-bold text-slate-700 block mb-1">特殊健康狀況或過敏備註</label>
+            <input id="privHealth" type="text" value="${priv.healthNote}" placeholder="如：無、或對特定食物藥物過敏" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-1">
+          ${!isFirstTimeGuide ? `<button type="button" onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer">取消</button>` : ''}
+          <button type="submit" class="px-6 py-2.5 text-sm bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md cursor-pointer">
+            儲存並更新個人檔案
+          </button>
+        </div>
+      </form>
+    </div>
+  `);
+  lucide.createIcons();
+}
+
+function saveStudentProfile(e, studentId) {
+  e.preventDefault();
+  const st = appData.students.find(s => s.id === studentId);
+  if (!st) return;
+
+  const rawTags = document.getElementById('profTags').value;
+  const parsedTags = rawTags.split(/[,，、]/).map(t => t.trim()).filter(Boolean);
+
+  st.publicProfile = {
+    nickname: document.getElementById('profNickname').value.trim(),
+    mbti: document.getElementById('profMbti').value,
+    avatarGrad: document.getElementById('profGrad').value,
+    igHandle: document.getElementById('profIg').value.trim(),
+    bio: document.getElementById('profBio').value.trim(),
+    tags: parsedTags
+  };
+
+  st.privateInfo = {
+    birthday: document.getElementById('privBirth').value,
+    studentPhone: document.getElementById('privStPhone').value.trim(),
+    parentName: document.getElementById('privParentName').value.trim(),
+    parentPhone: document.getElementById('privParentPhone').value.trim(),
+    emergencyRelation: document.getElementById('privEmergRel').value.trim(),
+    emergencyPhone: document.getElementById('privEmergPhone').value.trim(),
+    address: document.getElementById('privAddress').value.trim(),
+    healthNote: document.getElementById('privHealth').value.trim()
+  };
+
+  st.profileCompleted = true;
+  saveData();
+  closeModal();
+  enterMainApp();
+  switchTab('profiles');
+}
+
+function exportAllStudentsPrivateCSV() {
+  if (currentUser.role !== 'teacher') return;
+  let csv = '\uFEFF座號,學號,姓名,出生年月日,學生手機,家長姓名,父母聯絡電話,緊急聯絡人,緊急電話,通訊住址,健康備註\n';
+  appData.students.forEach(s => {
+    const p = s.privateInfo || {};
+    csv += `${s.seat},${s.id},${s.name},${p.birthday||'-'},${p.studentPhone||'-'},${p.parentName||'-'},${p.parentPhone||'-'},${p.emergencyRelation||'-'},${p.emergencyPhone||'-'},"${p.address||'-'}","${p.healthNote||'-'}"\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `高二忠班_學生基本個資與家長聯絡清冊_${TODAY_STR}.csv`;
+  link.click();
+}
+
+// ==================== 7. 迷因卡片繪製輔助元件 ====================
+function renderMemeFortuneCard(meme) {
+  if (!meme) return '';
+  return `
+    <div class="rounded-3xl border-2 ${meme.borderColor || 'border-amber-300'} bg-gradient-to-br ${meme.bgGrad || 'from-amber-50 to-orange-50'} p-5 shadow-md text-left relative overflow-hidden">
+      <div class="flex items-center justify-between gap-2 mb-3">
+        <span class="text-xs font-black px-3 py-1 rounded-full shadow-2xs ${meme.luckColor || 'bg-amber-500 text-white'}">
+          🎋 ${meme.luck}
+        </span>
+        <span class="text-[11px] font-mono text-slate-500 bg-white/70 px-2 py-0.5 rounded-md">今日幸運籤詩</span>
+      </div>
+
+      <div class="relative rounded-2xl overflow-hidden shadow-xs bg-white p-2 border border-slate-200/80">
+        <div class="text-center font-black text-slate-900 text-sm sm:text-base tracking-tight py-1.5 px-2 bg-slate-100 rounded-t-xl">
+          「${meme.topCaption}」
+        </div>
+        <div class="my-1.5 flex items-center justify-center">
+          ${meme.imageUrl
+            ? `<img src="${meme.imageUrl}" alt="迷因圖" class="w-full h-36 object-cover rounded-xl">`
+            : meme.svg
+          }
+        </div>
+        <div class="text-center font-black text-indigo-900 text-sm sm:text-base tracking-tight py-1.5 px-2 bg-amber-100/70 rounded-b-xl">
+          ${meme.bottomCaption}
+        </div>
+      </div>
+
+      <div class="mt-3.5 bg-white/85 backdrop-blur-xs rounded-2xl p-3.5 border border-white space-y-1.5 text-xs">
+        <div class="text-slate-700 font-bold">📜 籤詩指引：${meme.advice}</div>
+        <div class="text-amber-700 font-bold">🍀 今日開運小物：${meme.luckyItem}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ==================== 8. 模組：每日點名、情緒量表與打卡抽迷因籤 ====================
+function renderAttendance(container) {
+  if (!appData.attendance[TODAY_STR]) appData.attendance[TODAY_STR] = {};
+  const todayRecords = appData.attendance[TODAY_STR];
+
+  if (currentUser.role === 'student') {
+    const myRec = todayRecords[currentUser.id];
+    if (myRec) {
+      const m = myRec.mood;
+      const qInfo = m ? QUADRANT_INFO[m.q] : null;
+      const drawnMeme = appData.memeFortunes.find(item => item.id === myRec.fortuneId) || appData.memeFortunes[0];
+
+      container.innerHTML = `
+        <div class="max-w-4xl mx-auto mt-2 space-y-5">
+          <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-xs">
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-slate-100">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                  <i data-lucide="check-circle-2" class="w-7 h-7"></i>
+                </div>
+                <div>
+                  <h3 class="text-lg font-black text-slate-800">${TODAY_STR} 簽到完成！已為你抽出今日幸運迷因籤</h3>
+                  <p class="text-xs text-slate-500 mt-0.5">
+                    出席狀態：<strong class="text-emerald-700">${myRec.status === 'present' ? '準時出席' : myRec.status === 'late' ? '遲到' : '請假'}</strong> ｜ 打卡時間：<span class="font-mono">${myRec.time}</span>
+                  </p>
+                </div>
+              </div>
+              <button onclick="resetMyTodayCheckIn()" class="text-xs text-slate-400 hover:text-indigo-600 underline cursor-pointer">
+                重新打卡與重抽
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6 items-center">
+              <div class="lg:col-span-7 pop-in">
+                ${renderMemeFortuneCard(drawnMeme)}
+              </div>
+
+              <div class="lg:col-span-5 space-y-4">
+                ${m ? `
+                  <div class="p-5 rounded-2xl border ${qInfo.badge} space-y-2.5">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-bold opacity-80">今日情緒量表紀錄</span>
+                      <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-white/80">${qInfo.label}</span>
+                    </div>
+                    <div class="text-2xl font-black">${m.zh} <span class="text-sm font-medium opacity-75">(${m.en})</span></div>
+                    <div class="text-xs opacity-85">活力指數：${m.energy}/10 ｜ 愉悅指數：${m.pleasantness}/10</div>
+                    ${m.note ? `<div class="text-xs bg-white/90 p-3 rounded-xl mt-2 text-slate-700">💬 給老師的話：${m.note}</div>` : ''}
+                  </div>
+                ` : ''}
+
+                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 text-xs text-slate-600 space-y-2">
+                  <div class="font-bold text-slate-800 flex items-center gap-1.5">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i> 籤詩小提醒
+                  </div>
+                  <p class="leading-relaxed">每天完成上課心情打卡後，系統都會為你隨機抽取一張專屬迷因幸運籤！也別忘了去「班級自介牆」看看同學們的個人介紹。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    let gridHtml = '';
+    for (let r = 0; r < 10; r++) {
+      for (let c = 0; c < 10; c++) {
+        const item = MOOD_METER_GRID[r][c];
+        const qStyle = QUADRANT_INFO[item.q].cellBg;
+        const isSelected = tempSelectedMood && tempSelectedMood.r === r && tempSelectedMood.c === c;
+        gridHtml += `
+          <button type="button"
+            onclick="selectMoodCell(${r}, ${c})"
+            class="p-1.5 rounded-md border text-center transition cursor-pointer flex flex-col items-center justify-center leading-tight min-h-[46px] ${qStyle} ${
+              isSelected ? 'ring-3 ring-slate-900 scale-105 z-10 font-black shadow-md' : ''
+            }">
+            <span class="text-[11px] font-bold tracking-tight">${item.zh}</span>
+            <span class="text-[9px] opacity-75 font-mono hidden sm:block">${item.en}</span>
+          </button>
+        `;
+      }
+    }
+
+    container.innerHTML = `
+      <div class="max-w-5xl mx-auto space-y-5">
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <div>
+              <h3 class="text-lg font-bold text-slate-800">🎯 步驟一：點選最符合現在感受的「情緒量表 (Mood Meter)」格子</h3>
+              <p class="text-xs text-slate-500 mt-0.5">送出今日心情簽到後，即可立即抽取一張「今日幸運迷因籤詩」🎋！</p>
+            </div>
+            <div class="flex flex-wrap gap-1.5 text-[11px] font-bold">
+              <span class="px-2 py-1 rounded bg-rose-100 text-rose-800">紅區：高活力/低愉悅</span>
+              <span class="px-2 py-1 rounded bg-amber-100 text-amber-800">黃區：高活力/高愉悅</span>
+              <span class="px-2 py-1 rounded bg-sky-100 text-sky-800">藍區：低活力/低愉悅</span>
+              <span class="px-2 py-1 rounded bg-emerald-100 text-emerald-800">綠區：低活力/高愉悅</span>
+            </div>
+          </div>
+
+          <div class="flex gap-2 items-stretch overflow-x-auto pb-2">
+            <div class="flex flex-col justify-between items-center py-2 px-1 bg-slate-100 rounded-lg text-[11px] font-bold text-slate-600 shrink-0 select-none">
+              <span>高活力</span>
+              <span class="text-slate-400">↑</span>
+              <span class="[writing-mode:vertical-rl] tracking-widest text-xs text-slate-700">活力能量</span>
+              <span class="text-slate-400">↓</span>
+              <span>低活力</span>
+            </div>
+
+            <div class="flex-1 min-w-[680px]">
+              <div class="grid grid-cols-10 gap-1">
+                ${gridHtml}
+              </div>
+              <div class="mt-2 flex items-center justify-between px-3 py-1.5 bg-slate-100 rounded-lg text-[11px] font-bold text-slate-600 select-none">
+                <span>← 低愉悅度 (Low Pleasantness)</span>
+                <span class="text-slate-700">愉悅程度</span>
+                <span>高愉悅度 (High Pleasantness) →</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 pt-5 border-t border-slate-200 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+            <div class="flex-1">
+              ${tempSelectedMood ? `
+                <div class="flex flex-wrap items-center gap-2 mb-2">
+                  <span class="text-xs font-bold text-slate-500">已選擇情緒：</span>
+                  <span class="text-sm font-black px-3 py-1 rounded-lg border ${QUADRANT_INFO[tempSelectedMood.q].badge}">
+                    ${tempSelectedMood.zh} (${tempSelectedMood.en})
+                  </span>
+                  <span class="text-xs text-slate-400 font-mono">活力 ${tempSelectedMood.energy}/10 ・ 愉悅 ${tempSelectedMood.pleasantness}/10</span>
+                </div>
+                <input id="moodNoteInput" type="text" placeholder="想跟老師補充的原因或悄悄話（選填）" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              ` : `
+                <div class="text-sm text-amber-600 font-bold flex items-center gap-2">
+                  <i data-lucide="mouse-pointer-click" class="w-4 h-4"></i>
+                  <span>請先在上方情緒量表中點選一個最貼近你現在心情的詞彙！</span>
+                </div>
+              `}
+            </div>
+
+            <button onclick="studentCheckIn()" ${!tempSelectedMood ? 'disabled' : ''} class="shrink-0 px-6 py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition shadow-md ${
+              tempSelectedMood ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white cursor-pointer' : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+            }">
+              <i data-lucide="sparkles" class="w-5 h-5"></i>
+              送出打卡並抽取今日幸運迷因籤 🎋
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    let presentCount = 0, lateCount = 0, leaveCount = 0, absentCount = 0;
+    let qCounts = { red: 0, yellow: 0, blue: 0, green: 0 };
+    let careStudents = [];
+
+    appData.students.forEach(s => {
+      const r = todayRecords[s.id];
+      if (!r || r.status === 'absent') absentCount++;
+      else if (r.status === 'present') presentCount++;
+      else if (r.status === 'late') lateCount++;
+      else if (r.status === 'leave') leaveCount++;
+
+      if (r && r.mood && r.mood.q) {
+        qCounts[r.mood.q]++;
+        if (r.mood.q === 'red' || r.mood.q === 'blue') {
+          careStudents.push({ student: s, rec: r });
+        }
+      }
+    });
+
+    container.innerHTML = `
+      <div class="space-y-6">
+        <div class="grid grid-cols-2 lg:grid-cols-6 gap-3">
+          <div class="bg-white p-4 rounded-xl border border-slate-200">
+            <div class="text-xs font-bold text-slate-400">準時 / 遲到 / 未到</div>
+            <div class="text-xl font-black text-slate-800 mt-1">${presentCount} / ${lateCount} / <span class="text-rose-600">${absentCount}</span></div>
+          </div>
+          <div class="bg-rose-50 p-4 rounded-xl border border-rose-200">
+            <div class="text-xs font-bold text-rose-700">🔴 紅區 (焦慮/壓力)</div>
+            <div class="text-xl font-black text-rose-800 mt-1">${qCounts.red} 人</div>
+          </div>
+          <div class="bg-sky-50 p-4 rounded-xl border border-sky-200">
+            <div class="text-xs font-bold text-sky-700">🔵 藍區 (低落/疲憊)</div>
+            <div class="text-xl font-black text-sky-800 mt-1">${qCounts.blue} 人</div>
+          </div>
+          <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
+            <div class="text-xs font-bold text-amber-700">🟡 黃區 (開心/有動力)</div>
+            <div class="text-xl font-black text-amber-800 mt-1">${qCounts.yellow} 人</div>
+          </div>
+          <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+            <div class="text-xs font-bold text-emerald-700">🟢 綠區 (平靜/放鬆)</div>
+            <div class="text-xl font-black text-emerald-800 mt-1">${qCounts.green} 人</div>
+          </div>
+          <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 flex flex-col justify-center">
+            <div class="text-xs font-bold text-indigo-700">💛 今日優先關懷</div>
+            <div class="text-xl font-black text-indigo-900 mt-1">${careStudents.length} 位同學</div>
+          </div>
+        </div>
+
+        ${careStudents.length > 0 ? `
+          <div class="bg-gradient-to-r from-rose-50 via-amber-50/50 to-sky-50 rounded-2xl border border-rose-200/80 p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                <i data-lucide="heart-pulse" class="w-4 h-4 text-rose-600"></i>
+                今日情緒量表「建議關心名單」（位於紅區低愉悅高活力／藍區低愉悅低活力）
+              </h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              ${careStudents.map(({ student, rec }) => {
+                const qInfo = QUADRANT_INFO[rec.mood.q];
+                return `
+                  <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs flex items-start justify-between gap-3">
+                    <div class="space-y-1">
+                      <div class="flex items-center gap-2">
+                        <span class="font-bold text-sm text-slate-800">${student.seat}號 ${student.name}</span>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded border ${qInfo.badge}">
+                          ${rec.mood.zh} (${rec.mood.en})
+                        </span>
+                      </div>
+                      <p class="text-xs text-slate-600">
+                        ${rec.mood.note ? `💬 學生留言：「${rec.mood.note}」` : `<span class="text-slate-400 italic">學生未填寫補充留言</span>`}
+                      </p>
+                      <p class="text-[11px] text-indigo-600 font-medium">📞 家長電話：${student.privateInfo?.parentPhone || '未填寫'}</p>
+                    </div>
+                    <div class="flex flex-col gap-1.5 shrink-0">
+                      <button onclick="openCareChat('${student.id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 cursor-pointer">
+                        <i data-lucide="message-circle-heart" class="w-3.5 h-3.5"></i> 私訊關心
+                      </button>
+                      <button onclick="viewingStudentProfileId='${student.id}'; switchTab('profiles');" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-lg cursor-pointer">
+                        查看個資卡
+                      </button>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
+            <span class="font-bold text-slate-700">今日班級點名、心情與抽籤總表 (${TODAY_STR})</span>
+            <button onclick="exportAttendanceCSV()" class="text-xs bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> 匯出點名與心情 CSV
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[900px]">
+              <thead>
+                <tr class="border-b border-slate-200 text-xs text-slate-400 bg-slate-50">
+                  <th class="py-3 px-4">座號</th>
+                  <th class="py-3 px-4">姓名</th>
+                  <th class="py-3 px-4">打卡時間</th>
+                  <th class="py-3 px-4">出席狀態</th>
+                  <th class="py-3 px-4">今日情緒量表 (Mood Meter)</th>
+                  <th class="py-3 px-4">抽到的幸運迷因籤</th>
+                  <th class="py-3 px-4">學生心情留言</th>
+                  <th class="py-3 px-4 text-right">關懷互動</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-sm">
+                ${appData.students.map(s => {
+                  const rec = todayRecords[s.id] || { status: 'absent', time: '-', note: '', mood: null, fortuneId: null };
+                  const m = rec.mood;
+                  const qInfo = m ? QUADRANT_INFO[m.q] : null;
+                  const meme = rec.fortuneId ? appData.memeFortunes.find(f => f.id === rec.fortuneId) : null;
+                  return `
+                    <tr class="hover:bg-slate-50/80">
+                      <td class="py-3 px-4 font-mono text-slate-500">${s.seat}</td>
+                      <td class="py-3 px-4 font-bold text-slate-800">${s.name}</td>
+                      <td class="py-3 px-4 font-mono text-xs text-slate-500">${rec.time}</td>
+                      <td class="py-3 px-4">
+                        <select onchange="teacherUpdateAttendance('${s.id}', this.value)" class="text-xs font-bold px-2.5 py-1 rounded-md border ${
+                          rec.status === 'present' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                          rec.status === 'late' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                          rec.status === 'leave' ? 'bg-sky-50 text-sky-700 border-sky-200' :
+                          'bg-rose-50 text-rose-700 border-rose-200'
+                        }">
+                          <option value="present" ${rec.status==='present'?'selected':''}>✅ 準時出席</option>
+                          <option value="late" ${rec.status==='late'?'selected':''}>⚠️ 遲到</option>
+                          <option value="leave" ${rec.status==='leave'?'selected':''}>📋 請假</option>
+                          <option value="absent" ${rec.status==='absent'?'selected':''}>❌ 缺席/未打卡</option>
+                        </select>
+                      </td>
+                      <td class="py-3 px-4">
+                        ${m ? `
+                          <span class="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-lg border ${qInfo.badge}">
+                            ${m.zh} <span class="font-normal opacity-75">(${m.en})</span>
+                          </span>
+                        ` : `<span class="text-xs text-slate-300">尚未回報</span>`}
+                      </td>
+                      <td class="py-3 px-4">
+                        ${meme ? `<span class="text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md">🎋 ${meme.luck}</span>` : `<span class="text-xs text-slate-300">-</span>`}
+                      </td>
+                      <td class="py-3 px-4 text-xs text-slate-600 max-w-[180px] truncate" title="${m?.note || ''}">
+                        ${m?.note || '-'}
+                      </td>
+                      <td class="py-3 px-4 text-right space-x-1">
+                        <button onclick="openCareChat('${s.id}')" class="text-xs font-bold text-indigo-600 hover:bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200 cursor-pointer">
+                          私訊
+                        </button>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function selectMoodCell(r, c) {
+  const item = MOOD_METER_GRID[r][c];
+  tempSelectedMood = {
+    r, c,
+    zh: item.zh,
+    en: item.en,
+    q: item.q,
+    energy: 10 - r,
+    pleasantness: c + 1
+  };
+  renderCurrentTab();
+}
+
+function studentCheckIn() {
+  if (!tempSelectedMood) return alert('請先在情緒量表中點選一個心情格子！');
+  const noteInput = document.getElementById('moodNoteInput');
+  const moodNote = noteInput ? noteInput.value.trim() : '';
+
+  const now = new Date();
+  const timeStr = now.toTimeString().slice(0, 5);
+  const isLate = now.getHours() > 8 || (now.getHours() === 8 && now.getMinutes() > 30);
+
+  const pool = appData.memeFortunes;
+  const randomMeme = pool[Math.floor(Math.random() * pool.length)];
+
+  if (!appData.attendance[TODAY_STR]) appData.attendance[TODAY_STR] = {};
+  appData.attendance[TODAY_STR][currentUser.id] = {
+    status: isLate ? 'late' : 'present',
+    time: timeStr,
+    note: isLate ? '超過 08:30 打卡' : '',
+    mood: {
+      zh: tempSelectedMood.zh,
+      en: tempSelectedMood.en,
+      q: tempSelectedMood.q,
+      energy: tempSelectedMood.energy,
+      pleasantness: tempSelectedMood.pleasantness,
+      note: moodNote
+    },
+    fortuneId: randomMeme.id
+  };
+  tempSelectedMood = null;
+  saveData();
+
+  showModal(`
+    <div class="p-6 text-center space-y-4">
+      <div class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 text-xs font-black px-3 py-1 rounded-full">
+        🎉 簽到成功！為你抽出今日專屬幸運籤詩
+      </div>
+      <div class="meme-float">
+        ${renderMemeFortuneCard(randomMeme)}
+      </div>
+      <button onclick="closeModal(); renderCurrentTab();" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm shadow-md cursor-pointer">
+        收下今日好運氣！
+      </button>
+    </div>
+  `);
+  lucide.createIcons();
+}
+
+function resetMyTodayCheckIn() {
+  if (!confirm('確定要重新填寫今日的心情量表並重新抽籤嗎？')) return;
+  if (appData.attendance[TODAY_STR]) {
+    delete appData.attendance[TODAY_STR][currentUser.id];
+    saveData();
+    renderCurrentTab();
+  }
+}
+
+// ==================== 9. 教師專屬模組：迷因幸運籤詩圖庫管理 ====================
+function renderMemeManager(container) {
+  if (currentUser.role !== 'teacher') return;
+  container.innerHTML = `
+    <div class="max-w-5xl mx-auto space-y-5">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+        <div class="text-xs text-slate-600">
+          <strong>🎋 迷因籤詩獎池說明：</strong>學生每次完成每日心情打卡後，系統會從下方圖庫隨機抽取一張作為當日幸運籤。老師可隨時新增貼近班級文化的迷因籤詩！
+        </div>
+        <button onclick="openNewMemeModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs">
+          <i data-lucide="plus" class="w-4 h-4"></i> 新增迷因幸運籤
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        ${appData.memeFortunes.map(meme => `
+          <div class="relative group">
+            ${renderMemeFortuneCard(meme)}
+            ${appData.memeFortunes.length > 1 ? `
+              <button onclick="deleteMemeFortune('${meme.id}')" class="mt-2 w-full py-1.5 text-xs font-bold text-rose-500 hover:bg-rose-50 rounded-lg border border-rose-200 bg-white cursor-pointer">
+                移除此張籤詩
+              </button>
+            ` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function openNewMemeModal() {
+  if (currentUser.role !== 'teacher') return;
+  showModal(`
+    <div class="p-6">
+      <h3 class="text-lg font-bold text-slate-800 mb-4">新增班級迷因幸運籤詩</h3>
+      <div class="space-y-3">
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">籤詩吉凶等級</label>
+          <input id="memeLuck" type="text" placeholder="如：大吉・段考歐趴籤" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">迷因上句（情境鋪陳）</label>
+          <input id="memeTop" type="text" placeholder="如：當鐘聲響起的那一秒" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">迷因下句（反轉笑點）</label>
+          <input id="memeBottom" type="text" placeholder="如：你剛好把最後一個字寫完" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">自訂迷因圖片網址（選填，留空則自動配可愛插畫）</label>
+          <input id="memeImgUrl" type="url" placeholder="https://..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-bold text-slate-600 block mb-1">今日宜忌指引</label>
+            <input id="memeAdvice" type="text" placeholder="宜：幫助同學｜忌：熬夜" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-600 block mb-1">今日開運小物</label>
+            <input id="memeItem" type="text" placeholder="如：螢光筆、珍珠奶茶" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          </div>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">取消</button>
+        <button onclick="createMemeFortune()" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700">加入抽籤池</button>
+      </div>
+    </div>
+  `);
+}
+
+function createMemeFortune() {
+  const luck = document.getElementById('memeLuck').value.trim();
+  const topCaption = document.getElementById('memeTop').value.trim();
+  const bottomCaption = document.getElementById('memeBottom').value.trim();
+  const imageUrl = document.getElementById('memeImgUrl').value.trim();
+  const advice = document.getElementById('memeAdvice').value.trim() || '宜：保持微笑、專注當下｜忌：杞人憂天';
+  const luckyItem = document.getElementById('memeItem').value.trim() || '彩虹便利貼';
+
+  if (!luck || !topCaption || !bottomCaption) return alert('請填寫籤詩吉凶等級與上下句迷因文字！');
+
+  const sampleSvg = DEFAULT_MEME_FORTUNES[Math.floor(Math.random() * DEFAULT_MEME_FORTUNES.length)].svg;
+  appData.memeFortunes.unshift({
+    id: 'M' + Date.now(),
+    luck,
+    luckColor: 'bg-indigo-600 text-white',
+    borderColor: 'border-indigo-300',
+    bgGrad: 'from-indigo-100 via-purple-50 to-pink-100',
+    topCaption,
+    bottomCaption,
+    imageUrl: imageUrl || null,
+    svg: sampleSvg,
+    advice,
+    luckyItem
+  });
+  saveData();
+  closeModal();
+  renderCurrentTab();
+}
+
+function deleteMemeFortune(id) {
+  if (!confirm('確定要移除這張迷因幸運籤嗎？')) return;
+  appData.memeFortunes = appData.memeFortunes.filter(m => m.id !== id);
+  saveData();
+  renderCurrentTab();
+}
+
+function openCareChat(studentId) {
+  selectedChatStudentId = studentId;
+  switchTab('messages');
+}
+
+function teacherUpdateAttendance(studentId, status) {
+  if (currentUser.role !== 'teacher') return;
+  if (!appData.attendance[TODAY_STR]) appData.attendance[TODAY_STR] = {};
+  const old = appData.attendance[TODAY_STR][studentId] || { time: new Date().toTimeString().slice(0, 5), note: '', mood: null, fortuneId: null };
+  appData.attendance[TODAY_STR][studentId] = {
+    ...old,
+    status,
+    time: status === 'absent' ? '-' : (old.time === '-' ? new Date().toTimeString().slice(0, 5) : old.time)
+  };
+  saveData();
+  renderCurrentTab();
+}
+
+function exportAttendanceCSV() {
+  const todayRecords = appData.attendance[TODAY_STR] || {};
+  let csv = '\uFEFF座號,學號,姓名,日期,出席狀態,打卡時間,情緒象限,今日情緒詞彙,抽到的幸運籤,學生心情留言\n';
+  const qMap = { red: '紅區(高活力低愉悅)', yellow: '黃區(高活力高愉悅)', blue: '藍區(低活力低愉悅)', green: '綠區(低活力高愉悅)' };
+  appData.students.forEach(s => {
+    const r = todayRecords[s.id] || { status: 'absent', time: '-', mood: null, fortuneId: null };
+    const statusMap = { present: '準時出席', late: '遲到', leave: '請假', absent: '缺席' };
+    const qText = r.mood ? qMap[r.mood.q] : '-';
+    const moodText = r.mood ? `${r.mood.zh}(${r.mood.en})` : '-';
+    const meme = r.fortuneId ? appData.memeFortunes.find(f => f.id === r.fortuneId) : null;
+    const memeText = meme ? meme.luck : '-';
+    const moodNote = r.mood?.note ? r.mood.note.replace(/,/g, '，') : '-';
+    csv += `${s.seat},${s.id},${s.name},${TODAY_STR},${statusMap[r.status]},${r.time},${qText},${moodText},${memeText},${moodNote}\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `點名與心情抽籤紀錄_${TODAY_STR}.csv`;
+  link.click();
+}
+
+// ==================== 10. 模組：每日國際時事看板 (LINE TODAY + IG 留言 + 點擊頭像看自介) ====================
 function renderDailyNewsBoard(container) {
   const isTeacher = currentUser.role === 'teacher';
   if (!appData.dailyNews || appData.dailyNews.length === 0) {
@@ -877,30 +2209,25 @@ function renderDailyNewsBoard(container) {
   const isLikedByMe = activeNews.likes.includes(currentUser.id);
   const totalCommentsCount = activeNews.comments.reduce((acc, c) => acc + 1 + (c.replies ? c.replies.length : 0), 0);
 
-  // 頭像顏色與文字工具
-  const renderAvatar = (role, name) => {
+  const renderAvatar = (role, name, authorId) => {
     if (role === 'teacher') {
       return `<div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-500 text-white font-bold text-xs flex items-center justify-center shrink-0 ring-2 ring-indigo-100">師</div>`;
     }
     const shortName = name.includes(' ') ? name.split(' ')[1].slice(0, 1) : name.slice(0, 1);
-    return `<div class="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-white font-bold text-xs flex items-center justify-center shrink-0 ring-2 ring-emerald-50">${shortName}</div>`;
+    return `<button type="button" onclick="jumpToStudentProfile('${authorId}')" title="點擊查看 ${name} 的個人自介" class="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-white font-bold text-xs flex items-center justify-center shrink-0 ring-2 ring-emerald-50 hover:scale-105 transition cursor-pointer">${shortName}</button>`;
   };
 
-  const renderSmallAvatar = (role, name) => {
+  const renderSmallAvatar = (role, name, authorId) => {
     if (role === 'teacher') {
       return `<div class="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0">師</div>`;
     }
     const shortName = name.includes(' ') ? name.split(' ')[1].slice(0, 1) : name.slice(0, 1);
-    return `<div class="w-6 h-6 rounded-full bg-emerald-500 text-white font-bold text-[10px] flex items-center justify-center shrink-0">${shortName}</div>`;
+    return `<button type="button" onclick="jumpToStudentProfile('${authorId}')" title="點擊查看 ${name} 的個人自介" class="w-6 h-6 rounded-full bg-emerald-500 text-white font-bold text-[10px] flex items-center justify-center shrink-0 hover:scale-105 transition cursor-pointer">${shortName}</button>`;
   };
 
   container.innerHTML = `
     <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-      
-      <!-- 左側／上方：LINE TODAY 風格新聞焦點與 IG 互動留言區 (佔 8 欄) -->
       <div class="lg:col-span-8 bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-        
-        <!-- LINE TODAY 頂部品牌識別條 -->
         <div class="px-5 py-3 bg-[#06C755] text-white flex items-center justify-between">
           <div class="flex items-center gap-2">
             <span class="font-black tracking-wider text-sm bg-white text-[#06C755] px-2 py-0.5 rounded">TODAY</span>
@@ -909,7 +2236,6 @@ function renderDailyNewsBoard(container) {
           <span class="text-xs font-mono bg-black/15 px-2.5 py-0.5 rounded-full">${activeNews.date}</span>
         </div>
 
-        <!-- 新聞視覺橫幅卡片 (LINE TODAY 頭條設計) -->
         <div class="bg-gradient-to-br ${activeNews.coverGradient} p-6 sm:p-8 text-white relative overflow-hidden">
           <div class="relative z-10 space-y-3">
             <div class="flex flex-wrap items-center gap-2">
@@ -925,7 +2251,6 @@ function renderDailyNewsBoard(container) {
           <i data-lucide="${activeNews.coverIcon || 'globe'}" class="w-36 h-36 text-white/10 absolute -right-4 -bottom-6 pointer-events-none"></i>
         </div>
 
-        <!-- 新聞報導內文與思辨提問框 -->
         <div class="p-6 space-y-5 border-b border-slate-200">
           <p class="text-sm sm:text-[15px] text-slate-700 leading-relaxed">
             ${activeNews.summary}
@@ -936,7 +2261,6 @@ function renderDailyNewsBoard(container) {
             <p class="text-sm font-bold text-slate-800 leading-relaxed">${activeNews.discussionPrompt}</p>
           </div>
 
-          <!-- Instagram 風格互動工具列（愛心、留言數、收藏/分享感） -->
           <div class="pt-2 flex items-center justify-between">
             <div class="flex items-center gap-5">
               <button onclick="toggleNewsLike('${activeNews.id}')" class="flex items-center gap-1.5 group cursor-pointer">
@@ -949,12 +2273,11 @@ function renderDailyNewsBoard(container) {
               </button>
             </div>
             <div class="text-xs text-slate-400 font-medium">
-              班級互動討論區
+              點擊同學頭像可看 IG 自介
             </div>
           </div>
         </div>
 
-        <!-- Instagram 風格留言串列表 -->
         <div class="bg-slate-50/50">
           <div class="px-6 py-3 border-b border-slate-100 flex items-center justify-between">
             <span class="text-xs font-bold text-slate-500">同學與老師的觀點留言 (${totalCommentsCount})</span>
@@ -977,12 +2300,11 @@ function renderDailyNewsBoard(container) {
               const canDelete = isTeacher || c.authorId === currentUser.id;
               return `
                 <div class="space-y-2.5">
-                  <!-- 主留言 -->
                   <div class="flex items-start gap-3 group">
-                    ${renderAvatar(c.role, c.authorName)}
+                    ${renderAvatar(c.role, c.authorName, c.authorId)}
                     <div class="flex-1 min-w-0">
                       <div class="text-sm leading-relaxed text-slate-800">
-                        <span class="font-bold mr-1.5 ${c.role === 'teacher' ? 'text-indigo-700' : 'text-slate-900'}">${c.authorName}</span>
+                        <span onclick="${c.role==='student' ? `jumpToStudentProfile('${c.authorId}')` : ''}" class="font-bold mr-1.5 ${c.role === 'teacher' ? 'text-indigo-700' : 'text-slate-900 hover:underline cursor-pointer'}">${c.authorName}</span>
                         ${c.role === 'teacher' ? `<span class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-1.5 py-0.5 rounded mr-1.5">導師</span>` : ''}
                         <span class="break-words">${c.text}</span>
                       </div>
@@ -993,13 +2315,11 @@ function renderDailyNewsBoard(container) {
                         ${canDelete ? `<button onclick="deleteNewsComment('${activeNews.id}', '${c.id}')" class="hover:text-rose-500 cursor-pointer">刪除</button>` : ''}
                       </div>
                     </div>
-                    <!-- IG 右側小愛心 -->
                     <button onclick="toggleCommentLike('${activeNews.id}', '${c.id}')" class="pt-1 text-slate-400 hover:text-rose-500 cursor-pointer shrink-0">
                       <i data-lucide="heart" class="w-4 h-4 ${cLiked ? 'fill-rose-500 text-rose-500' : ''}"></i>
                     </button>
                   </div>
 
-                  <!-- 子回覆串 (IG 縮排回覆) -->
                   ${c.replies && c.replies.length > 0 ? `
                     <div class="pl-12 space-y-2.5 border-l-2 border-slate-200/80 ml-4">
                       ${c.replies.map(r => {
@@ -1007,10 +2327,10 @@ function renderDailyNewsBoard(container) {
                         const canDelReply = isTeacher || r.authorId === currentUser.id;
                         return `
                           <div class="flex items-start gap-2.5">
-                            ${renderSmallAvatar(r.role, r.authorName)}
+                            ${renderSmallAvatar(r.role, r.authorName, r.authorId)}
                             <div class="flex-1 min-w-0">
                               <div class="text-xs sm:text-sm leading-relaxed text-slate-800">
-                                <span class="font-bold mr-1 ${r.role === 'teacher' ? 'text-indigo-700' : 'text-slate-900'}">${r.authorName}</span>
+                                <span onclick="${r.role==='student' ? `jumpToStudentProfile('${r.authorId}')` : ''}" class="font-bold mr-1 ${r.role === 'teacher' ? 'text-indigo-700' : 'text-slate-900 hover:underline cursor-pointer'}">${r.authorName}</span>
                                 ${r.role === 'teacher' ? `<span class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-1.5 py-0.5 rounded mr-1">導師</span>` : ''}
                                 <span class="break-words">${r.text}</span>
                               </div>
@@ -1034,7 +2354,6 @@ function renderDailyNewsBoard(container) {
             }).join('')}
           </div>
 
-          <!-- Instagram 底部固定發佈留言輸入框 -->
           <div class="p-4 bg-white border-t border-slate-200">
             ${replyingToCommentId ? `
               <div id="replyBanner" class="text-xs text-indigo-600 font-bold mb-2 flex items-center justify-between bg-indigo-50 px-3 py-1.5 rounded-lg">
@@ -1043,7 +2362,7 @@ function renderDailyNewsBoard(container) {
               </div>
             ` : ''}
             <form onsubmit="submitNewsComment(event, '${activeNews.id}')" class="flex items-center gap-3">
-              ${renderAvatar(currentUser.role, currentUser.role === 'teacher' ? currentUser.name : `${currentUser.seat}號 ${currentUser.name}`)}
+              ${renderAvatar(currentUser.role, currentUser.role === 'teacher' ? currentUser.name : `${currentUser.seat}號 ${currentUser.name}`, currentUser.id)}
               <input id="igCommentInput" type="text" required placeholder="以「${currentUser.role === 'teacher' ? currentUser.name : currentUser.seat + '號 ' + currentUser.name}」的身分新增留言，分享你的看法..." class="flex-1 bg-slate-100 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#06C755]">
               <button type="submit" class="text-sm font-black text-[#06C755] hover:text-emerald-700 px-3 py-2 cursor-pointer shrink-0">
                 發佈
@@ -1053,7 +2372,6 @@ function renderDailyNewsBoard(container) {
         </div>
       </div>
 
-      <!-- 右側：LINE TODAY 每日新聞期數列表與教師出題區 (佔 4 欄) -->
       <div class="lg:col-span-4 space-y-4">
         ${isTeacher ? `
           <button onclick="openNewDailyNewsModal()" class="w-full py-3.5 bg-[#06C755] hover:bg-emerald-600 text-white font-bold rounded-2xl shadow-sm flex items-center justify-center gap-2 text-sm cursor-pointer transition">
@@ -1090,18 +2408,15 @@ function renderDailyNewsBoard(container) {
             }).join('')}
           </div>
         </div>
-
-        <div class="bg-white rounded-2xl border border-slate-200 p-4 text-xs text-slate-500 space-y-2">
-          <div class="font-bold text-slate-700 flex items-center gap-1.5">
-            <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i> 班級時事討論公約
-          </div>
-          <p class="leading-relaxed">1. 尊重不同立場的同學，理性表達觀點並提出理由。</p>
-          <p class="leading-relaxed">2. 可對認同的同學留言按 ❤️ 或點擊「回覆」進行延伸對話。</p>
-        </div>
       </div>
-
     </div>
   `;
+}
+
+function jumpToStudentProfile(studentId) {
+  if (!appData.students.some(s => s.id === studentId)) return;
+  viewingStudentProfileId = studentId;
+  switchTab('profiles');
 }
 
 function selectDailyNews(id) {
@@ -1311,379 +2626,7 @@ function deleteDailyNews(id) {
   renderCurrentTab();
 }
 
-// ==================== 6. 模組：每日點名與情緒量表 (Mood Meter) ====================
-function renderAttendance(container) {
-  if (!appData.attendance[TODAY_STR]) appData.attendance[TODAY_STR] = {};
-  const todayRecords = appData.attendance[TODAY_STR];
-
-  if (currentUser.role === 'student') {
-    const myRec = todayRecords[currentUser.id];
-    if (myRec) {
-      const m = myRec.mood;
-      const qInfo = m ? QUADRANT_INFO[m.q] : null;
-      container.innerHTML = `
-        <div class="max-w-2xl mx-auto mt-4">
-          <div class="bg-white rounded-3xl border border-slate-200 p-8 text-center shadow-xs space-y-5">
-            <div class="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
-              <i data-lucide="check-circle-2" class="w-9 h-9"></i>
-            </div>
-            <div>
-              <h3 class="text-xl font-bold text-slate-800">${TODAY_STR} 上課簽到與心情紀錄完成</h3>
-              <p class="text-sm text-slate-500 mt-1">
-                狀態：<strong>${myRec.status === 'present' ? '準時出席' : myRec.status === 'late' ? '遲到' : '請假'}</strong> ｜ 打卡時間：<span class="font-mono">${myRec.time}</span>
-              </p>
-            </div>
-
-            ${m ? `
-              <div class="p-5 rounded-2xl border ${qInfo.badge} text-left max-w-md mx-auto space-y-2">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs font-bold opacity-80">今日情緒量表 (Mood Meter)</span>
-                  <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-white/70">${qInfo.label}</span>
-                </div>
-                <div class="text-2xl font-black">${m.zh} <span class="text-sm font-medium opacity-75">(${m.en})</span></div>
-                <div class="text-xs opacity-85">活力指數：${m.energy}/10 ｜ 愉悅指數：${m.pleasantness}/10</div>
-                ${m.note ? `<div class="text-xs bg-white/80 p-2.5 rounded-xl mt-2 text-slate-700">💬 給老師的話：${m.note}</div>` : ''}
-              </div>
-            ` : ''}
-
-            <div class="pt-2">
-              <button onclick="resetMyTodayCheckIn()" class="text-xs text-slate-400 hover:text-indigo-600 underline cursor-pointer">
-                重新選擇今日心情狀態
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-      return;
-    }
-
-    let gridHtml = '';
-    for (let r = 0; r < 10; r++) {
-      for (let c = 0; c < 10; c++) {
-        const item = MOOD_METER_GRID[r][c];
-        const qStyle = QUADRANT_INFO[item.q].cellBg;
-        const isSelected = tempSelectedMood && tempSelectedMood.r === r && tempSelectedMood.c === c;
-        gridHtml += `
-          <button type="button"
-            onclick="selectMoodCell(${r}, ${c})"
-            class="p-1.5 rounded-md border text-center transition cursor-pointer flex flex-col items-center justify-center leading-tight min-h-[46px] ${qStyle} ${
-              isSelected ? 'ring-3 ring-slate-900 scale-105 z-10 font-black shadow-md' : ''
-            }">
-            <span class="text-[11px] font-bold tracking-tight">${item.zh}</span>
-            <span class="text-[9px] opacity-75 font-mono hidden sm:block">${item.en}</span>
-          </button>
-        `;
-      }
-    }
-
-    container.innerHTML = `
-      <div class="max-w-5xl mx-auto space-y-5">
-        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
-          <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
-            <div>
-              <h3 class="text-lg font-bold text-slate-800">🎯 步驟一：請點選最符合你現在感受的「情緒量表 (Mood Meter)」格子</h3>
-              <p class="text-xs text-slate-500 mt-0.5">參考 Marc Brackett 情緒量表：越上方代表「活力越高」，越右方代表「愉悅度越高」。</p>
-            </div>
-            <div class="flex flex-wrap gap-1.5 text-[11px] font-bold">
-              <span class="px-2 py-1 rounded bg-rose-100 text-rose-800">紅區：高活力/低愉悅</span>
-              <span class="px-2 py-1 rounded bg-amber-100 text-amber-800">黃區：高活力/高愉悅</span>
-              <span class="px-2 py-1 rounded bg-sky-100 text-sky-800">藍區：低活力/低愉悅</span>
-              <span class="px-2 py-1 rounded bg-emerald-100 text-emerald-800">綠區：低活力/高愉悅</span>
-            </div>
-          </div>
-
-          <div class="flex gap-2 items-stretch overflow-x-auto pb-2">
-            <div class="flex flex-col justify-between items-center py-2 px-1 bg-slate-100 rounded-lg text-[11px] font-bold text-slate-600 shrink-0 select-none">
-              <span>高活力</span>
-              <span class="text-slate-400">↑</span>
-              <span class="[writing-mode:vertical-rl] tracking-widest text-xs text-slate-700">活力能量</span>
-              <span class="text-slate-400">↓</span>
-              <span>低活力</span>
-            </div>
-
-            <div class="flex-1 min-w-[680px]">
-              <div class="grid grid-cols-10 gap-1">
-                ${gridHtml}
-              </div>
-              <div class="mt-2 flex items-center justify-between px-3 py-1.5 bg-slate-100 rounded-lg text-[11px] font-bold text-slate-600 select-none">
-                <span>← 低愉悅度 (Low Pleasantness)</span>
-                <span class="text-slate-700">愉悅程度</span>
-                <span>高愉悅度 (High Pleasantness) →</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-5 pt-5 border-t border-slate-200 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-            <div class="flex-1">
-              ${tempSelectedMood ? `
-                <div class="flex flex-wrap items-center gap-2 mb-2">
-                  <span class="text-xs font-bold text-slate-500">已選擇情緒：</span>
-                  <span class="text-sm font-black px-3 py-1 rounded-lg border ${QUADRANT_INFO[tempSelectedMood.q].badge}">
-                    ${tempSelectedMood.zh} (${tempSelectedMood.en})
-                  </span>
-                  <span class="text-xs text-slate-400 font-mono">活力 ${tempSelectedMood.energy}/10 ・ 愉悅 ${tempSelectedMood.pleasantness}/10</span>
-                </div>
-                <input id="moodNoteInput" type="text" placeholder="想跟老師補充的原因或悄悄話（選填）" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-              ` : `
-                <div class="text-sm text-amber-600 font-bold flex items-center gap-2">
-                  <i data-lucide="mouse-pointer-click" class="w-4 h-4"></i>
-                  <span>請先在上方情緒量表中點選一個最貼近你現在心情的詞彙！</span>
-                </div>
-              `}
-            </div>
-
-            <button onclick="studentCheckIn()" ${!tempSelectedMood ? 'disabled' : ''} class="shrink-0 px-6 py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition shadow-md ${
-              tempSelectedMood ? 'bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer' : 'bg-slate-200 text-slate-400 cursor-not-allowed'
-            }">
-              <i data-lucide="fingerprint" class="w-5 h-5"></i>
-              送出心情並完成今日打卡
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-  } else {
-    let presentCount = 0, lateCount = 0, leaveCount = 0, absentCount = 0;
-    let qCounts = { red: 0, yellow: 0, blue: 0, green: 0 };
-    let careStudents = [];
-
-    appData.students.forEach(s => {
-      const r = todayRecords[s.id];
-      if (!r || r.status === 'absent') absentCount++;
-      else if (r.status === 'present') presentCount++;
-      else if (r.status === 'late') lateCount++;
-      else if (r.status === 'leave') leaveCount++;
-
-      if (r && r.mood && r.mood.q) {
-        qCounts[r.mood.q]++;
-        if (r.mood.q === 'red' || r.mood.q === 'blue') {
-          careStudents.push({ student: s, rec: r });
-        }
-      }
-    });
-
-    container.innerHTML = `
-      <div class="space-y-6">
-        <div class="grid grid-cols-2 lg:grid-cols-6 gap-3">
-          <div class="bg-white p-4 rounded-xl border border-slate-200">
-            <div class="text-xs font-bold text-slate-400">準時 / 遲到 / 未到</div>
-            <div class="text-xl font-black text-slate-800 mt-1">${presentCount} / ${lateCount} / <span class="text-rose-600">${absentCount}</span></div>
-          </div>
-          <div class="bg-rose-50 p-4 rounded-xl border border-rose-200">
-            <div class="text-xs font-bold text-rose-700">🔴 紅區 (焦慮/壓力)</div>
-            <div class="text-xl font-black text-rose-800 mt-1">${qCounts.red} 人</div>
-          </div>
-          <div class="bg-sky-50 p-4 rounded-xl border border-sky-200">
-            <div class="text-xs font-bold text-sky-700">🔵 藍區 (低落/疲憊)</div>
-            <div class="text-xl font-black text-sky-800 mt-1">${qCounts.blue} 人</div>
-          </div>
-          <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
-            <div class="text-xs font-bold text-amber-700">🟡 黃區 (開心/有動力)</div>
-            <div class="text-xl font-black text-amber-800 mt-1">${qCounts.yellow} 人</div>
-          </div>
-          <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
-            <div class="text-xs font-bold text-emerald-700">🟢 綠區 (平靜/放鬆)</div>
-            <div class="text-xl font-black text-emerald-800 mt-1">${qCounts.green} 人</div>
-          </div>
-          <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 flex flex-col justify-center">
-            <div class="text-xs font-bold text-indigo-700">💛 今日優先關懷</div>
-            <div class="text-xl font-black text-indigo-900 mt-1">${careStudents.length} 位同學</div>
-          </div>
-        </div>
-
-        ${careStudents.length > 0 ? `
-          <div class="bg-gradient-to-r from-rose-50 via-amber-50/50 to-sky-50 rounded-2xl border border-rose-200/80 p-5">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                <i data-lucide="heart-pulse" class="w-4 h-4 text-rose-600"></i>
-                今日情緒量表「建議關心名單」（位於紅區低愉悅高活力／藍區低愉悅低活力）
-              </h3>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              ${careStudents.map(({ student, rec }) => {
-                const qInfo = QUADRANT_INFO[rec.mood.q];
-                return `
-                  <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs flex items-start justify-between gap-3">
-                    <div class="space-y-1">
-                      <div class="flex items-center gap-2">
-                        <span class="font-bold text-sm text-slate-800">${student.seat}號 ${student.name}</span>
-                        <span class="text-xs font-bold px-2 py-0.5 rounded border ${qInfo.badge}">
-                          ${rec.mood.zh} (${rec.mood.en})
-                        </span>
-                      </div>
-                      <p class="text-xs text-slate-600">
-                        ${rec.mood.note ? `💬 學生留言：「${rec.mood.note}」` : `<span class="text-slate-400 italic">學生未填寫補充留言</span>`}
-                      </p>
-                      <p class="text-[11px] text-indigo-600 font-medium">💡 關懷建議：${qInfo.tip}</p>
-                    </div>
-                    <button onclick="openCareChat('${student.id}')" class="shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1 cursor-pointer">
-                      <i data-lucide="message-circle-heart" class="w-3.5 h-3.5"></i> 私訊關心
-                    </button>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-          </div>
-        ` : ''}
-
-        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
-            <span class="font-bold text-slate-700">今日班級點名與心情紀錄總表 (${TODAY_STR})</span>
-            <button onclick="exportAttendanceCSV()" class="text-xs bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 cursor-pointer">
-              <i data-lucide="download" class="w-3.5 h-3.5"></i> 匯出點名與心情 CSV
-            </button>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse min-w-[820px]">
-              <thead>
-                <tr class="border-b border-slate-200 text-xs text-slate-400 bg-slate-50">
-                  <th class="py-3 px-4">座號</th>
-                  <th class="py-3 px-4">姓名</th>
-                  <th class="py-3 px-4">打卡時間</th>
-                  <th class="py-3 px-4">出席狀態</th>
-                  <th class="py-3 px-4">今日情緒量表 (Mood Meter)</th>
-                  <th class="py-3 px-4">學生心情留言</th>
-                  <th class="py-3 px-4 text-right">關懷互動</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100 text-sm">
-                ${appData.students.map(s => {
-                  const rec = todayRecords[s.id] || { status: 'absent', time: '-', note: '', mood: null };
-                  const m = rec.mood;
-                  const qInfo = m ? QUADRANT_INFO[m.q] : null;
-                  return `
-                    <tr class="hover:bg-slate-50/80">
-                      <td class="py-3 px-4 font-mono text-slate-500">${s.seat}</td>
-                      <td class="py-3 px-4 font-bold text-slate-800">${s.name}</td>
-                      <td class="py-3 px-4 font-mono text-xs text-slate-500">${rec.time}</td>
-                      <td class="py-3 px-4">
-                        <select onchange="teacherUpdateAttendance('${s.id}', this.value)" class="text-xs font-bold px-2.5 py-1 rounded-md border ${
-                          rec.status === 'present' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                          rec.status === 'late' ? 'bg-amber-50 text-amber-700 border-amber-200' :
-                          rec.status === 'leave' ? 'bg-sky-50 text-sky-700 border-sky-200' :
-                          'bg-rose-50 text-rose-700 border-rose-200'
-                        }">
-                          <option value="present" ${rec.status==='present'?'selected':''}>✅ 準時出席</option>
-                          <option value="late" ${rec.status==='late'?'selected':''}>⚠️ 遲到</option>
-                          <option value="leave" ${rec.status==='leave'?'selected':''}>📋 請假</option>
-                          <option value="absent" ${rec.status==='absent'?'selected':''}>❌ 缺席/未打卡</option>
-                        </select>
-                      </td>
-                      <td class="py-3 px-4">
-                        ${m ? `
-                          <span class="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-lg border ${qInfo.badge}">
-                            ${m.zh} <span class="font-normal opacity-75">(${m.en})</span>
-                          </span>
-                        ` : `<span class="text-xs text-slate-300">尚未回報</span>`}
-                      </td>
-                      <td class="py-3 px-4 text-xs text-slate-600 max-w-[220px] truncate" title="${m?.note || ''}">
-                        ${m?.note || '-'}
-                      </td>
-                      <td class="py-3 px-4 text-right">
-                        <button onclick="openCareChat('${s.id}')" class="text-xs font-bold text-indigo-600 hover:bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200 cursor-pointer">
-                          私訊
-                        </button>
-                      </td>
-                    </tr>
-                  `;
-                }).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-}
-
-function selectMoodCell(r, c) {
-  const item = MOOD_METER_GRID[r][c];
-  tempSelectedMood = {
-    r, c,
-    zh: item.zh,
-    en: item.en,
-    q: item.q,
-    energy: 10 - r,
-    pleasantness: c + 1
-  };
-  renderCurrentTab();
-}
-
-function studentCheckIn() {
-  if (!tempSelectedMood) return alert('請先在情緒量表中點選一個心情格子！');
-  const noteInput = document.getElementById('moodNoteInput');
-  const moodNote = noteInput ? noteInput.value.trim() : '';
-
-  const now = new Date();
-  const timeStr = now.toTimeString().slice(0, 5);
-  const isLate = now.getHours() > 8 || (now.getHours() === 8 && now.getMinutes() > 30);
-
-  if (!appData.attendance[TODAY_STR]) appData.attendance[TODAY_STR] = {};
-  appData.attendance[TODAY_STR][currentUser.id] = {
-    status: isLate ? 'late' : 'present',
-    time: timeStr,
-    note: isLate ? '超過 08:30 打卡' : '',
-    mood: {
-      zh: tempSelectedMood.zh,
-      en: tempSelectedMood.en,
-      q: tempSelectedMood.q,
-      energy: tempSelectedMood.energy,
-      pleasantness: tempSelectedMood.pleasantness,
-      note: moodNote
-    }
-  };
-  tempSelectedMood = null;
-  saveData();
-  renderCurrentTab();
-}
-
-function resetMyTodayCheckIn() {
-  if (!confirm('確定要重新填寫今日的心情量表嗎？')) return;
-  if (appData.attendance[TODAY_STR]) {
-    delete appData.attendance[TODAY_STR][currentUser.id];
-    saveData();
-    renderCurrentTab();
-  }
-}
-
-function openCareChat(studentId) {
-  selectedChatStudentId = studentId;
-  switchTab('messages');
-}
-
-function teacherUpdateAttendance(studentId, status) {
-  if (currentUser.role !== 'teacher') return;
-  if (!appData.attendance[TODAY_STR]) appData.attendance[TODAY_STR] = {};
-  const old = appData.attendance[TODAY_STR][studentId] || { time: new Date().toTimeString().slice(0, 5), note: '', mood: null };
-  appData.attendance[TODAY_STR][studentId] = {
-    ...old,
-    status,
-    time: status === 'absent' ? '-' : (old.time === '-' ? new Date().toTimeString().slice(0, 5) : old.time)
-  };
-  saveData();
-  renderCurrentTab();
-}
-
-function exportAttendanceCSV() {
-  const todayRecords = appData.attendance[TODAY_STR] || {};
-  let csv = '\uFEFF座號,學號,姓名,日期,出席狀態,打卡時間,情緒象限,今日情緒詞彙,學生心情留言\n';
-  const qMap = { red: '紅區(高活力低愉悅)', yellow: '黃區(高活力高愉悅)', blue: '藍區(低活力低愉悅)', green: '綠區(低活力高愉悅)' };
-  appData.students.forEach(s => {
-    const r = todayRecords[s.id] || { status: 'absent', time: '-', mood: null };
-    const statusMap = { present: '準時出席', late: '遲到', leave: '請假', absent: '缺席' };
-    const qText = r.mood ? qMap[r.mood.q] : '-';
-    const moodText = r.mood ? `${r.mood.zh}(${r.mood.en})` : '-';
-    const moodNote = r.mood?.note ? r.mood.note.replace(/,/g, '，') : '-';
-    csv += `${s.seat},${s.id},${s.name},${TODAY_STR},${statusMap[r.status]},${r.time},${qText},${moodText},${moodNote}\n`;
-  });
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = `點名與心情紀錄_${TODAY_STR}.csv`;
-  link.click();
-}
-
-// ==================== 7. 模組：班級課表系統 ====================
+// ==================== 11. 模組：班級課表系統 ====================
 function renderTimetable(container) {
   const days = ['週一', '週二', '週三', '週四', '週五'];
   const periods = [
@@ -1839,7 +2782,7 @@ function processImportTimetable() {
   renderCurrentTab();
 }
 
-// ==================== 8. 模組：隔日作業聯絡簿提醒 ====================
+// ==================== 12. 模組：隔日作業聯絡簿提醒 ====================
 function renderHomeworkReminders(container) {
   const isTeacher = currentUser.role === 'teacher';
   const sortedList = [...appData.homeworkReminders].sort((a, b) => a.dueDate.localeCompare(b.dueDate));
@@ -1997,7 +2940,7 @@ function deleteHomeworkReminder(hwId) {
   renderCurrentTab();
 }
 
-// ==================== 9. 模組：班級考試行事曆 ====================
+// ==================== 13. 模組：班級考試行事曆 ====================
 function renderExamCalendar(container) {
   const isTeacher = currentUser.role === 'teacher';
   const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
@@ -2213,7 +3156,7 @@ function deleteExam(id) {
   renderCurrentTab();
 }
 
-// ==================== 10. 模組：課程公告發布 ====================
+// ==================== 14. 模組：課程公告發布 ====================
 function renderAnnouncements(container) {
   const sorted = [...appData.announcements].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
   const isTeacher = currentUser.role === 'teacher';
@@ -2341,7 +3284,7 @@ function deleteAnnouncement(id) {
   renderCurrentTab();
 }
 
-// ==================== 11. 模組：師生一對一私訊 ====================
+// ==================== 15. 模組：師生一對一私訊 ====================
 function renderMessages(container) {
   if (currentUser.role === 'student') {
     const chatList = appData.messages[currentUser.id] || [];
@@ -2521,14 +3464,14 @@ function updateUnreadBadge() {
   }
 }
 
-// ==================== 12. 模組：學生帳號與名冊管理 ====================
+// ==================== 16. 模組：學生帳號與名冊管理 ====================
 function renderRoster(container) {
   if (currentUser.role !== 'teacher') return;
   container.innerHTML = `
-    <div class="max-w-4xl mx-auto space-y-4">
+    <div class="max-w-5xl mx-auto space-y-4">
       <div class="bg-indigo-50/70 border border-indigo-200 rounded-xl p-4 flex items-center justify-between">
         <div class="text-xs text-indigo-800">
-          <strong>🔐 教師專屬管理模組：</strong>此頁面僅教師權限可見。您可檢視全班已建立之學生帳號、重設忘記的學生密碼，或直接新增學生名冊。
+          <strong>🔐 教師專屬管理模組：</strong>此頁面僅教師權限可見。您可檢視全班已建立之學生帳號、個資填寫狀態、重設密碼或手動新增名冊。
         </div>
         <button onclick="openAddStudentModal()" class="shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-lg cursor-pointer">
           + 手動新增學生帳號
@@ -2540,9 +3483,10 @@ function renderRoster(container) {
           <thead>
             <tr class="border-b border-slate-200 text-xs text-slate-400 bg-slate-50">
               <th class="py-3 px-4">座號</th>
-              <th class="py-3 px-4">登入學號 (帳號)</th>
+              <th class="py-3 px-4">登入學號</th>
               <th class="py-3 px-4">學生姓名</th>
-              <th class="py-3 px-4">目前密碼</th>
+              <th class="py-3 px-4">父母電話 (僅師可見)</th>
+              <th class="py-3 px-4">資料填寫狀態</th>
               <th class="py-3 px-4 text-right">管理操作</th>
             </tr>
           </thead>
@@ -2552,9 +3496,16 @@ function renderRoster(container) {
                 <td class="py-3 px-4 font-mono text-slate-500">${s.seat}</td>
                 <td class="py-3 px-4 font-mono font-bold text-indigo-600">${s.id}</td>
                 <td class="py-3 px-4 font-bold text-slate-800">${s.name}</td>
-                <td class="py-3 px-4 font-mono text-xs text-slate-500">${s.password}</td>
-                <td class="py-3 px-4 text-right space-x-2">
-                  <button onclick="resetStudentPassword('${s.id}')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2.5 py-1 rounded-md cursor-pointer">重設為 1234</button>
+                <td class="py-3 px-4 font-mono text-xs text-rose-700 font-bold">${s.privateInfo?.parentPhone || '-'}</td>
+                <td class="py-3 px-4">
+                  ${s.profileCompleted
+                    ? `<span class="text-xs font-bold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded">✓ 已完成建檔</span>`
+                    : `<span class="text-xs font-bold bg-amber-50 text-amber-700 px-2 py-0.5 rounded">⏳ 待學生填寫</span>`
+                  }
+                </td>
+                <td class="py-3 px-4 text-right space-x-1.5">
+                  <button onclick="viewingStudentProfileId='${s.id}'; switchTab('profiles');" class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-2.5 py-1 rounded-md cursor-pointer">檢視個資</button>
+                  <button onclick="resetStudentPassword('${s.id}')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2.5 py-1 rounded-md cursor-pointer">重設密碼</button>
                   <button onclick="deleteStudentAccount('${s.id}')" class="text-xs bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-2.5 py-1 rounded-md cursor-pointer">移除</button>
                 </td>
               </tr>
@@ -2623,14 +3574,19 @@ function createStudentByTeacher() {
   if (!seat || !id || !name) return alert('請完整填寫座號、學號與姓名');
   if (appData.students.some(s => s.id === id)) return alert('此學號已存在');
 
-  appData.students.push({ id, seat, name, password });
+  appData.students.push({
+    id, seat, name, password,
+    profileCompleted: false,
+    publicProfile: { nickname: `${id.toLowerCase()}_student`, mbti: 'ENFP', avatarGrad: 'from-emerald-500 to-teal-600', bio: '尚未填寫個人簡介', tags: [], igHandle: '' },
+    privateInfo: { birthday: '', studentPhone: '', parentName: '', parentPhone: '', emergencyRelation: '', emergencyPhone: '', address: '', healthNote: '' }
+  });
   appData.students.sort((a, b) => a.seat.localeCompare(b.seat));
   saveData();
   closeModal();
   renderCurrentTab();
 }
 
-// ==================== 13. 通用 Modal 控制 ====================
+// ==================== 17. 通用 Modal 控制 ====================
 function showModal(html) {
   const backdrop = document.getElementById('modalBackdrop');
   document.getElementById('modalContent').innerHTML = html;
