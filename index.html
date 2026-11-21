@@ -69,7 +69,7 @@
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">班務事務與個人檔案中心</span>
         </h2>
         <p class="text-sm text-slate-600 leading-relaxed">
-          整合 IG 風格班級自介牆、敏感個資（父母電話/生日）教師專屬加密檢視、班級幹部名錄、整潔打掃分配表、導師與各處室分機查詢，以及自動同步學生生日的班級行事曆。
+          整合導師一對一私訊、每日課程公告、情緒量表點名、每日時事看板、作業提醒、班級課表、幹部打掃與分機查詢，以及 IG 風格個人自介設定。
         </p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
@@ -236,7 +236,7 @@
           <div id="sidebarUserMeta" class="text-xs text-slate-400 font-mono mt-0.5">帳號：teacher</div>
         </div>
 
-        <nav id="sidebarNav" class="py-3 space-y-1 overflow-y-auto max-h-[calc(100vh-220px)]"></nav>
+        <nav id="sidebarNav" class="py-2.5 space-y-0.5 overflow-y-auto max-h-[calc(100vh-220px)]"></nav>
       </div>
 
       <div class="p-4 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
@@ -248,7 +248,7 @@
     <main class="flex-1 flex flex-col h-full overflow-hidden">
       <header class="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-3">
-          <h2 id="pageTitle" class="text-xl font-bold text-slate-800">每日點名與心情量表</h2>
+          <h2 id="pageTitle" class="text-xl font-bold text-slate-800">導師一對一私訊</h2>
           <span id="permissionHint" class="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium hidden md:inline-block"></span>
         </div>
         <div class="flex items-center gap-4">
@@ -386,7 +386,6 @@ const DEFAULT_DATA = {
   teachers: [
     { username: 'teacher', password: '1234', name: '陳老師', title: '高二忠班導師', extension: '312', office: '高二導師辦公室（行政大樓 3F）' }
   ],
-  // 班級幹部名單（全班同學可隨時查詢）
   classOfficers: [
     { id: 'OFF01', role: '班長', studentId: 'S01', duty: '統籌班級事務、朝會整隊、傳達導師與行政公告' },
     { id: 'OFF02', role: '副班長', studentId: 'S04', duty: '協助班長處理班務、每日早自習點名與登記缺曠課' },
@@ -395,14 +394,12 @@ const DEFAULT_DATA = {
     { id: 'OFF05', role: '風紀股長', studentId: 'S03', duty: '維持午休與自習課秩序、管理手機養機場保管箱' },
     { id: 'OFF06', role: '總務／康樂股長', studentId: 'S06', duty: '管理班費收支明細、籌辦班遊與校慶運動會活動' }
   ],
-  // 班級打掃工作分配表（全班同學可隨時查詢自己負責區域）
   cleaningDuties: [
     { id: 'CLN01', zone: '教室前門與講台黑板區', time: '每日 07:45 / 15:15', studentIds: ['S01'], tools: '板擦機、濕抹布、小掃把', note: '下課後需將黑板擦拭乾淨並整理講桌粉筆盒' },
     { id: 'CLN02', zone: '教室座位走道與門窗玻璃', time: '每日 15:15', studentIds: ['S02', 'S04'], tools: '掃把、畚斗、玻璃刮刀', note: '排好桌椅整齊線，窗溝灰塵每週五加強擦拭' },
     { id: 'CLN03', zone: '教室後方資源回收與垃圾桶', time: '每日 12:35 / 15:20', studentIds: ['S05'], tools: '分類回收籃、大型垃圾袋', note: '寶特瓶需壓扁沖洗，放學前送至地下室回收場' },
     { id: 'CLN04', zone: '外掃區：二樓東側走廊與樓梯間', time: '每日 15:15', studentIds: ['S03', 'S06'], tools: '長柄掃把、拖把、水桶', note: '扶手需用稀釋漂白水擦拭消毒，樓梯轉角勿堆雜物' }
   ],
-  // 學校總機、導師與各處室分機號碼（供家長與學生參考）
   schoolContacts: {
     mainPhone: '(07) 525-2000',
     absenceLine: '(07) 525-2000 轉 210（生輔組請假專線）',
@@ -434,7 +431,6 @@ const DEFAULT_DATA = {
         igHandle: '@zixuan_hoops'
       },
       privateInfo: {
-        // 故意設定其中幾位同學的生日在「本月」，讓打開班級行事曆就能直接看到生日慶祝標籤！
         birthday: `2009-${CURRENT_MONTH_PAD}-14`,
         studentPhone: '0912-345-601',
         parentName: '林建宏（父親）',
@@ -668,12 +664,13 @@ const DEFAULT_DATA = {
   }
 };
 
-let appData = JSON.parse(localStorage.getItem('eduCloud_v9')) || DEFAULT_DATA;
-let currentUser = JSON.parse(sessionStorage.getItem('eduCloudSession_v9')) || null;
+let appData = JSON.parse(localStorage.getItem('eduCloud_v10')) || DEFAULT_DATA;
+let currentUser = JSON.parse(sessionStorage.getItem('eduCloudSession_v10')) || null;
 let portalRole = 'teacher';
 let isRegisterMode = false;
 let currentCaptcha = '';
-let currentTab = 'classInfo'; // 預設開啟「班級事務中心（幹部・打掃・處室分機）」
+// 預設開啟「導師一對一私訊」（選單第一項）
+let currentTab = 'messages';
 let selectedChatStudentId = appData.students[0]?.id || 'S01';
 let viewingStudentProfileId = appData.students[0]?.id || 'S01';
 let selectedNewsId = appData.dailyNews[0]?.id || 'NEWS01';
@@ -686,7 +683,7 @@ let calMonth = new Date().getMonth();
 let showBirthdaysOnCalendar = true;
 
 function saveData() {
-  localStorage.setItem('eduCloud_v9', JSON.stringify(appData));
+  localStorage.setItem('eduCloud_v10', JSON.stringify(appData));
   if (currentUser) updateUnreadBadge();
 }
 
@@ -817,7 +814,7 @@ function handleLogin(e) {
     viewingStudentProfileId = student.id;
   }
 
-  sessionStorage.setItem('eduCloudSession_v9', JSON.stringify(currentUser));
+  sessionStorage.setItem('eduCloudSession_v10', JSON.stringify(currentUser));
   enterMainApp();
 }
 
@@ -864,12 +861,12 @@ function handleRegister(e) {
     viewingStudentProfileId = studentId;
   }
 
-  sessionStorage.setItem('eduCloudSession_v9', JSON.stringify(currentUser));
+  sessionStorage.setItem('eduCloudSession_v10', JSON.stringify(currentUser));
   enterMainApp();
 }
 
 function logout() {
-  sessionStorage.removeItem('eduCloudSession_v9');
+  sessionStorage.removeItem('eduCloudSession_v10');
   currentUser = null;
   tempSelectedMood = null;
   replyingToCommentId = null;
@@ -881,7 +878,7 @@ function logout() {
   lucide.createIcons();
 }
 
-// ==================== 5. 權限分流初始化主介面 ====================
+// ==================== 5. 權限分流初始化主介面（依指定由上到下選單順序排列） ====================
 function enterMainApp() {
   document.getElementById('authScreen').classList.add('hidden');
   document.getElementById('mainApp').classList.remove('hidden');
@@ -903,38 +900,40 @@ function enterMainApp() {
     profileBadge.innerHTML = `<i data-lucide="shield-check" class="w-4 h-4"></i><span>教師權限：${currentUser.name}</span>`;
     profileBadge.className = 'flex items-center gap-2 bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full text-xs font-bold';
 
+    // 選單排序：1.導師一對一私訊 2.每日課程最新公告 3.點名與心情關懷 4.每日時事看板 5.作業提醒 6.班級課表查詢 7.班級事務中心 8.自我介紹設定 (+行事曆與名冊輔助)
     sidebarNav.innerHTML = `
-      <button onclick="switchTab('classInfo')" id="nav-classInfo" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <div class="flex items-center gap-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-indigo-600"></i><span>幹部・打掃・處室分機</span></div>
-        <span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded">班務</span>
+      <button onclick="switchTab('messages')" id="nav-messages" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="message-square-text" class="w-4 h-4 text-indigo-600"></i><span>導師一對一私訊</span></div>
+        <span id="unreadBadge" class="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
       </button>
+      <button onclick="switchTab('announcements')" id="nav-announcements" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="megaphone" class="w-4 h-4"></i><span>每日課程最新公告</span>
+      </button>
+      <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="heart-handshake" class="w-4 h-4"></i><span>點名與心情關懷</span>
+      </button>
+      <button onclick="switchTab('news')" id="nav-news" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="newspaper" class="w-4 h-4 text-emerald-600"></i><span>每日時事看板</span></div>
+        <span class="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">TODAY</span>
+      </button>
+      <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="list-todo" class="w-4 h-4"></i><span>作業提醒</span>
+      </button>
+      <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="calendar-days" class="w-4 h-4"></i><span>班級課表查詢</span>
+      </button>
+      <button onclick="switchTab('classInfo')" id="nav-classInfo" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-indigo-600"></i><span>班級事務中心</span></div>
+        <span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded">幹部/打掃</span>
+      </button>
+      <button onclick="switchTab('profiles')" id="nav-profiles" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="contact-2" class="w-4 h-4 text-indigo-600"></i><span>自我介紹設定與個資</span></div>
+        <span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded">🔒個資</span>
+      </button>
+      <div class="my-1.5 border-t border-slate-100 mx-4"></div>
       <button onclick="switchTab('exams')" id="nav-exams" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <div class="flex items-center gap-3"><i data-lucide="calendar-heart" class="w-4 h-4 text-rose-500"></i><span>班級行事曆 (含生日)</span></div>
         <span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-1.5 py-0.5 rounded">🎂生日</span>
-      </button>
-      <button onclick="switchTab('profiles')" id="nav-profiles" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <div class="flex items-center gap-3"><i data-lucide="contact-2" class="w-4 h-4 text-indigo-600"></i><span>學生檔案與個資總覽</span></div>
-        <span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded">🔒個資</span>
-      </button>
-      <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <i data-lucide="heart-handshake" class="w-4 h-4"></i><span>每日點名與心情關懷</span>
-      </button>
-      <button onclick="switchTab('news')" id="nav-news" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <div class="flex items-center gap-3"><i data-lucide="newspaper" class="w-4 h-4 text-emerald-600"></i><span>每日國際時事看板</span></div>
-        <span class="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">TODAY</span>
-      </button>
-      <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <i data-lucide="calendar-cog" class="w-4 h-4"></i><span>班級課表編輯/匯入</span>
-      </button>
-      <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <i data-lucide="list-todo" class="w-4 h-4"></i><span>隔日作業聯絡簿發布</span>
-      </button>
-      <button onclick="switchTab('announcements')" id="nav-announcements" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <i data-lucide="megaphone" class="w-4 h-4"></i><span>課程公告發布管理</span>
-      </button>
-      <button onclick="switchTab('messages')" id="nav-messages" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <div class="flex items-center gap-3"><i data-lucide="message-square-text" class="w-4 h-4"></i><span>學生一對一私訊輔導</span></div>
-        <span id="unreadBadge" class="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
       </button>
       <button onclick="switchTab('roster')" id="nav-roster" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="users" class="w-4 h-4"></i><span>學生帳號與名冊管理</span>
@@ -952,39 +951,41 @@ function enterMainApp() {
     profileBadge.innerHTML = `<i data-lucide="user" class="w-4 h-4"></i><span>學生權限：${currentUser.seat}號 ${currentUser.name}</span>`;
     profileBadge.className = 'flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-bold';
 
+    // 學生端選單同樣嚴格依照：1.導師一對一私訊 2.每日課程最新公告 3.點名與心情關懷 4.每日時事看板 5.作業提醒 6.班級課表查詢 7.班級事務中心 8.自我介紹設定 (+班級行事曆)
     sidebarNav.innerHTML = `
-      <button onclick="switchTab('classInfo')" id="nav-classInfo" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <div class="flex items-center gap-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-emerald-600"></i><span>幹部・打掃・處室分機</span></div>
-        <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-1.5 py-0.5 rounded">查詢</span>
+      <button onclick="switchTab('messages')" id="nav-messages" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i><span>導師一對一私訊</span></div>
+        <span id="unreadBadge" class="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
       </button>
-      <button onclick="switchTab('exams')" id="nav-exams" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <div class="flex items-center gap-3"><i data-lucide="calendar-heart" class="w-4 h-4 text-rose-500"></i><span>班級行事曆 (含生日)</span></div>
-        <span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-1.5 py-0.5 rounded">🎂生日</span>
-      </button>
-      <button onclick="switchTab('profiles')" id="nav-profiles" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <div class="flex items-center gap-3"><i data-lucide="instagram" class="w-4 h-4 text-pink-600"></i><span>班級自介牆與我的資料</span></div>
-        ${needSetup ? `<span class="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded animate-pulse">待填寫</span>` : ''}
+      <button onclick="switchTab('announcements')" id="nav-announcements" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="bell" class="w-4 h-4"></i><span>每日課程最新公告</span>
       </button>
       <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <div class="flex items-center gap-3"><i data-lucide="smile-plus" class="w-4 h-4"></i><span>每日打卡與幸運迷因籤</span></div>
+        <div class="flex items-center gap-3"><i data-lucide="smile-plus" class="w-4 h-4"></i><span>點名與心情關懷</span></div>
         <span class="bg-amber-400 text-slate-900 text-[10px] font-black px-1.5 py-0.5 rounded">抽籤</span>
       </button>
       <button onclick="switchTab('news')" id="nav-news" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <div class="flex items-center gap-3"><i data-lucide="newspaper" class="w-4 h-4 text-emerald-600"></i><span>每日國際時事看板</span></div>
+        <div class="flex items-center gap-3"><i data-lucide="newspaper" class="w-4 h-4 text-emerald-600"></i><span>每日時事看板</span></div>
         <span class="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">TODAY</span>
+      </button>
+      <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="check-square" class="w-4 h-4"></i><span>作業提醒</span>
       </button>
       <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="calendar-days" class="w-4 h-4"></i><span>班級課表查詢</span>
       </button>
-      <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <i data-lucide="check-square" class="w-4 h-4"></i><span>隔日應交作業提醒</span>
+      <button onclick="switchTab('classInfo')" id="nav-classInfo" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-emerald-600"></i><span>班級事務中心</span></div>
+        <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-1.5 py-0.5 rounded">幹部/打掃</span>
       </button>
-      <button onclick="switchTab('announcements')" id="nav-announcements" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <i data-lucide="bell" class="w-4 h-4"></i><span>課程最新公告</span>
+      <button onclick="switchTab('profiles')" id="nav-profiles" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="instagram" class="w-4 h-4 text-pink-600"></i><span>自我介紹設定</span></div>
+        ${needSetup ? `<span class="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded animate-pulse">待填寫</span>` : ''}
       </button>
-      <button onclick="switchTab('messages')" id="nav-messages" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <div class="flex items-center gap-3"><i data-lucide="message-circle" class="w-4 h-4"></i><span>與導師一對一私訊</span></div>
-        <span id="unreadBadge" class="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+      <div class="my-1.5 border-t border-slate-100 mx-4"></div>
+      <button onclick="switchTab('exams')" id="nav-exams" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="calendar-heart" class="w-4 h-4 text-rose-500"></i><span>班級行事曆 (含生日)</span></div>
+        <span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-1.5 py-0.5 rounded">🎂生日</span>
       </button>
     `;
 
@@ -1005,28 +1006,28 @@ function switchTab(tab) {
   if (targetNav) targetNav.classList.add(activeClass);
 
   const teacherTitles = {
-    classInfo: ['班級事務中心｜幹部名單・打掃分配・處室分機', '管理班級幹部職掌、打掃區域分配表，並提供家長與學生查詢導師及各處室分機'],
-    exams: ['班級行事曆｜考試日程與學生生日慶祝', '自動同步匯入全班學生生日，整合小考、段考與班級壽星祝福'],
-    profiles: ['學生 IG 個人檔案與導師專用個資總覽', '可檢視全班同學公開自介與家長電話、生日、緊急聯絡人等私密個資'],
-    attendance: ['每日點名與情緒量表關懷總覽', '即時掌握學生出缺勤、Mood Meter 狀態與今日抽到的迷因籤'],
-    news: ['每日國際時事看板｜班級思辨討論區', 'LINE TODAY 風格每日精選新聞 + IG 互動留言板'],
-    timetable: ['班級課表管理系統', '教師可點擊編輯節次或批次匯入課表'],
-    homework: ['隔日作業聯絡簿發布', '發布隔天與近期應繳交的紙本/實體作業提醒'],
-    announcements: ['課程公告發布管理', '教師可發布、置頂與刪除班級公告'],
-    messages: ['學生一對一私訊輔導', '與班上每位學生的獨立私密對話頻道'],
-    roster: ['學生帳號與名冊管理', '教師可檢視已註冊學生或重設學生密碼']
+    messages: ['導師一對一私訊', '與班上每位學生的獨立私密對話頻道'],
+    announcements: ['每日課程最新公告', '教師可發布、置頂與管理每日課程通知'],
+    attendance: ['點名與心情關懷', '即時掌握學生出缺勤、Mood Meter 狀態與今日抽到的迷因籤'],
+    news: ['每日時事看板', 'LINE TODAY 風格每日精選新聞 + 班級思辨互動留言板'],
+    homework: ['作業提醒', '發布隔天與近期應繳交的紙本／實體作業提醒'],
+    timetable: ['班級課表查詢', '教師可點擊編輯節次或管理本學期課表'],
+    classInfo: ['班級事務中心', '管理班級幹部名單、打掃區域分配表，並提供家長與學生查詢導師及各處室分機'],
+    profiles: ['自我介紹設定與個資總覽', '可檢視全班同學公開自介與家長電話、生日、緊急聯絡人等私密個資'],
+    exams: ['班級行事曆 (含生日)', '自動同步匯入全班學生生日，整合小考、段考與班級壽星祝福'],
+    roster: ['學生帳號與名冊管理', '教師可檢視已註冊學生名冊與緊急聯絡電話']
   };
 
   const studentTitles = {
-    classInfo: ['班級事務查詢｜幹部名單・打掃範圍・處室分機', '隨時查詢班級幹部負責項目、你的打掃工作分配，以及老師與各處室分機號碼'],
-    exams: ['班級行事曆｜考試日程與同學生日慶祝', '查看考試倒數日期與本月班級壽星，一起為同學送上生日祝福！'],
-    profiles: ['班級 IG 自介牆與我的基本資料', '認識全班同學的公開自介；父母電話與生日僅供導師查閱，同學之間完全保密'],
-    attendance: ['每日心情打卡與幸運迷因籤', '選擇今日情緒量表完成簽到，即可抽取今日專屬幸運迷因籤詩！'],
-    news: ['每日國際時事看板｜班級思辨討論區', '閱讀今日精選國際新聞，在下方留言分享你的觀點！'],
+    messages: ['導師一對一私訊', '僅你與班導師可見的專屬私密對話'],
+    announcements: ['每日課程最新公告', '檢視老師發布的每日課程與班級重要通知'],
+    attendance: ['點名與心情關懷', '選擇今日情緒量表完成簽到，即可抽取今日專屬幸運迷因籤詩！'],
+    news: ['每日時事看板', '閱讀今日精選國際新聞，在下方留言分享你的觀點！'],
+    homework: ['作業提醒', '確認明天與近期該帶到學校繳交的作業清單'],
     timetable: ['班級課表查詢', '唯讀檢視本學期班級每週課表'],
-    homework: ['隔日應交作業提醒', '確認明天與近期該帶到學校繳交的作業清單'],
-    announcements: ['課程最新公告', '檢視老師發布的重要通知並標記已讀'],
-    messages: ['與導師一對一私訊', '僅你與班導師可見的專屬私密對話']
+    classInfo: ['班級事務中心', '隨時查詢班級幹部負責項目、你的打掃工作分配，以及老師與各處室分機號碼'],
+    profiles: ['自我介紹設定', '設定你的 IG 風格個人自介與基本資料（父母電話與生日僅供導師查閱）'],
+    exams: ['班級行事曆 (含生日)', '查看考試倒數日期與本月班級壽星，一起為同學送上生日祝福！']
   };
 
   const [title, hint] = currentUser.role === 'teacher' ? teacherTitles[tab] : studentTitles[tab];
@@ -1037,25 +1038,24 @@ function switchTab(tab) {
 
 function renderCurrentTab() {
   const container = document.getElementById('contentArea');
-  if (currentTab === 'classInfo') renderClassInfoHub(container);
-  else if (currentTab === 'exams') renderExamCalendar(container);
-  else if (currentTab === 'profiles') renderStudentProfilesHub(container);
+  if (currentTab === 'messages') renderMessages(container);
+  else if (currentTab === 'announcements') renderAnnouncements(container);
   else if (currentTab === 'attendance') renderAttendance(container);
   else if (currentTab === 'news') renderDailyNewsBoard(container);
-  else if (currentTab === 'timetable') renderTimetable(container);
   else if (currentTab === 'homework') renderHomeworkReminders(container);
-  else if (currentTab === 'announcements') renderAnnouncements(container);
-  else if (currentTab === 'messages') renderMessages(container);
+  else if (currentTab === 'timetable') renderTimetable(container);
+  else if (currentTab === 'classInfo') renderClassInfoHub(container);
+  else if (currentTab === 'profiles') renderStudentProfilesHub(container);
+  else if (currentTab === 'exams') renderExamCalendar(container);
   else if (currentTab === 'roster' && currentUser.role === 'teacher') renderRoster(container);
   lucide.createIcons();
 }
 
-// ==================== 6. 新增核心模組：幹部名單 + 打掃範圍表格 + 導師與各處室分機 ====================
+// ==================== 6. 班級事務中心：幹部名單 + 打掃範圍表格 + 導師與各處室分機 ====================
 function renderClassInfoHub(container) {
   const isTeacher = currentUser.role === 'teacher';
   const contacts = appData.schoolContacts;
 
-  // 若為學生登入，優先標示出「我自己的打掃區域」與「我擔任的幹部」
   const myCleaning = !isTeacher ? appData.cleaningDuties.filter(d => d.studentIds.includes(currentUser.id)) : [];
   const myOfficer = !isTeacher ? appData.classOfficers.filter(o => o.studentId === currentUser.id) : [];
 
@@ -1063,7 +1063,6 @@ function renderClassInfoHub(container) {
     <div class="max-w-6xl mx-auto space-y-6">
 
       ${!isTeacher ? `
-        <!-- 學生個人專屬快捷提醒條（一眼看到自己負責哪裡打掃、擔任什麼幹部） -->
         <div class="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-5 text-white shadow-sm flex flex-wrap items-center justify-between gap-4">
           <div class="space-y-1">
             <div class="text-xs font-bold text-emerald-100 flex items-center gap-1.5">
@@ -1083,7 +1082,7 @@ function renderClassInfoHub(container) {
         </div>
       ` : ''}
 
-      <!-- 區塊一：班級幹部名單（方便同學隨時查詢找誰處理事務） -->
+      <!-- 區塊一：班級幹部名單 -->
       <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
         <div class="p-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 bg-slate-50/70">
           <div class="flex items-center gap-2.5">
@@ -1225,7 +1224,7 @@ function renderClassInfoHub(container) {
         </div>
       </div>
 
-      <!-- 區塊三：班導師與學校各處室分機號碼一覽表（供家長與學生參考） -->
+      <!-- 區塊三：班導師與學校各處室分機號碼一覽表 -->
       <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
         <div class="p-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 bg-slate-50/70">
           <div class="flex items-center gap-2.5">
@@ -1245,7 +1244,6 @@ function renderClassInfoHub(container) {
         </div>
 
         <div class="p-5 space-y-5">
-          <!-- 導師專屬聯絡卡 -->
           <div class="bg-gradient-to-r from-indigo-50 via-sky-50 to-indigo-50 border-2 border-indigo-200 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="space-y-1">
               <span class="text-[11px] font-black bg-indigo-600 text-white px-2.5 py-0.5 rounded-full">班導師直接聯繫窗口</span>
@@ -1260,7 +1258,6 @@ function renderClassInfoHub(container) {
             </div>
           </div>
 
-          <!-- 各處室分機表格 -->
           <div class="overflow-x-auto border border-slate-200 rounded-xl">
             <table class="w-full text-left border-collapse min-w-[650px]">
               <thead>
@@ -1292,7 +1289,6 @@ function renderClassInfoHub(container) {
   `;
 }
 
-// 教師編輯／新增幹部 Modal
 function openOfficerModal(officerId = null) {
   if (currentUser.role !== 'teacher') return;
   const existing = officerId ? appData.classOfficers.find(o => o.id === officerId) : null;
@@ -1347,7 +1343,6 @@ function deleteOfficer(id) {
   renderCurrentTab();
 }
 
-// 教師編輯／新增打掃區域 Modal
 function openCleaningModal(cleanId = null) {
   if (currentUser.role !== 'teacher') return;
   const existing = cleanId ? appData.cleaningDuties.find(c => c.id === cleanId) : null;
@@ -1422,7 +1417,6 @@ function deleteCleaning(id) {
   renderCurrentTab();
 }
 
-// 教師編輯導師與各處室分機 Modal
 function openEditContactsModal() {
   if (currentUser.role !== 'teacher') return;
   const c = appData.schoolContacts;
@@ -1489,7 +1483,7 @@ function saveContactsInfo() {
   renderCurrentTab();
 }
 
-// ==================== 7. 模組：班級行事曆（自動匯入學生生日 + 考試日程） ====================
+// ==================== 7. 班級行事曆（自動匯入學生生日 + 考試日程） ====================
 function renderExamCalendar(container) {
   const isTeacher = currentUser.role === 'teacher';
   const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
@@ -1498,8 +1492,6 @@ function renderExamCalendar(container) {
   const firstDay = new Date(calYear, calMonth, 1).getDay();
   const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
 
-  // 自動從全班學生基本資料 (privateInfo.birthday) 萃取「當月壽星」並匯入行事曆！
-  // 注意：對同學只顯示「月/日 生日快樂」慶祝，不會洩漏出生年份或年齡隱私；老師端則可同步對照完整資料
   const monthBirthdays = appData.students
     .filter(s => s.privateInfo && s.privateInfo.birthday && s.privateInfo.birthday.split('-')[1] === currentMonthStr)
     .map(s => {
@@ -1614,10 +1606,7 @@ function renderExamCalendar(container) {
         </div>
       </div>
 
-      <!-- 右側欄：本月班級壽星榜 + 近期考試日程 -->
       <div class="lg:col-span-4 space-y-5">
-        
-        <!-- 自動匯入之本月壽星卡片 -->
         <div class="bg-gradient-to-br from-pink-50 via-rose-50/70 to-amber-50 rounded-2xl border border-pink-200 p-5 shadow-xs">
           <div class="flex items-center justify-between mb-2">
             <h3 class="font-black text-pink-900 text-sm flex items-center gap-1.5">
@@ -1651,7 +1640,6 @@ function renderExamCalendar(container) {
           `}
         </div>
 
-        <!-- 近期考試日程 -->
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
           <h3 class="font-bold text-slate-800 text-base mb-1 flex items-center gap-2">
             <i data-lucide="timer" class="w-4 h-4 text-rose-500"></i> 近期考試日程與範圍
@@ -1780,7 +1768,7 @@ function deleteExam(id) {
   renderCurrentTab();
 }
 
-// ==================== 8. 模組：IG 風格班級個人檔案牆 + 教師限定敏感個資 ====================
+// ==================== 8. 自我介紹設定與個資總覽 ====================
 function renderStudentProfilesHub(container) {
   const isTeacher = currentUser.role === 'teacher';
   const targetStudent = appData.students.find(s => s.id === viewingStudentProfileId) || appData.students[0];
@@ -1799,7 +1787,6 @@ function renderStudentProfilesHub(container) {
   };
   const priv = targetStudent.privateInfo || {};
 
-  // 查詢該同學擔任的幹部與打掃區域
   const officerRole = appData.classOfficers.find(o => o.studentId === targetStudent.id);
   const cleaningZones = appData.cleaningDuties.filter(c => c.studentIds.includes(targetStudent.id));
 
@@ -1899,7 +1886,6 @@ function renderStudentProfilesHub(container) {
                 ${pub.bio || '這位同學還沒有填寫自我介紹喔～'}
               </p>
 
-              <!-- 公開顯示該生負責的打掃區域 -->
               <div class="text-xs bg-emerald-50/70 border border-emerald-100 text-emerald-800 px-3.5 py-2.5 rounded-xl flex items-center justify-between">
                 <span>🧹 負責打掃區域：<strong>${cleaningZones.length > 0 ? cleaningZones.map(z => z.zone).join('、') : '未指派'}</strong></span>
                 <button onclick="switchTab('classInfo')" class="underline font-bold hover:text-emerald-950 cursor-pointer">查看打掃表 →</button>
@@ -2184,7 +2170,7 @@ function exportAllStudentsPrivateCSV() {
   link.click();
 }
 
-// ==================== 9. 迷因卡片 & 每日點名 ====================
+// ==================== 9. 迷因卡片 & 點名與心情關懷 ====================
 function renderMemeFortuneCard(meme) {
   if (!meme) return '';
   return `
@@ -2374,7 +2360,7 @@ function teacherUpdateAttendance(studentId, status) {
   renderCurrentTab();
 }
 
-// ==================== 10. 每日國際時事看板 ====================
+// ==================== 10. 每日時事看板 ====================
 function renderDailyNewsBoard(container) {
   const activeNews = appData.dailyNews.find(n => n.id === selectedNewsId) || appData.dailyNews[0];
   const isLikedByMe = activeNews.likes.includes(currentUser.id);
@@ -2449,7 +2435,7 @@ function openCareChat(studentId) {
   switchTab('messages');
 }
 
-// ==================== 11. 課表・作業・公告・私訊・名冊 ====================
+// ==================== 11. 課表・作業提醒・每日課程最新公告・導師一對一私訊・名冊 ====================
 function renderTimetable(container) {
   const days = ['週一', '週二', '週三', '週四', '週五'];
   const periods = [1, 2, 3, 4, 5, 6, 7];
@@ -2517,7 +2503,7 @@ function renderHomeworkReminders(container) {
   const isTeacher = currentUser.role === 'teacher';
   container.innerHTML = `
     <div class="max-w-4xl mx-auto space-y-4">
-      ${isTeacher ? `<div class="flex justify-end"><button onclick="openNewHomeworkReminderModal()" class="bg-indigo-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer">+ 新增隔日作業提醒</button></div>` : ''}
+      ${isTeacher ? `<div class="flex justify-end"><button onclick="openNewHomeworkReminderModal()" class="bg-indigo-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer">+ 新增作業提醒</button></div>` : ''}
       ${appData.homeworkReminders.map(hw => {
         const isChecked = hw.checkedBy && hw.checkedBy.includes(currentUser.id);
         return `
@@ -2599,7 +2585,7 @@ function renderAnnouncements(container) {
 function openNewAnnouncementModal() {
   showModal(`
     <div class="p-6">
-      <h3 class="text-lg font-bold text-slate-800 mb-4">發布課程公告</h3>
+      <h3 class="text-lg font-bold text-slate-800 mb-4">發布每日課程最新公告</h3>
       <div class="space-y-3">
         <input id="annTitle" type="text" placeholder="公告標題" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
         <textarea id="annContent" rows="4" placeholder="公告內容" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></textarea>
