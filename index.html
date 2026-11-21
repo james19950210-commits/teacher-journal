@@ -19,11 +19,6 @@
       background-size: 40px 40px;
       background-position: 0 0, 20px 20px;
     }
-    @keyframes floatSlow {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-6px) rotate(1.5deg); }
-    }
-    .meme-float { animation: floatSlow 3.5s ease-in-out infinite; }
     @keyframes popIn {
       0% { opacity: 0; transform: scale(0.85) translateY(12px); }
       100% { opacity: 1; transform: scale(1) translateY(0); }
@@ -33,11 +28,15 @@
       background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
       padding: 3px;
     }
+    .stamp-card-bg {
+      background-image: radial-gradient(#fde68a 1.2px, transparent 1.2px);
+      background-size: 16px 16px;
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-screen overflow-hidden">
 
-  <!-- ==================== 類因材網風格：校園入口與帳號登入畫面 ==================== -->
+  <!-- ==================== 校園入口與帳號登入畫面 ==================== -->
   <div id="authScreen" class="fixed inset-0 portal-bg flex flex-col justify-between overflow-y-auto z-50">
     <header class="bg-white/90 backdrop-blur-md border-b border-sky-100 px-6 py-3.5 flex items-center justify-between sticky top-0 z-10">
       <div class="flex items-center gap-3">
@@ -66,10 +65,10 @@
         </div>
         <h2 class="text-3xl sm:text-4xl font-black text-slate-800 leading-tight">
           智慧化班級點名、<br>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">班務事務與個人檔案中心</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">榮譽集點與到校紀錄中心</span>
         </h2>
         <p class="text-sm text-slate-600 leading-relaxed">
-          整合導師一對一私訊、每日課程公告、情緒量表點名、每日時事看板、作業提醒、班級課表、幹部打掃與分機查詢，以及 IG 風格個人自介設定。
+          整合導師一對一私訊、每日課程公告、情緒量表點名、每日時事看板、班級生日行事曆、作業提醒、班級課表、班級事務中心、榮譽集點卡、每日到校打卡紀錄及個人自介設定。
         </p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
@@ -78,9 +77,9 @@
               <i data-lucide="award" class="w-4 h-4"></i> 教師管理權限
             </div>
             <ul class="text-xs text-slate-600 space-y-1">
-              <li>• 查閱全班基本個資（父母電話/生日/住址）</li>
-              <li>• 編輯幹部名單、打掃分配表與分機資訊</li>
-              <li>• 班級行事曆自動同步顯示全班學生生日</li>
+              <li>• 幫表現優良學生加點，核銷免雜記/小考/零食券</li>
+              <li>• 稽核全班每日精確到校打卡時間憑證</li>
+              <li>• 管理幹部名單、打掃分配與生日考試行事曆</li>
             </ul>
           </div>
           <div class="bg-white/90 p-4 rounded-2xl border border-emerald-100 shadow-2xs">
@@ -88,9 +87,9 @@
               <i data-lucide="user-check" class="w-4 h-4"></i> 學生學習權限
             </div>
             <ul class="text-xs text-slate-600 space-y-1">
-              <li>• 隨時查詢班級幹部名單、打掃負責區域</li>
-              <li>• 查詢導師與各處室分機供家長聯繫參考</li>
-              <li>• 班級行事曆一同為當月壽星送上生日祝福</li>
+              <li>• 查看個人電子集點卡，兌換免雜記/小考/零食券</li>
+              <li>• 隨時查閱每日到校打卡時間戳記，避免爭議</li>
+              <li>• 查詢幹部打掃分配、處室分機與班級行事曆</li>
             </ul>
           </div>
         </div>
@@ -236,7 +235,7 @@
           <div id="sidebarUserMeta" class="text-xs text-slate-400 font-mono mt-0.5">帳號：teacher</div>
         </div>
 
-        <nav id="sidebarNav" class="py-2.5 space-y-0.5 overflow-y-auto max-h-[calc(100vh-220px)]"></nav>
+        <nav id="sidebarNav" class="py-2 space-y-0.5 overflow-y-auto max-h-[calc(100vh-225px)]"></nav>
       </div>
 
       <div class="p-4 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
@@ -306,7 +305,7 @@ const MOOD_METER_GRID = [
     { zh: '柔和的', en: 'Mellow', q: 'green' }, { zh: '沉思的', en: 'Thoughtful', q: 'green' }, { zh: '平和的', en: 'Peaceful', q: 'green' }, { zh: '舒服的', en: 'Comfortable', q: 'green' }, { zh: '無憂無慮', en: 'Carefree', q: 'green' }
   ],
   [
-    { zh: '絕望的', en: 'Despairing', q: 'blue' }, { zh: '無望的', en: 'Hopeless', q: 'blue' }, { zh: '孤寂的', en: 'Desolate', q: 'blue' }, { zh: '疲憊不堪的', en: 'Spent', q: 'blue' }, { zh: '被榨乾的的', en: 'Drained', q: 'blue' },
+    { zh: '絕望的', en: 'Despairing', q: 'blue' }, { zh: '無望的', en: 'Hopeless', q: 'blue' }, { zh: '孤寂的', en: 'Desolate', q: 'blue' }, { zh: '疲憊不堪的', en: 'Spent', q: 'blue' }, { zh: '被榨乾的', en: 'Drained', q: 'blue' },
     { zh: '昏昏欲睡', en: 'Sleepy', q: 'green' }, { zh: '安於現狀的', en: 'Complacent', q: 'green' }, { zh: '平靜的', en: 'Tranquil', q: 'green' }, { zh: '舒適的', en: 'Cozy', q: 'green' }, { zh: '安詳的', en: 'Serene', q: 'green' }
   ]
 ];
@@ -365,7 +364,38 @@ const DEFAULT_MEME_FORTUNES = [
   }
 ];
 
-// ==================== 3. 日期工具與初始資料庫 ====================
+// ==================== 3. 集點卡兌換獎勵定義 ====================
+const REWARD_CATALOG = [
+  {
+    id: 'REW_SNACK',
+    name: '零食兌換券',
+    cost: 3,
+    icon: '🍪',
+    badgeColor: 'bg-amber-100 text-amber-800 border-amber-300',
+    cardBg: 'from-amber-50 to-orange-50 border-amber-200',
+    desc: '可向導師兌換教室百寶箱精選餅乾、糖果或飲料乙份。'
+  },
+  {
+    id: 'REW_JOURNAL',
+    name: '免雜記券',
+    cost: 5,
+    icon: '📝',
+    badgeColor: 'bg-sky-100 text-sky-800 border-sky-300',
+    cardBg: 'from-sky-50 to-indigo-50 border-sky-200',
+    desc: '可折抵一次週記／生活札記撰寫（仍須準時交本蓋章核銷）。'
+  },
+  {
+    id: 'REW_QUIZ',
+    name: '免小考券',
+    cost: 10,
+    icon: '🎟️',
+    badgeColor: 'bg-rose-100 text-rose-800 border-rose-300',
+    cardBg: 'from-rose-50 to-pink-50 border-rose-200',
+    desc: '可折抵一次國文／班級平時隨堂小考（段考、模擬考除外）。'
+  }
+];
+
+// ==================== 4. 日期工具與初始資料庫 ====================
 function getOffsetDateStr(offsetDays) {
   const d = new Date();
   d.setDate(d.getDate() + offsetDays);
@@ -377,10 +407,15 @@ function getOffsetDateStr(offsetDays) {
 
 const TODAY_STR = getOffsetDateStr(0);
 const YESTERDAY_STR = getOffsetDateStr(-1);
+const TWO_DAYS_AGO_STR = getOffsetDateStr(-2);
+const THREE_DAYS_AGO_STR = getOffsetDateStr(-3);
 const TOMORROW_STR = getOffsetDateStr(1);
 const CURRENT_MONTH_NUM = new Date().getMonth() + 1;
 const CURRENT_MONTH_PAD = String(CURRENT_MONTH_NUM).padStart(2, '0');
 const TEACHER_AUTH_CODE = '8888';
+
+// 規定準時到校時間門檻：07:45
+const ON_TIME_CUTOFF = '07:45';
 
 const DEFAULT_DATA = {
   teachers: [
@@ -422,6 +457,16 @@ const DEFAULT_DATA = {
     {
       id: 'S01', password: '1234', seat: '01', name: '林子軒',
       profileCompleted: true,
+      points: 7,
+      pointLogs: [
+        { id: 'PL01', date: THREE_DAYS_AGO_STR, type: 'earn', delta: 2, reason: '主動協助搬運全班教科書與段考考卷', by: '陳老師' },
+        { id: 'PL02', date: TWO_DAYS_AGO_STR, type: 'earn', delta: 3, reason: '連續一週準時於 07:35 前到校並完成黑板整潔', by: '陳老師' },
+        { id: 'PL03', date: YESTERDAY_STR, type: 'earn', delta: 5, reason: '國文課堂小組發表表現優異', by: '陳老師' },
+        { id: 'PL04', date: YESTERDAY_STR, type: 'redeem', delta: -3, reason: '兌換【零食兌換券】', by: '林子軒（學生自助兌換）' }
+      ],
+      vouchers: [
+        { id: 'VCH101', rewardId: 'REW_SNACK', name: '零食兌換券', icon: '🍪', redeemedAt: YESTERDAY_STR, status: 'unused', usedAt: null }
+      ],
       publicProfile: {
         nickname: 'zixuan.lin_01',
         mbti: 'ENTJ',
@@ -444,6 +489,12 @@ const DEFAULT_DATA = {
     {
       id: 'S02', password: '1234', seat: '02', name: '陳思妤',
       profileCompleted: true,
+      points: 11,
+      pointLogs: [
+        { id: 'PL21', date: THREE_DAYS_AGO_STR, type: 'earn', delta: 6, reason: '教室佈置與班級海報設計獲全校第一名', by: '陳老師' },
+        { id: 'PL22', date: YESTERDAY_STR, type: 'earn', delta: 5, reason: '每日時事看板思辨留言深入且有見地', by: '陳老師' }
+      ],
+      vouchers: [],
       publicProfile: {
         nickname: 'siyu_art.22',
         mbti: 'INFJ',
@@ -466,6 +517,11 @@ const DEFAULT_DATA = {
     {
       id: 'S03', password: '1234', seat: '03', name: '張宇翔',
       profileCompleted: true,
+      points: 4,
+      pointLogs: [
+        { id: 'PL31', date: TWO_DAYS_AGO_STR, type: 'earn', delta: 4, reason: '外掃區樓梯扶手消毒徹底，衛生評比滿分', by: '陳老師' }
+      ],
+      vouchers: [],
       publicProfile: {
         nickname: 'yuxiang_run',
         mbti: 'ENFP',
@@ -488,6 +544,11 @@ const DEFAULT_DATA = {
     {
       id: 'S04', password: '1234', seat: '04', name: '黃品妍',
       profileCompleted: true,
+      points: 6,
+      pointLogs: [
+        { id: 'PL41', date: YESTERDAY_STR, type: 'earn', delta: 6, reason: '協助副班長早自習點名零誤差且熱心輔導同學', by: '陳老師' }
+      ],
+      vouchers: [],
       publicProfile: {
         nickname: 'pinyan_read',
         mbti: 'ISFJ',
@@ -510,6 +571,11 @@ const DEFAULT_DATA = {
     {
       id: 'S05', password: '1234', seat: '05', name: '王柏翰',
       profileCompleted: true,
+      points: 3,
+      pointLogs: [
+        { id: 'PL51', date: TWO_DAYS_AGO_STR, type: 'earn', delta: 3, reason: '資源回收分類整齊確實', by: '陳老師' }
+      ],
+      vouchers: [],
       publicProfile: {
         nickname: 'bohan_05',
         mbti: 'ISTP',
@@ -532,6 +598,11 @@ const DEFAULT_DATA = {
     {
       id: 'S06', password: '1234', seat: '06', name: '吳佳穎',
       profileCompleted: true,
+      points: 8,
+      pointLogs: [
+        { id: 'PL61', date: YESTERDAY_STR, type: 'earn', delta: 8, reason: '班費帳目清晰透明並規劃班級慶生活動', by: '陳老師' }
+      ],
+      vouchers: [],
       publicProfile: {
         nickname: 'jiaying_dance',
         mbti: 'ESFJ',
@@ -553,15 +624,32 @@ const DEFAULT_DATA = {
     }
   ],
   memeFortunes: DEFAULT_MEME_FORTUNES,
+  // 歷史與今日點名打卡紀錄（含精確到校時間戳記，供「每日打卡紀錄」查詢憑證）
   attendance: {
+    [THREE_DAYS_AGO_STR]: {
+      'S01': { status: 'present', time: '07:32:18', exactTimestamp: `${THREE_DAYS_AGO_STR} 07:32:18`, source: '學生自主系統簽到', note: '', mood: { zh: '有動力的', en: 'Motivated', q: 'yellow' }, fortuneId: 'M01' },
+      'S02': { status: 'present', time: '07:38:04', exactTimestamp: `${THREE_DAYS_AGO_STR} 07:38:04`, source: '學生自主系統簽到', note: '', mood: { zh: '平靜的', en: 'Calm', q: 'green' }, fortuneId: 'M02' },
+      'S03': { status: 'late', time: '07:52:41', exactTimestamp: `${THREE_DAYS_AGO_STR} 07:52:41`, source: '學生自主系統簽到', note: '公車誤點 7 分鐘', mood: { zh: '緊張的', en: 'Nervous', q: 'red' }, fortuneId: 'M02' }
+    },
+    [TWO_DAYS_AGO_STR]: {
+      'S01': { status: 'present', time: '07:34:55', exactTimestamp: `${TWO_DAYS_AGO_STR} 07:34:55`, source: '學生自主系統簽到', note: '', mood: { zh: '平靜的', en: 'Calm', q: 'green' }, fortuneId: 'M02' },
+      'S02': { status: 'present', time: '07:41:12', exactTimestamp: `${TWO_DAYS_AGO_STR} 07:41:12`, source: '學生自主系統簽到', note: '', mood: { zh: '開心的', en: 'Pleased', q: 'yellow' }, fortuneId: 'M01' },
+      'S04': { status: 'present', time: '07:29:03', exactTimestamp: `${TWO_DAYS_AGO_STR} 07:29:03`, source: '學生自主系統簽到', note: '', mood: { zh: '集中的', en: 'Focused', q: 'yellow' }, fortuneId: 'M01' }
+    },
+    [YESTERDAY_STR]: {
+      'S01': { status: 'present', time: '07:36:09', exactTimestamp: `${YESTERDAY_STR} 07:36:09`, source: '學生自主系統簽到', note: '', mood: { zh: '集中的', en: 'Focused', q: 'yellow' }, fortuneId: 'M01' },
+      'S02': { status: 'present', time: '07:43:27', exactTimestamp: `${YESTERDAY_STR} 07:43:27`, source: '學生自主系統簽到', note: '', mood: { zh: '自在的', en: 'At Ease', q: 'green' }, fortuneId: 'M02' },
+      'S03': { status: 'present', time: '07:44:50', exactTimestamp: `${YESTERDAY_STR} 07:44:50`, source: '學生自主系統簽到', note: '壓線準時進教室！', mood: { zh: '振奮的', en: 'Upbeat', q: 'yellow' }, fortuneId: 'M01' },
+      'S05': { status: 'leave', time: '07:20:00', exactTimestamp: `${YESTERDAY_STR} 07:20:00`, source: '導師核准病假登錄', note: '家長來電請病假半天', mood: null, fortuneId: null }
+    },
     [TODAY_STR]: {
       'S01': {
-        status: 'present', time: '08:05', note: '',
+        status: 'present', time: '07:38:15', exactTimestamp: `${TODAY_STR} 07:38:15`, source: '學生自主系統簽到', note: '',
         mood: { zh: '集中的', en: 'Focused', q: 'yellow', energy: 7, pleasantness: 7, note: '昨晚睡得很飽，準備好上數學課！' },
         fortuneId: 'M01'
       },
       'S02': {
-        status: 'present', time: '08:12', note: '',
+        status: 'present', time: '07:42:33', exactTimestamp: `${TODAY_STR} 07:42:33`, source: '學生自主系統簽到', note: '',
         mood: { zh: '平靜的', en: 'Calm', q: 'green', energy: 4, pleasantness: 6, note: '' },
         fortuneId: 'M02'
       }
@@ -611,7 +699,7 @@ const DEFAULT_DATA = {
       id: 'A01',
       title: '下週第二次段考範圍與座位表公告',
       category: '重要通知',
-      content: '請各位同學注意，下週三、四舉行第二次期中考。請提前依照班級考試行事曆複習各科範圍。',
+      content: '請各位同學注意，下週三、四舉行第二次期中考。請提前依照班級行事曆複習各科範圍。',
       pinned: true,
       author: '陳老師',
       date: TODAY_STR,
@@ -664,17 +752,17 @@ const DEFAULT_DATA = {
   }
 };
 
-let appData = JSON.parse(localStorage.getItem('eduCloud_v10')) || DEFAULT_DATA;
-let currentUser = JSON.parse(sessionStorage.getItem('eduCloudSession_v10')) || null;
+let appData = JSON.parse(localStorage.getItem('eduCloud_v11')) || DEFAULT_DATA;
+let currentUser = JSON.parse(sessionStorage.getItem('eduCloudSession_v11')) || null;
 let portalRole = 'teacher';
 let isRegisterMode = false;
 let currentCaptcha = '';
-// 預設開啟「導師一對一私訊」（選單第一項）
 let currentTab = 'messages';
 let selectedChatStudentId = appData.students[0]?.id || 'S01';
 let viewingStudentProfileId = appData.students[0]?.id || 'S01';
 let selectedNewsId = appData.dailyNews[0]?.id || 'NEWS01';
-let replyingToCommentId = null;
+let selectedCheckInStudentId = appData.students[0]?.id || 'S01';
+let selectedStampStudentId = appData.students[0]?.id || 'S01';
 let tempSelectedMood = null;
 
 // 行事曆目前檢視年月與篩選開關
@@ -683,11 +771,11 @@ let calMonth = new Date().getMonth();
 let showBirthdaysOnCalendar = true;
 
 function saveData() {
-  localStorage.setItem('eduCloud_v10', JSON.stringify(appData));
+  localStorage.setItem('eduCloud_v11', JSON.stringify(appData));
   if (currentUser) updateUnreadBadge();
 }
 
-// ==================== 4. 登入入口與驗證邏輯 ====================
+// ==================== 5. 登入入口與驗證邏輯 ====================
 function init() {
   document.getElementById('portalDate').textContent = TODAY_STR;
   document.getElementById('currentDateDisplay').textContent = TODAY_STR;
@@ -731,7 +819,7 @@ function selectPortalRole(role) {
     tabT.className = 'py-4 flex items-center justify-center gap-2 bg-indigo-600 text-white transition cursor-pointer';
     tabS.className = 'py-4 flex items-center justify-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200/70 transition cursor-pointer';
     title.textContent = isRegisterMode ? '建立教師管理帳戶' : '教師身分驗證登入';
-    subtitle.textContent = '具備查閱學生家長電話/生日個資、管理幹部打掃與行事曆權限';
+    subtitle.textContent = '具備登記學生加點集點卡、稽核到校打卡時間與查閱個資權限';
     idLabel.textContent = '教師帳號';
     idInput.placeholder = '請輸入教師帳號 (預設: teacher)';
     loginBtn.className = 'w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
@@ -744,7 +832,7 @@ function selectPortalRole(role) {
     tabS.className = 'py-4 flex items-center justify-center gap-2 bg-emerald-600 text-white transition cursor-pointer';
     tabT.className = 'py-4 flex items-center justify-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200/70 transition cursor-pointer';
     title.textContent = isRegisterMode ? '建立學生學習帳戶' : '學生身分驗證登入';
-    subtitle.textContent = '查詢幹部名單、打掃範圍、導師與各處室分機及班級生日行事曆';
+    subtitle.textContent = '查看個人集點卡兌換獎勵、每日到校時間憑證與班級行事曆';
     idLabel.textContent = '學生學號';
     idInput.placeholder = '請輸入學生學號 (例如: S01)';
     loginBtn.className = 'w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
@@ -812,9 +900,11 @@ function handleLogin(e) {
     }
     currentUser = { role: 'student', id: student.id, name: student.name, seat: student.seat };
     viewingStudentProfileId = student.id;
+    selectedCheckInStudentId = student.id;
+    selectedStampStudentId = student.id;
   }
 
-  sessionStorage.setItem('eduCloudSession_v10', JSON.stringify(currentUser));
+  sessionStorage.setItem('eduCloudSession_v11', JSON.stringify(currentUser));
   enterMainApp();
 }
 
@@ -842,6 +932,9 @@ function handleRegister(e) {
     appData.students.push({
       id: studentId, password, seat, name,
       profileCompleted: false,
+      points: 0,
+      pointLogs: [],
+      vouchers: [],
       publicProfile: {
         nickname: `${studentId.toLowerCase()}_student`,
         mbti: 'ENFP',
@@ -859,17 +952,18 @@ function handleRegister(e) {
     saveData();
     currentUser = { role: 'student', id: studentId, name, seat };
     viewingStudentProfileId = studentId;
+    selectedCheckInStudentId = studentId;
+    selectedStampStudentId = studentId;
   }
 
-  sessionStorage.setItem('eduCloudSession_v10', JSON.stringify(currentUser));
+  sessionStorage.setItem('eduCloudSession_v11', JSON.stringify(currentUser));
   enterMainApp();
 }
 
 function logout() {
-  sessionStorage.removeItem('eduCloudSession_v10');
+  sessionStorage.removeItem('eduCloudSession_v11');
   currentUser = null;
   tempSelectedMood = null;
-  replyingToCommentId = null;
   document.getElementById('mainApp').classList.add('hidden');
   document.getElementById('authScreen').classList.remove('hidden');
   document.getElementById('loginPassword').value = '';
@@ -878,7 +972,18 @@ function logout() {
   lucide.createIcons();
 }
 
-// ==================== 5. 權限分流初始化主介面（依指定由上到下選單順序排列） ====================
+// ==================== 6. 選單順序排列（依最新指定順序） ====================
+// 1. 導師一對一私訊
+// 2. 每日課程最新公告
+// 3. 點名與心情關懷
+// 4. 每日時事看板
+// 5. 班級行事曆 (移至作業提醒上方)
+// 6. 作業提醒
+// 7. 班級課表查詢
+// 8. 班級事務中心
+// 9. 榮譽集點卡與兌換
+// 10. 每日打卡紀錄 (倒數第二個)
+// 11. 自我介紹設定 (最後一個)
 function enterMainApp() {
   document.getElementById('authScreen').classList.add('hidden');
   document.getElementById('mainApp').classList.remove('hidden');
@@ -900,92 +1005,102 @@ function enterMainApp() {
     profileBadge.innerHTML = `<i data-lucide="shield-check" class="w-4 h-4"></i><span>教師權限：${currentUser.name}</span>`;
     profileBadge.className = 'flex items-center gap-2 bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full text-xs font-bold';
 
-    // 選單排序：1.導師一對一私訊 2.每日課程最新公告 3.點名與心情關懷 4.每日時事看板 5.作業提醒 6.班級課表查詢 7.班級事務中心 8.自我介紹設定 (+行事曆與名冊輔助)
     sidebarNav.innerHTML = `
-      <button onclick="switchTab('messages')" id="nav-messages" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('messages')" id="nav-messages" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <div class="flex items-center gap-3"><i data-lucide="message-square-text" class="w-4 h-4 text-indigo-600"></i><span>導師一對一私訊</span></div>
         <span id="unreadBadge" class="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
       </button>
-      <button onclick="switchTab('announcements')" id="nav-announcements" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('announcements')" id="nav-announcements" class="w-full flex items-center gap-3 px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="megaphone" class="w-4 h-4"></i><span>每日課程最新公告</span>
       </button>
-      <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="heart-handshake" class="w-4 h-4"></i><span>點名與心情關懷</span>
       </button>
-      <button onclick="switchTab('news')" id="nav-news" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('news')" id="nav-news" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <div class="flex items-center gap-3"><i data-lucide="newspaper" class="w-4 h-4 text-emerald-600"></i><span>每日時事看板</span></div>
         <span class="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">TODAY</span>
       </button>
-      <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('exams')" id="nav-exams" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="calendar-heart" class="w-4 h-4 text-rose-500"></i><span>班級行事曆</span></div>
+        <span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-1.5 py-0.5 rounded">🎂生日</span>
+      </button>
+      <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="list-todo" class="w-4 h-4"></i><span>作業提醒</span>
       </button>
-      <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="calendar-days" class="w-4 h-4"></i><span>班級課表查詢</span>
       </button>
-      <button onclick="switchTab('classInfo')" id="nav-classInfo" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('classInfo')" id="nav-classInfo" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <div class="flex items-center gap-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-indigo-600"></i><span>班級事務中心</span></div>
         <span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded">幹部/打掃</span>
       </button>
-      <button onclick="switchTab('profiles')" id="nav-profiles" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('pointsCard')" id="nav-pointsCard" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="ticket" class="w-4 h-4 text-amber-500"></i><span>榮譽集點卡管理</span></div>
+        <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded">加點/核銷</span>
+      </button>
+      <button onclick="switchTab('checkinLogs')" id="nav-checkinLogs" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="clock-check" class="w-4 h-4 text-sky-600"></i><span>每日打卡紀錄</span></div>
+        <span class="bg-sky-100 text-sky-700 text-[10px] font-bold px-1.5 py-0.5 rounded">到校時間</span>
+      </button>
+      <button onclick="switchTab('profiles')" id="nav-profiles" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <div class="flex items-center gap-3"><i data-lucide="contact-2" class="w-4 h-4 text-indigo-600"></i><span>自我介紹設定與個資</span></div>
         <span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded">🔒個資</span>
-      </button>
-      <div class="my-1.5 border-t border-slate-100 mx-4"></div>
-      <button onclick="switchTab('exams')" id="nav-exams" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <div class="flex items-center gap-3"><i data-lucide="calendar-heart" class="w-4 h-4 text-rose-500"></i><span>班級行事曆 (含生日)</span></div>
-        <span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-1.5 py-0.5 rounded">🎂生日</span>
-      </button>
-      <button onclick="switchTab('roster')" id="nav-roster" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <i data-lucide="users" class="w-4 h-4"></i><span>學生帳號與名冊管理</span>
       </button>
     `;
   } else {
     const me = appData.students.find(s => s.id === currentUser.id);
     const needSetup = me && !me.profileCompleted;
+    const myPoints = me ? (me.points || 0) : 0;
 
     brandBox.className = 'w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold shadow-sm';
     roleBadge.textContent = '🎓 學生學習端';
     roleBadge.className = 'text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700';
     userNameEl.textContent = `${currentUser.seat}號 ${currentUser.name}`;
-    userMetaEl.textContent = `學生學號：${currentUser.id}`;
+    userMetaEl.textContent = `學號：${currentUser.id} ｜ 目前點數：${myPoints} 點`;
     profileBadge.innerHTML = `<i data-lucide="user" class="w-4 h-4"></i><span>學生權限：${currentUser.seat}號 ${currentUser.name}</span>`;
     profileBadge.className = 'flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-bold';
 
-    // 學生端選單同樣嚴格依照：1.導師一對一私訊 2.每日課程最新公告 3.點名與心情關懷 4.每日時事看板 5.作業提醒 6.班級課表查詢 7.班級事務中心 8.自我介紹設定 (+班級行事曆)
     sidebarNav.innerHTML = `
-      <button onclick="switchTab('messages')" id="nav-messages" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('messages')" id="nav-messages" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <div class="flex items-center gap-3"><i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i><span>導師一對一私訊</span></div>
         <span id="unreadBadge" class="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
       </button>
-      <button onclick="switchTab('announcements')" id="nav-announcements" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('announcements')" id="nav-announcements" class="w-full flex items-center gap-3 px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="bell" class="w-4 h-4"></i><span>每日課程最新公告</span>
       </button>
-      <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <div class="flex items-center gap-3"><i data-lucide="smile-plus" class="w-4 h-4"></i><span>點名與心情關懷</span></div>
-        <span class="bg-amber-400 text-slate-900 text-[10px] font-black px-1.5 py-0.5 rounded">抽籤</span>
+        <span class="bg-amber-400 text-slate-900 text-[10px] font-black px-1.5 py-0.5 rounded">簽到</span>
       </button>
-      <button onclick="switchTab('news')" id="nav-news" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('news')" id="nav-news" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <div class="flex items-center gap-3"><i data-lucide="newspaper" class="w-4 h-4 text-emerald-600"></i><span>每日時事看板</span></div>
         <span class="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">TODAY</span>
       </button>
-      <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('exams')" id="nav-exams" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="calendar-heart" class="w-4 h-4 text-rose-500"></i><span>班級行事曆</span></div>
+        <span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-1.5 py-0.5 rounded">🎂生日</span>
+      </button>
+      <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="check-square" class="w-4 h-4"></i><span>作業提醒</span>
       </button>
-      <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="calendar-days" class="w-4 h-4"></i><span>班級課表查詢</span>
       </button>
-      <button onclick="switchTab('classInfo')" id="nav-classInfo" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('classInfo')" id="nav-classInfo" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <div class="flex items-center gap-3"><i data-lucide="clipboard-list" class="w-4 h-4 text-emerald-600"></i><span>班級事務中心</span></div>
         <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-1.5 py-0.5 rounded">幹部/打掃</span>
       </button>
-      <button onclick="switchTab('profiles')" id="nav-profiles" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+      <button onclick="switchTab('pointsCard')" id="nav-pointsCard" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="ticket" class="w-4 h-4 text-amber-500"></i><span>我的榮譽集點卡</span></div>
+        <span class="bg-amber-100 text-amber-800 text-[10px] font-black px-1.5 py-0.5 rounded">${myPoints} 點</span>
+      </button>
+      <button onclick="switchTab('checkinLogs')" id="nav-checkinLogs" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="clock-check" class="w-4 h-4 text-sky-600"></i><span>每日打卡紀錄</span></div>
+        <span class="bg-sky-100 text-sky-700 text-[10px] font-bold px-1.5 py-0.5 rounded">到校憑證</span>
+      </button>
+      <button onclick="switchTab('profiles')" id="nav-profiles" class="w-full flex items-center justify-between px-5 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <div class="flex items-center gap-3"><i data-lucide="instagram" class="w-4 h-4 text-pink-600"></i><span>自我介紹設定</span></div>
         ${needSetup ? `<span class="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded animate-pulse">待填寫</span>` : ''}
-      </button>
-      <div class="my-1.5 border-t border-slate-100 mx-4"></div>
-      <button onclick="switchTab('exams')" id="nav-exams" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <div class="flex items-center gap-3"><i data-lucide="calendar-heart" class="w-4 h-4 text-rose-500"></i><span>班級行事曆 (含生日)</span></div>
-        <span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-1.5 py-0.5 rounded">🎂生日</span>
       </button>
     `;
 
@@ -1009,25 +1124,28 @@ function switchTab(tab) {
     messages: ['導師一對一私訊', '與班上每位學生的獨立私密對話頻道'],
     announcements: ['每日課程最新公告', '教師可發布、置頂與管理每日課程通知'],
     attendance: ['點名與心情關懷', '即時掌握學生出缺勤、Mood Meter 狀態與今日抽到的迷因籤'],
-    news: ['每日時事看板', 'LINE TODAY 風格每日精選新聞 + 班級思辨互動留言板'],
+    news: ['每日時事看板', '每日精選新聞 + 班級思辨互動留言板'],
+    exams: ['班級行事曆', '自動同步匯入全班學生生日，整合小考、段考與班級壽星祝福'],
     homework: ['作業提醒', '發布隔天與近期應繳交的紙本／實體作業提醒'],
     timetable: ['班級課表查詢', '教師可點擊編輯節次或管理本學期課表'],
     classInfo: ['班級事務中心', '管理班級幹部名單、打掃區域分配表，並提供家長與學生查詢導師及各處室分機'],
-    profiles: ['自我介紹設定與個資總覽', '可檢視全班同學公開自介與家長電話、生日、緊急聯絡人等私密個資'],
-    exams: ['班級行事曆 (含生日)', '自動同步匯入全班學生生日，整合小考、段考與班級壽星祝福'],
-    roster: ['學生帳號與名冊管理', '教師可檢視已註冊學生名冊與緊急聯絡電話']
+    pointsCard: ['榮譽集點卡管理', '登記表現優良學生加點，並協助核銷已兌換的免雜記券、免小考券與零食券'],
+    checkinLogs: ['每日打卡紀錄', '完整記錄全班每日到校打卡時間戳記（基準 07:45），避免出缺勤時間爭議'],
+    profiles: ['自我介紹設定與個資總覽', '可檢視全班同學公開自介與家長電話、生日、緊急聯絡人等私密個資']
   };
 
   const studentTitles = {
     messages: ['導師一對一私訊', '僅你與班導師可見的專屬私密對話'],
     announcements: ['每日課程最新公告', '檢視老師發布的每日課程與班級重要通知'],
-    attendance: ['點名與心情關懷', '選擇今日情緒量表完成簽到，即可抽取今日專屬幸運迷因籤詩！'],
+    attendance: ['點名與心情關懷', '選擇今日情緒量表完成簽到，系統將自動寫入今日到校打卡時間憑證！'],
     news: ['每日時事看板', '閱讀今日精選國際新聞，在下方留言分享你的觀點！'],
+    exams: ['班級行事曆', '查看考試倒數日期與本月班級壽星，一起為同學送上生日祝福！'],
     homework: ['作業提醒', '確認明天與近期該帶到學校繳交的作業清單'],
     timetable: ['班級課表查詢', '唯讀檢視本學期班級每週課表'],
     classInfo: ['班級事務中心', '隨時查詢班級幹部負責項目、你的打掃工作分配，以及老師與各處室分機號碼'],
-    profiles: ['自我介紹設定', '設定你的 IG 風格個人自介與基本資料（父母電話與生日僅供導師查閱）'],
-    exams: ['班級行事曆 (含生日)', '查看考試倒數日期與本月班級壽星，一起為同學送上生日祝福！']
+    pointsCard: ['我的榮譽集點卡', '累積老師獎勵的榮譽點數，可直接兌換零食券、免雜記券與免小考券！'],
+    checkinLogs: ['每日打卡紀錄', '清楚查看自己每天幾點幾分到校簽到與歷史紀錄，避免日後出缺勤爭議'],
+    profiles: ['自我介紹設定', '設定你的 IG 風格個人自介與基本資料（父母電話與生日僅供導師查閱）']
   };
 
   const [title, hint] = currentUser.role === 'teacher' ? teacherTitles[tab] : studentTitles[tab];
@@ -1042,26 +1160,537 @@ function renderCurrentTab() {
   else if (currentTab === 'announcements') renderAnnouncements(container);
   else if (currentTab === 'attendance') renderAttendance(container);
   else if (currentTab === 'news') renderDailyNewsBoard(container);
+  else if (currentTab === 'exams') renderExamCalendar(container);
   else if (currentTab === 'homework') renderHomeworkReminders(container);
   else if (currentTab === 'timetable') renderTimetable(container);
   else if (currentTab === 'classInfo') renderClassInfoHub(container);
+  else if (currentTab === 'pointsCard') renderPointsCardHub(container);
+  else if (currentTab === 'checkinLogs') renderDailyCheckInLogs(container);
   else if (currentTab === 'profiles') renderStudentProfilesHub(container);
-  else if (currentTab === 'exams') renderExamCalendar(container);
-  else if (currentTab === 'roster' && currentUser.role === 'teacher') renderRoster(container);
   lucide.createIcons();
 }
 
-// ==================== 6. 班級事務中心：幹部名單 + 打掃範圍表格 + 導師與各處室分機 ====================
+// ==================== 7. 新增功能 A：榮譽集點卡（教師登記加點 + 學生兌換免雜記/小考/零食券） ====================
+function renderPointsCardHub(container) {
+  const isTeacher = currentUser.role === 'teacher';
+  const targetStudent = isTeacher
+    ? (appData.students.find(s => s.id === selectedStampStudentId) || appData.students[0])
+    : (appData.students.find(s => s.id === currentUser.id) || appData.students[0]);
+
+  if (isTeacher) selectedStampStudentId = targetStudent.id;
+  if (!targetStudent.pointLogs) targetStudent.pointLogs = [];
+  if (!targetStudent.vouchers) targetStudent.vouchers = [];
+  const currentPts = targetStudent.points || 0;
+
+  // 10 格集點卡視覺化格子
+  const totalSlots = 10;
+  let stampSlotsHtml = '';
+  for (let i = 1; i <= totalSlots; i++) {
+    const filled = i <= currentPts;
+    const milestoneLabel = i === 3 ? '🍪零食券' : i === 5 ? '📝免雜記' : i === 10 ? '🎟️免小考' : `${i}點`;
+    stampSlotsHtml += `
+      <div class="relative rounded-2xl border-2 p-2.5 flex flex-col items-center justify-center min-h-[74px] transition ${
+        filled
+          ? 'bg-gradient-to-br from-amber-400 to-orange-500 border-amber-500 text-white shadow-sm scale-[1.02]'
+          : 'bg-white/80 border-dashed border-amber-300 text-slate-400'
+      }">
+        ${filled
+          ? `<div class="text-xl font-black drop-shadow-2xs">★</div><div class="text-[10px] font-black mt-0.5">${milestoneLabel}</div>`
+          : `<div class="text-xs font-bold">${i}</div><div class="text-[10px] text-amber-700/70 font-bold mt-0.5">${milestoneLabel}</div>`
+        }
+      </div>
+    `;
+  }
+
+  container.innerHTML = `
+    <div class="max-w-6xl mx-auto space-y-6">
+
+      ${isTeacher ? `
+        <!-- 教師端專屬：快速登記學生加點控制台 + 全班點數一覽 -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+                <i data-lucide="award" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="font-black text-slate-800 text-base">教師端｜班級榮譽點數登記與管理面板</h3>
+                <p class="text-xs text-slate-500">可為表現優良同學登記加點，或直接替學生核銷已兌換的票券</p>
+              </div>
+            </div>
+            <button onclick="openGrantPointsModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-black px-4 py-2.5 rounded-xl shadow-xs flex items-center gap-1.5 cursor-pointer transition">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i> 登記學生加點
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
+            ${appData.students.map(s => {
+              const isSel = s.id === targetStudent.id;
+              const unusedCount = (s.vouchers || []).filter(v => v.status === 'unused').length;
+              return `
+                <button onclick="selectedStampStudentId='${s.id}'; renderCurrentTab();"
+                  class="p-3 rounded-xl border text-left transition cursor-pointer ${
+                    isSel ? 'border-amber-500 bg-amber-50 ring-2 ring-amber-200' : 'border-slate-200 bg-slate-50/60 hover:bg-white'
+                  }">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-mono text-slate-500">${s.seat}號</span>
+                    ${unusedCount > 0 ? `<span class="text-[10px] font-bold bg-rose-500 text-white px-1.5 py-0.2 rounded-full">${unusedCount}張券</span>` : ''}
+                  </div>
+                  <div class="font-black text-sm text-slate-800 mt-0.5">${s.name}</div>
+                  <div class="text-xs font-black text-amber-600 mt-1">⭐ ${s.points || 0} 點</div>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      ` : ''}
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- 左側：個人電子集點卡 + 獎勵兌換櫃檯 -->
+        <div class="lg:col-span-7 space-y-6">
+          <!-- 集點卡主視覺 -->
+          <div class="rounded-3xl border-2 border-amber-300 bg-gradient-to-br from-amber-100 via-yellow-50 to-orange-100 stamp-card-bg p-6 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div>
+                <span class="text-[11px] font-black bg-amber-500 text-slate-950 px-2.5 py-0.5 rounded-full">
+                  高二忠班專屬榮譽制度
+                </span>
+                <h3 class="text-xl font-black text-slate-900 mt-1.5">
+                  ${targetStudent.seat}號 ${targetStudent.name} 的榮譽集點卡
+                </h3>
+              </div>
+              <div class="bg-white/95 px-4 py-2.5 rounded-2xl border border-amber-300 text-center shadow-2xs">
+                <div class="text-[11px] font-bold text-slate-500">目前可用點數</div>
+                <div class="text-2xl font-black text-amber-600 font-mono">${currentPts} <span class="text-xs text-slate-600">點</span></div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-5 gap-2.5 my-4">
+              ${stampSlotsHtml}
+            </div>
+
+            ${currentPts > 10 ? `
+              <div class="text-xs font-bold text-amber-800 bg-white/80 px-3 py-1.5 rounded-lg inline-block">
+                🔥 超越 10 點！目前總計累積 <strong>${currentPts}</strong> 點，可一次兌換多張獎勵券！
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- 獎勵兌換區（零食券 / 免雜記券 / 免小考券） -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
+            <div class="flex items-center justify-between">
+              <h4 class="font-black text-slate-800 text-base flex items-center gap-2">
+                <i data-lucide="gift" class="w-5 h-5 text-rose-500"></i> 集點獎勵兌換商店
+              </h4>
+              <span class="text-xs text-slate-400">點數達標即可立即兌換電子票券</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              ${REWARD_CATALOG.map(rew => {
+                const canAfford = currentPts >= rew.cost;
+                return `
+                  <div class="rounded-2xl border p-4 bg-gradient-to-b ${rew.cardBg} flex flex-col justify-between gap-3">
+                    <div>
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="text-2xl">${rew.icon}</span>
+                        <span class="text-xs font-black px-2.5 py-0.5 rounded-full border ${rew.badgeColor}">
+                          需 ${rew.cost} 點
+                        </span>
+                      </div>
+                      <div class="font-black text-slate-900 text-sm">${rew.name}</div>
+                      <p class="text-xs text-slate-600 mt-1 leading-relaxed">${rew.desc}</p>
+                    </div>
+                    <button onclick="redeemStudentReward('${targetStudent.id}', '${rew.id}')"
+                      ${!canAfford ? 'disabled' : ''}
+                      class="w-full py-2 rounded-xl text-xs font-black transition cursor-pointer ${
+                        canAfford
+                          ? 'bg-slate-900 hover:bg-slate-800 text-white shadow-2xs'
+                          : 'bg-slate-200/80 text-slate-400 cursor-not-allowed'
+                      }">
+                      ${canAfford ? (isTeacher ? `替學生兌換 (-${rew.cost}點)` : `立即兌換 (-${rew.cost}點)`) : `還差 ${rew.cost - currentPts} 點`}
+                    </button>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- 右側：我的票券夾 + 加點與兌換明細紀錄 -->
+        <div class="lg:col-span-5 space-y-6">
+          <!-- 已兌換票券夾 -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-3">
+            <div class="flex items-center justify-between">
+              <h4 class="font-black text-slate-800 text-base flex items-center gap-2">
+                <i data-lucide="ticket" class="w-4 h-4 text-indigo-600"></i> ${targetStudent.name} 的電子票券夾
+              </h4>
+              <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full">
+                可用 ${(targetStudent.vouchers || []).filter(v => v.status === 'unused').length} 張
+              </span>
+            </div>
+
+            ${(targetStudent.vouchers || []).length === 0 ? `
+              <div class="text-center text-xs text-slate-400 py-6 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                目前尚未兌換任何票券，累積點數後可從左側兌換！
+              </div>
+            ` : `
+              <div class="space-y-2.5 max-h-[240px] overflow-y-auto pr-1">
+                ${targetStudent.vouchers.map(v => `
+                  <div class="p-3.5 rounded-xl border flex items-center justify-between gap-2 ${
+                    v.status === 'unused'
+                      ? 'bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200'
+                      : 'bg-slate-50 border-slate-200 opacity-60'
+                  }">
+                    <div class="flex items-center gap-2.5">
+                      <span class="text-2xl">${v.icon}</span>
+                      <div>
+                        <div class="font-black text-sm text-slate-800">${v.name}</div>
+                        <div class="text-[11px] text-slate-500">兌換日：${v.redeemedAt}</div>
+                      </div>
+                    </div>
+                    ${v.status === 'unused' ? (
+                      isTeacher
+                        ? `<button onclick="useStudentVoucher('${targetStudent.id}', '${v.id}')" class="text-xs font-black bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg cursor-pointer">導師核銷使用</button>`
+                        : `<span class="text-[11px] font-black text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-lg">未使用（出示給老師核銷）</span>`
+                    ) : `
+                      <span class="text-[11px] font-bold text-slate-500 bg-slate-200 px-2 py-1 rounded-lg">已核銷 (${v.usedAt})</span>
+                    `}
+                  </div>
+                `).join('')}
+              </div>
+            `}
+          </div>
+
+          <!-- 點數增減異動明細 -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-3">
+            <h4 class="font-black text-slate-800 text-base flex items-center gap-2">
+              <i data-lucide="history" class="w-4 h-4 text-amber-600"></i> 加點與兌換歷史明細
+            </h4>
+            <div class="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+              ${targetStudent.pointLogs.length === 0 ? `<div class="text-center text-xs text-slate-400 py-6">尚無點數異動紀錄</div>` : ''}
+              ${[...targetStudent.pointLogs].reverse().map(log => `
+                <div class="p-3 rounded-xl border border-slate-100 bg-slate-50/70 flex items-start justify-between gap-3">
+                  <div>
+                    <div class="text-xs font-bold text-slate-800">${log.reason}</div>
+                    <div class="text-[11px] text-slate-400 mt-0.5">${log.date} · 登錄者：${log.by}</div>
+                  </div>
+                  <span class="font-mono font-black text-xs px-2 py-1 rounded-lg shrink-0 ${
+                    log.delta > 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'
+                  }">
+                    ${log.delta > 0 ? `+${log.delta}` : log.delta} 點
+                  </span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function openGrantPointsModal() {
+  if (currentUser.role !== 'teacher') return;
+  showModal(`
+    <div class="p-6">
+      <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2">
+        <span>⭐</span> 登記學生榮譽加點
+      </h3>
+      <div class="space-y-3.5">
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">選擇加點學生</label>
+          <select id="grantStudentSelect" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm">
+            ${appData.students.map(s => `<option value="${s.id}" ${s.id===selectedStampStudentId?'selected':''}>${s.seat}號 ${s.name}（目前 ${s.points || 0} 點）</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">加點點數</label>
+          <div class="grid grid-cols-4 gap-2">
+            ${[1, 2, 3, 5].map(num => `
+              <button type="button" onclick="document.getElementById('grantDeltaInput').value=${num}" class="py-1.5 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 font-black text-xs cursor-pointer">
+                +${num} 點
+              </button>
+            `).join('')}
+          </div>
+          <input id="grantDeltaInput" type="number" min="1" max="20" value="2" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm mt-2 font-mono font-bold">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">優良事蹟／加點原因</label>
+          <input id="grantReasonInput" type="text" placeholder="例如：主動協助打掃、課堂發表優異、全週準時到校" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm">
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-xl">取消</button>
+        <button onclick="submitGrantPoints()" class="px-5 py-2 text-sm bg-amber-500 hover:bg-amber-600 text-slate-950 font-black rounded-xl cursor-pointer">確認登記加點</button>
+      </div>
+    </div>
+  `);
+}
+
+function submitGrantPoints() {
+  if (currentUser.role !== 'teacher') return;
+  const studentId = document.getElementById('grantStudentSelect').value;
+  const delta = parseInt(document.getElementById('grantDeltaInput').value, 10);
+  const reason = document.getElementById('grantReasonInput').value.trim();
+
+  if (!delta || delta <= 0) return alert('請輸入正確的加點點數');
+  if (!reason) return alert('請填寫加點原因，方便學生查閱！');
+
+  const st = appData.students.find(s => s.id === studentId);
+  if (!st) return;
+
+  st.points = (st.points || 0) + delta;
+  if (!st.pointLogs) st.pointLogs = [];
+  st.pointLogs.push({
+    id: 'PL' + Date.now(),
+    date: TODAY_STR,
+    type: 'earn',
+    delta,
+    reason,
+    by: currentUser.name
+  });
+
+  selectedStampStudentId = studentId;
+  saveData();
+  closeModal();
+  renderCurrentTab();
+}
+
+function redeemStudentReward(studentId, rewardId) {
+  const st = appData.students.find(s => s.id === studentId);
+  const rew = REWARD_CATALOG.find(r => r.id === rewardId);
+  if (!st || !rew) return;
+
+  if ((st.points || 0) < rew.cost) return alert('目前點數不足，無法兌換此獎勵！');
+  if (!confirm(`確定要扣除 ${rew.cost} 點，為「${st.name}」兌換【${rew.name}】嗎？`)) return;
+
+  st.points -= rew.cost;
+  if (!st.pointLogs) st.pointLogs = [];
+  st.pointLogs.push({
+    id: 'PL' + Date.now(),
+    date: TODAY_STR,
+    type: 'redeem',
+    delta: -rew.cost,
+    reason: `兌換【${rew.name}】`,
+    by: currentUser.role === 'teacher' ? `${currentUser.name}（代為兌換）` : `${st.name}（學生自助兌換）`
+  });
+
+  if (!st.vouchers) st.vouchers = [];
+  st.vouchers.unshift({
+    id: 'VCH' + Date.now(),
+    rewardId: rew.id,
+    name: rew.name,
+    icon: rew.icon,
+    redeemedAt: TODAY_STR,
+    status: 'unused',
+    usedAt: null
+  });
+
+  saveData();
+  if (currentUser.role === 'student') {
+    enterMainApp();
+    switchTab('pointsCard');
+  } else {
+    renderCurrentTab();
+  }
+}
+
+function useStudentVoucher(studentId, voucherId) {
+  if (currentUser.role !== 'teacher') return;
+  const st = appData.students.find(s => s.id === studentId);
+  if (!st || !st.vouchers) return;
+  const vch = st.vouchers.find(v => v.id === voucherId);
+  if (!vch) return;
+
+  if (!confirm(`確定要核銷「${st.name}」的【${vch.name}】嗎？核銷後即標記為已使用。`)) return;
+  vch.status = 'used';
+  vch.usedAt = TODAY_STR;
+  saveData();
+  renderCurrentTab();
+}
+
+// ==================== 8. 新增功能 B：每日打卡紀錄（精確到校時間憑證，避免出缺勤爭議） ====================
+function renderDailyCheckInLogs(container) {
+  const isTeacher = currentUser.role === 'teacher';
+  const targetStudent = isTeacher
+    ? (appData.students.find(s => s.id === selectedCheckInStudentId) || appData.students[0])
+    : (appData.students.find(s => s.id === currentUser.id) || appData.students[0]);
+
+  if (isTeacher) selectedCheckInStudentId = targetStudent.id;
+
+  // 彙整該生所有日期的打卡紀錄（由新到舊排列）
+  const allDates = Object.keys(appData.attendance).sort((a, b) => b.localeCompare(a));
+  const studentLogs = allDates.map(dateStr => {
+    const rec = appData.attendance[dateStr]?.[targetStudent.id];
+    if (!rec) {
+      return {
+        date: dateStr,
+        status: 'absent',
+        time: '--:--:--',
+        exactTimestamp: '當日無系統打卡紀錄',
+        source: '系統未偵測到簽到',
+        note: ''
+      };
+    }
+    return {
+      date: dateStr,
+      status: rec.status,
+      time: rec.time || '--:--:--',
+      exactTimestamp: rec.exactTimestamp || `${dateStr} ${rec.time || ''}`,
+      source: rec.source || '學生自主系統簽到',
+      note: rec.note || (rec.mood?.note || '')
+    };
+  });
+
+  const onTimeCount = studentLogs.filter(l => l.status === 'present').length;
+  const lateCount = studentLogs.filter(l => l.status === 'late').length;
+  const leaveCount = studentLogs.filter(l => l.status === 'leave').length;
+  const absentCount = studentLogs.filter(l => l.status === 'absent').length;
+
+  const getStatusBadge = (st) => {
+    if (st === 'present') return `<span class="text-xs font-black px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200">✅ 準時到校（≤ ${ON_TIME_CUTOFF}）</span>`;
+    if (st === 'late') return `<span class="text-xs font-black px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-300">⚠️ 逾時／遲到（> ${ON_TIME_CUTOFF}）</span>`;
+    if (st === 'leave') return `<span class="text-xs font-black px-2.5 py-1 rounded-full bg-sky-100 text-sky-700 border border-sky-200">📋 已核准請假</span>`;
+    return `<span class="text-xs font-black px-2.5 py-1 rounded-full bg-rose-100 text-rose-700 border border-rose-200">❌ 未打卡／缺席</span>`;
+  };
+
+  container.innerHTML = `
+    <div class="max-w-5xl mx-auto space-y-6">
+
+      <!-- 頂部說明與憑證規範橫幅 -->
+      <div class="bg-gradient-to-r from-sky-700 via-indigo-700 to-slate-800 rounded-2xl p-5 text-white shadow-sm flex flex-wrap items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="text-xs font-bold text-sky-200 flex items-center gap-1.5">
+            <i data-lucide="shield-check" class="w-4 h-4"></i> 班級電子到校時間戳記存證系統（避免出缺勤爭議）
+          </div>
+          <h3 class="text-lg font-black">
+            ${targetStudent.seat}號 ${targetStudent.name}（學號：${targetStudent.id}）每日到校打卡明細
+          </h3>
+          <p class="text-xs text-slate-200">
+            每日早上完成「點名與心情關懷」簽到後，系統自動鎖定精確到秒的伺服器到校時間；<strong>${ON_TIME_CUTOFF} 前</strong>簽到為準時到校。
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          ${!isTeacher && !appData.attendance[TODAY_STR]?.[currentUser.id] ? `
+            <button onclick="switchTab('attendance')" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs px-4 py-2.5 rounded-xl shadow-sm cursor-pointer">
+              👉 前往今日簽到打卡
+            </button>
+          ` : ''}
+          <button onclick="exportStudentCheckInCSV('${targetStudent.id}')" class="bg-white/15 hover:bg-white/25 border border-white/25 text-white font-bold text-xs px-3.5 py-2.5 rounded-xl flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i> 下載到校證明 (CSV)
+          </button>
+        </div>
+      </div>
+
+      ${isTeacher ? `
+        <!-- 教師端切換檢視學生 -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 flex flex-wrap items-center justify-between gap-3">
+          <span class="text-xs font-bold text-slate-600">👨‍🏫 教師端稽核切換學生：</span>
+          <div class="flex flex-wrap gap-2">
+            ${appData.students.map(s => `
+              <button onclick="selectedCheckInStudentId='${s.id}'; renderCurrentTab();"
+                class="text-xs font-bold px-3 py-1.5 rounded-lg border transition cursor-pointer ${
+                  s.id === targetStudent.id ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-white'
+                }">
+                ${s.seat}號 ${s.name}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- 出缺勤統計數據卡 -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-white rounded-2xl border border-emerald-200 p-4">
+          <div class="text-xs font-bold text-slate-400">準時到校天數</div>
+          <div class="text-2xl font-black text-emerald-600 mt-1">${onTimeCount} <span class="text-xs text-slate-500">天</span></div>
+        </div>
+        <div class="bg-white rounded-2xl border border-amber-200 p-4">
+          <div class="text-xs font-bold text-slate-400">遲到／逾時次數</div>
+          <div class="text-2xl font-black text-amber-600 mt-1">${lateCount} <span class="text-xs text-slate-500">次</span></div>
+        </div>
+        <div class="bg-white rounded-2xl border border-sky-200 p-4">
+          <div class="text-xs font-bold text-slate-400">核准請假天數</div>
+          <div class="text-2xl font-black text-sky-600 mt-1">${leaveCount} <span class="text-xs text-slate-500">天</span></div>
+        </div>
+        <div class="bg-white rounded-2xl border border-rose-200 p-4">
+          <div class="text-xs font-bold text-slate-400">未打卡／缺席紀錄</div>
+          <div class="text-2xl font-black text-rose-600 mt-1">${absentCount} <span class="text-xs text-slate-500">天</span></div>
+        </div>
+      </div>
+
+      <!-- 每日精確到校時間憑證表格 -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+        <div class="p-4 border-b border-slate-200 bg-slate-50/70 flex items-center justify-between">
+          <span class="font-black text-sm text-slate-800">📅 每日到校打卡時間戳記明細表（系統不可竄改存證）</span>
+          <span class="text-xs text-slate-400">共 ${studentLogs.length} 筆上課日紀錄</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse min-w-[680px]">
+            <thead>
+              <tr class="border-b border-slate-200 text-xs text-slate-500 bg-slate-50">
+                <th class="py-3.5 px-5">日期</th>
+                <th class="py-3.5 px-4">判定狀態</th>
+                <th class="py-3.5 px-4">精確到校時間戳記</th>
+                <th class="py-3.5 px-4">紀錄來源</th>
+                <th class="py-3.5 px-4">備註／說明</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-sm">
+              ${studentLogs.map(log => `
+                <tr class="${log.date === TODAY_STR ? 'bg-sky-50/50' : 'hover:bg-slate-50'}">
+                  <td class="py-3.5 px-5 font-mono font-bold text-slate-800">
+                    ${log.date} ${log.date === TODAY_STR ? '<span class="ml-1 text-[10px] bg-sky-600 text-white px-1.5 py-0.5 rounded">今日</span>' : ''}
+                  </td>
+                  <td class="py-3.5 px-4">${getStatusBadge(log.status)}</td>
+                  <td class="py-3.5 px-4">
+                    <span class="font-mono font-black text-xs px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 border border-slate-200">
+                      🕒 ${log.exactTimestamp}
+                    </span>
+                  </td>
+                  <td class="py-3.5 px-4 text-xs text-slate-600">${log.source}</td>
+                  <td class="py-3.5 px-4 text-xs text-slate-500">${log.note || '-'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function exportStudentCheckInCSV(studentId) {
+  const st = appData.students.find(s => s.id === studentId);
+  if (!st) return;
+  let csv = '\uFEFF日期,座號,學號,姓名,判定狀態,精確到校時間戳記,紀錄來源,備註\n';
+  const allDates = Object.keys(appData.attendance).sort((a, b) => b.localeCompare(a));
+  allDates.forEach(d => {
+    const rec = appData.attendance[d]?.[studentId];
+    const statusMap = { present: '準時到校', late: '遲到逾時', leave: '核准請假', absent: '未打卡缺席' };
+    if (!rec) {
+      csv += `${d},${st.seat},${st.id},${st.name},未打卡缺席,無打卡紀錄,系統未偵測到簽到,-\n`;
+    } else {
+      csv += `${d},${st.seat},${st.id},${st.name},${statusMap[rec.status] || rec.status},${rec.exactTimestamp || (d + ' ' + rec.time)},${rec.source || '學生自主系統簽到'},"${rec.note || ''}"\n`;
+    }
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `${st.seat}號_${st.name}_每日到校打卡時間憑證_${TODAY_STR}.csv`;
+  link.click();
+}
+
+// ==================== 9. 班級事務中心：幹部名單 + 打掃範圍表格 + 導師與各處室分機 ====================
 function renderClassInfoHub(container) {
   const isTeacher = currentUser.role === 'teacher';
   const contacts = appData.schoolContacts;
-
   const myCleaning = !isTeacher ? appData.cleaningDuties.filter(d => d.studentIds.includes(currentUser.id)) : [];
   const myOfficer = !isTeacher ? appData.classOfficers.filter(o => o.studentId === currentUser.id) : [];
 
   container.innerHTML = `
     <div class="max-w-6xl mx-auto space-y-6">
-
       ${!isTeacher ? `
         <div class="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-5 text-white shadow-sm flex flex-wrap items-center justify-between gap-4">
           <div class="space-y-1">
@@ -1082,7 +1711,6 @@ function renderClassInfoHub(container) {
         </div>
       ` : ''}
 
-      <!-- 區塊一：班級幹部名單 -->
       <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
         <div class="p-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 bg-slate-50/70">
           <div class="flex items-center gap-2.5">
@@ -1109,39 +1737,26 @@ function renderClassInfoHub(container) {
               <div class="p-4 rounded-2xl border ${isMe ? 'border-emerald-400 bg-emerald-50/40 ring-2 ring-emerald-100' : 'border-slate-200 bg-white hover:border-indigo-200'} transition flex flex-col justify-between gap-3">
                 <div>
                   <div class="flex items-center justify-between gap-2 mb-2">
-                    <span class="text-xs font-black px-2.5 py-1 rounded-lg bg-indigo-600 text-white">
-                      ${off.role}
-                    </span>
+                    <span class="text-xs font-black px-2.5 py-1 rounded-lg bg-indigo-600 text-white">${off.role}</span>
                     ${isMe ? `<span class="text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">我的職務</span>` : ''}
                     ${isTeacher ? `
                       <div class="flex items-center gap-1">
-                        <button onclick="openOfficerModal('${off.id}')" class="text-xs text-slate-400 hover:text-indigo-600 p-1 cursor-pointer" title="編輯幹部">
-                          <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
-                        </button>
-                        <button onclick="deleteOfficer('${off.id}')" class="text-xs text-slate-400 hover:text-rose-500 p-1 cursor-pointer" title="移除">
-                          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                        </button>
+                        <button onclick="openOfficerModal('${off.id}')" class="text-xs text-slate-400 hover:text-indigo-600 p-1 cursor-pointer"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
+                        <button onclick="deleteOfficer('${off.id}')" class="text-xs text-slate-400 hover:text-rose-500 p-1 cursor-pointer"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
                       </div>
                     ` : ''}
                   </div>
-
                   <div class="flex items-center gap-2.5 my-2">
                     ${st ? `
-                      <button onclick="jumpToStudentProfile('${st.id}')" title="點擊查看 ${st.name} 的 IG 自介" class="w-9 h-9 rounded-full bg-gradient-to-tr ${st.publicProfile?.avatarGrad || 'from-slate-500 to-slate-700'} text-white font-bold text-xs flex items-center justify-center shrink-0 cursor-pointer hover:scale-105 transition">
+                      <button onclick="jumpToStudentProfile('${st.id}')" class="w-9 h-9 rounded-full bg-gradient-to-tr ${st.publicProfile?.avatarGrad || 'from-slate-500 to-slate-700'} text-white font-bold text-xs flex items-center justify-center shrink-0 cursor-pointer">
                         ${st.name.slice(-1)}
                       </button>
                       <div>
-                        <button onclick="jumpToStudentProfile('${st.id}')" class="font-black text-sm text-slate-800 hover:text-indigo-600 cursor-pointer">
-                          ${st.seat}號 ${st.name}
-                        </button>
-                        <div class="text-[11px] text-slate-400">點擊可查看個人自介</div>
+                        <button onclick="jumpToStudentProfile('${st.id}')" class="font-black text-sm text-slate-800 hover:text-indigo-600 cursor-pointer">${st.seat}號 ${st.name}</button>
                       </div>
                     ` : `<span class="text-sm text-slate-400">尚未指派學生</span>`}
                   </div>
-
-                  <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-100 mt-2">
-                    ${off.duty}
-                  </p>
+                  <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-100 mt-2">${off.duty}</p>
                 </div>
               </div>
             `;
@@ -1149,7 +1764,6 @@ function renderClassInfoHub(container) {
         </div>
       </div>
 
-      <!-- 區塊二：班級打掃工作分配表格 -->
       <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
         <div class="p-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 bg-slate-50/70">
           <div class="flex items-center gap-2.5">
@@ -1158,7 +1772,7 @@ function renderClassInfoHub(container) {
             </div>
             <div>
               <h3 class="font-black text-slate-800 text-base">二、班級整潔打掃區域與負責同學分配表</h3>
-              <p class="text-xs text-slate-500">請各位同學依規定打掃時段前往負責區域，並接受衛生股長（${appData.students.find(s=>s.id===appData.classOfficers.find(o=>o.role.includes('衛生'))?.studentId)?.name || '衛生股長'}）檢查</p>
+              <p class="text-xs text-slate-500">請各位同學依規定打掃時段前往負責區域，並接受衛生股長檢查</p>
             </div>
           </div>
           ${isTeacher ? `
@@ -1197,21 +1811,15 @@ function renderClassInfoHub(container) {
                           const st = appData.students.find(s => s.id === sid);
                           if (!st) return '';
                           const highlight = !isTeacher && sid === currentUser.id;
-                          return `
-                            <button onclick="jumpToStudentProfile('${st.id}')" class="text-xs font-bold px-2.5 py-1 rounded-lg border transition cursor-pointer ${
-                              highlight ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-slate-700 border-slate-200 hover:border-indigo-300'
-                            }">
-                              ${st.seat}號 ${st.name}
-                            </button>
-                          `;
+                          return `<span class="text-xs font-bold px-2.5 py-1 rounded-lg border ${highlight ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-slate-700 border-slate-200'}">${st.seat}號 ${st.name}</span>`;
                         }).join('')}
                       </div>
                     </td>
                     <td class="py-3.5 px-4 font-mono text-xs text-slate-600">${cln.time}</td>
                     <td class="py-3.5 px-4 text-xs text-slate-600">${cln.tools}</td>
-                    <td class="py-3.5 px-4 text-xs text-slate-600 leading-relaxed">${cln.note}</td>
+                    <td class="py-3.5 px-4 text-xs text-slate-600">${cln.note}</td>
                     ${isTeacher ? `
-                      <td class="py-3.5 px-4 text-right space-x-1 shrink-0">
+                      <td class="py-3.5 px-4 text-right space-x-1">
                         <button onclick="openCleaningModal('${cln.id}')" class="text-xs font-bold text-indigo-600 hover:bg-indigo-50 px-2 py-1 rounded cursor-pointer">編輯</button>
                         <button onclick="deleteCleaning('${cln.id}')" class="text-xs font-bold text-rose-500 hover:bg-rose-50 px-2 py-1 rounded cursor-pointer">刪除</button>
                       </td>
@@ -1224,7 +1832,6 @@ function renderClassInfoHub(container) {
         </div>
       </div>
 
-      <!-- 區塊三：班導師與學校各處室分機號碼一覽表 -->
       <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
         <div class="p-5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 bg-slate-50/70">
           <div class="flex items-center gap-2.5">
@@ -1251,7 +1858,7 @@ function renderClassInfoHub(container) {
               <p class="text-xs text-slate-600">📍 辦公室位置：${contacts.teacherInfo.office}</p>
               <p class="text-xs text-slate-500">🕒 建議聯繫時段：${contacts.teacherInfo.availableTime}</p>
             </div>
-            <div class="bg-white px-6 py-3.5 rounded-2xl border border-indigo-200 text-center shrink-0 shadow-2xs">
+            <div class="bg-white px-6 py-3.5 rounded-2xl border border-indigo-200 text-center shrink-0">
               <div class="text-xs font-bold text-slate-400">校內分機號碼</div>
               <div class="text-3xl font-black font-mono text-indigo-700 tracking-wider mt-0.5">#${contacts.teacherInfo.extension}</div>
               <div class="text-[11px] text-slate-500 mt-1">總機 ${contacts.mainPhone}</div>
@@ -1271,11 +1878,7 @@ function renderClassInfoHub(container) {
                 ${contacts.offices.map(off => `
                   <tr class="hover:bg-slate-50">
                     <td class="py-3 px-4 font-bold text-slate-800">${off.name}</td>
-                    <td class="py-3 px-4">
-                      <span class="font-mono font-black text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-1 rounded-lg text-xs">
-                        #${off.ext}
-                      </span>
-                    </td>
+                    <td class="py-3 px-4"><span class="font-mono font-black text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-1 rounded-lg text-xs">#${off.ext}</span></td>
                     <td class="py-3 px-4 text-xs text-slate-600">${off.desc}</td>
                   </tr>
                 `).join('')}
@@ -1284,36 +1887,25 @@ function renderClassInfoHub(container) {
           </div>
         </div>
       </div>
-
     </div>
   `;
 }
 
 function openOfficerModal(officerId = null) {
-  if (currentUser.role !== 'teacher') return;
   const existing = officerId ? appData.classOfficers.find(o => o.id === officerId) : null;
   showModal(`
     <div class="p-6">
       <h3 class="text-lg font-bold text-slate-800 mb-4">${existing ? '編輯班級幹部' : '新增班級幹部'}</h3>
       <div class="space-y-3">
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">幹部職稱</label>
-          <input id="offRoleInput" type="text" value="${existing ? existing.role : ''}" placeholder="例如：班長、資訊股長、輔導股長" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">擔任同學</label>
-          <select id="offStudentSelect" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
-            ${appData.students.map(s => `<option value="${s.id}" ${existing && existing.studentId===s.id?'selected':''}>${s.seat}號 ${s.name} (${s.id})</option>`).join('')}
-          </select>
-        </div>
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">職掌與負責事項說明</label>
-          <textarea id="offDutyInput" rows="3" placeholder="說明該幹部協助處理哪些班務..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">${existing ? existing.duty : ''}</textarea>
-        </div>
+        <input id="offRoleInput" type="text" value="${existing ? existing.role : ''}" placeholder="幹部職稱" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <select id="offStudentSelect" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          ${appData.students.map(s => `<option value="${s.id}" ${existing && existing.studentId===s.id?'selected':''}>${s.seat}號 ${s.name}</option>`).join('')}
+        </select>
+        <textarea id="offDutyInput" rows="3" placeholder="職掌說明" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">${existing ? existing.duty : ''}</textarea>
       </div>
       <div class="mt-6 flex justify-end gap-2">
-        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">取消</button>
-        <button onclick="saveOfficer('${officerId || ''}')" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700">儲存設定</button>
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600">取消</button>
+        <button onclick="saveOfficer('${officerId || ''}')" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg">儲存</button>
       </div>
     </div>
   `);
@@ -1323,8 +1915,7 @@ function saveOfficer(officerId) {
   const role = document.getElementById('offRoleInput').value.trim();
   const studentId = document.getElementById('offStudentSelect').value;
   const duty = document.getElementById('offDutyInput').value.trim();
-  if (!role || !duty) return alert('請填寫幹部職稱與職掌說明');
-
+  if (!role || !duty) return;
   if (officerId) {
     const idx = appData.classOfficers.findIndex(o => o.id === officerId);
     if (idx !== -1) appData.classOfficers[idx] = { id: officerId, role, studentId, duty };
@@ -1337,54 +1928,34 @@ function saveOfficer(officerId) {
 }
 
 function deleteOfficer(id) {
-  if (!confirm('確定要移除此幹部項目嗎？')) return;
   appData.classOfficers = appData.classOfficers.filter(o => o.id !== id);
   saveData();
   renderCurrentTab();
 }
 
 function openCleaningModal(cleanId = null) {
-  if (currentUser.role !== 'teacher') return;
   const existing = cleanId ? appData.cleaningDuties.find(c => c.id === cleanId) : null;
   const selectedIds = existing ? existing.studentIds : [];
-
   showModal(`
-    <div class="p-6 max-h-[88vh] overflow-y-auto">
+    <div class="p-6">
       <h3 class="text-lg font-bold text-slate-800 mb-4">${existing ? '編輯打掃工作分配' : '新增打掃工作區域'}</h3>
       <div class="space-y-3">
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">打掃區域名稱</label>
-          <input id="clnZoneInput" type="text" value="${existing ? existing.zone : ''}" placeholder="例如：教室講台與黑板區、二樓外掃走廊" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <input id="clnZoneInput" type="text" value="${existing ? existing.zone : ''}" placeholder="打掃區域名稱" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <div class="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+          ${appData.students.map(s => `
+            <label class="flex items-center gap-1.5 text-xs font-bold">
+              <input type="checkbox" name="clnStudentCheck" value="${s.id}" ${selectedIds.includes(s.id)?'checked':''}>
+              <span>${s.seat}號 ${s.name}</span>
+            </label>
+          `).join('')}
         </div>
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1.5">勾選負責同學（可複選）</label>
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
-            ${appData.students.map(s => `
-              <label class="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
-                <input type="checkbox" name="clnStudentCheck" value="${s.id}" ${selectedIds.includes(s.id)?'checked':''} class="rounded text-emerald-600">
-                <span>${s.seat}號 ${s.name}</span>
-              </label>
-            `).join('')}
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="text-xs font-bold text-slate-600 block mb-1">打掃時段</label>
-            <input id="clnTimeInput" type="text" value="${existing ? existing.time : '每日 15:15'}" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
-          </div>
-          <div>
-            <label class="text-xs font-bold text-slate-600 block mb-1">使用工具</label>
-            <input id="clnToolsInput" type="text" value="${existing ? existing.tools : ''}" placeholder="如：掃把、抹布" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
-          </div>
-        </div>
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">檢查重點與注意事項</label>
-          <input id="clnNoteInput" type="text" value="${existing ? existing.note : ''}" placeholder="說明整潔評分重點..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
-        </div>
+        <input id="clnTimeInput" type="text" value="${existing ? existing.time : '每日 15:15'}" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <input id="clnToolsInput" type="text" value="${existing ? existing.tools : ''}" placeholder="使用工具" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <input id="clnNoteInput" type="text" value="${existing ? existing.note : ''}" placeholder="檢查重點" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
       </div>
       <div class="mt-6 flex justify-end gap-2">
-        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">取消</button>
-        <button onclick="saveCleaning('${cleanId || ''}')" class="px-4 py-2 text-sm bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700">儲存分配</button>
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600">取消</button>
+        <button onclick="saveCleaning('${cleanId || ''}')" class="px-4 py-2 text-sm bg-emerald-600 text-white font-bold rounded-lg">儲存</button>
       </div>
     </div>
   `);
@@ -1396,9 +1967,7 @@ function saveCleaning(cleanId) {
   const tools = document.getElementById('clnToolsInput').value.trim();
   const note = document.getElementById('clnNoteInput').value.trim();
   const studentIds = Array.from(document.querySelectorAll('input[name="clnStudentCheck"]:checked')).map(el => el.value);
-
-  if (!zone || studentIds.length === 0) return alert('請填寫打掃區域並至少勾選一位負責同學');
-
+  if (!zone || studentIds.length === 0) return;
   if (cleanId) {
     const idx = appData.cleaningDuties.findIndex(c => c.id === cleanId);
     if (idx !== -1) appData.cleaningDuties[idx] = { id: cleanId, zone, studentIds, time, tools, note };
@@ -1411,55 +1980,25 @@ function saveCleaning(cleanId) {
 }
 
 function deleteCleaning(id) {
-  if (!confirm('確定要刪除此打掃區域嗎？')) return;
   appData.cleaningDuties = appData.cleaningDuties.filter(c => c.id !== id);
   saveData();
   renderCurrentTab();
 }
 
 function openEditContactsModal() {
-  if (currentUser.role !== 'teacher') return;
   const c = appData.schoolContacts;
   showModal(`
     <div class="p-6 max-h-[88vh] overflow-y-auto">
       <h3 class="text-lg font-bold text-slate-800 mb-4">編輯導師與各處室分機號碼</h3>
-      <div class="space-y-4">
-        <div class="bg-indigo-50/70 p-3.5 rounded-xl border border-indigo-200 space-y-2.5">
-          <div class="text-xs font-black text-indigo-800">導師與學校總機資訊</div>
-          <div class="grid grid-cols-2 gap-2.5">
-            <div>
-              <label class="text-xs font-bold text-slate-600 block mb-1">學校總機號碼</label>
-              <input id="ctMainPhone" type="text" value="${c.mainPhone}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-            </div>
-            <div>
-              <label class="text-xs font-bold text-slate-600 block mb-1">導師分機號碼</label>
-              <input id="ctTeacherExt" type="text" value="${c.teacherInfo.extension}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-            </div>
-          </div>
-          <div>
-            <label class="text-xs font-bold text-slate-600 block mb-1">導師辦公室位置</label>
-            <input id="ctTeacherOffice" type="text" value="${c.teacherInfo.office}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-          </div>
-          <div>
-            <label class="text-xs font-bold text-slate-600 block mb-1">建議家長聯繫時段</label>
-            <input id="ctTeacherTime" type="text" value="${c.teacherInfo.availableTime}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-          </div>
-        </div>
-
-        <div class="space-y-2">
-          <div class="text-xs font-black text-slate-700">各處室分機明細</div>
-          ${c.offices.map((o, idx) => `
-            <div class="grid grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded-lg border border-slate-200">
-              <input id="offName_${idx}" type="text" value="${o.name}" class="col-span-5 border border-slate-300 bg-white rounded px-2 py-1 text-xs font-bold">
-              <input id="offExt_${idx}" type="text" value="${o.ext}" class="col-span-2 border border-slate-300 bg-white rounded px-2 py-1 text-xs font-mono">
-              <input id="offDesc_${idx}" type="text" value="${o.desc}" class="col-span-5 border border-slate-300 bg-white rounded px-2 py-1 text-xs">
-            </div>
-          `).join('')}
-        </div>
+      <div class="space-y-3">
+        <input id="ctMainPhone" type="text" value="${c.mainPhone}" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm">
+        <input id="ctTeacherExt" type="text" value="${c.teacherInfo.extension}" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm">
+        <input id="ctTeacherOffice" type="text" value="${c.teacherInfo.office}" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm">
+        <input id="ctTeacherTime" type="text" value="${c.teacherInfo.availableTime}" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm">
       </div>
       <div class="mt-6 flex justify-end gap-2">
-        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">取消</button>
-        <button onclick="saveContactsInfo()" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700">儲存分機表</button>
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600">取消</button>
+        <button onclick="saveContactsInfo()" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg">儲存</button>
       </div>
     </div>
   `);
@@ -1471,19 +2010,12 @@ function saveContactsInfo() {
   c.teacherInfo.extension = document.getElementById('ctTeacherExt').value.trim();
   c.teacherInfo.office = document.getElementById('ctTeacherOffice').value.trim();
   c.teacherInfo.availableTime = document.getElementById('ctTeacherTime').value.trim();
-
-  c.offices.forEach((o, idx) => {
-    o.name = document.getElementById(`offName_${idx}`).value.trim();
-    o.ext = document.getElementById(`offExt_${idx}`).value.trim();
-    o.desc = document.getElementById(`offDesc_${idx}`).value.trim();
-  });
-
   saveData();
   closeModal();
   renderCurrentTab();
 }
 
-// ==================== 7. 班級行事曆（自動匯入學生生日 + 考試日程） ====================
+// ==================== 10. 班級行事曆（自動匯入學生生日 + 考試日程） ====================
 function renderExamCalendar(container) {
   const isTeacher = currentUser.role === 'teacher';
   const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
@@ -1548,13 +2080,12 @@ function renderExamCalendar(container) {
         <div class="space-y-1 mt-1">
           ${dayBirthdays.map(b => `
             <div onclick="event.stopPropagation(); jumpToStudentProfile('${b.studentId}')"
-                 class="text-[11px] font-bold px-1.5 py-0.5 rounded border bg-pink-50 text-pink-700 border-pink-200 truncate hover:bg-pink-100 cursor-pointer"
-                 title="點擊查看 ${b.name} 的個人自介並送上祝福！">
+                 class="text-[11px] font-bold px-1.5 py-0.5 rounded border bg-pink-50 text-pink-700 border-pink-200 truncate hover:bg-pink-100 cursor-pointer">
               🎂 ${b.name} 生日
             </div>
           `).join('')}
           ${dayExams.map(ex => `
-            <div class="text-[11px] font-bold px-1.5 py-0.5 rounded border truncate ${getExamBadgeColor(ex.type)}" title="${ex.subject} - ${ex.title} (${ex.scope})">
+            <div class="text-[11px] font-bold px-1.5 py-0.5 rounded border truncate ${getExamBadgeColor(ex.type)}">
               ${ex.subject}｜${ex.title}
             </div>
           `).join('')}
@@ -1576,7 +2107,6 @@ function renderExamCalendar(container) {
               <i data-lucide="chevron-right" class="w-4 h-4"></i>
             </button>
           </div>
-
           <div class="flex items-center gap-2">
             <button onclick="toggleShowBirthdays()" class="text-xs font-bold px-3 py-1.5 rounded-lg border transition cursor-pointer ${
               showBirthdaysOnCalendar ? 'bg-pink-50 text-pink-700 border-pink-200' : 'bg-white text-slate-500 border-slate-300'
@@ -1590,83 +2120,42 @@ function renderExamCalendar(container) {
             ` : ''}
           </div>
         </div>
-
         <div class="grid grid-cols-7 bg-slate-100/80 border-b border-slate-200 text-center text-xs font-bold text-slate-600 py-2">
-          <div class="text-rose-500">週日</div>
-          <div>週一</div>
-          <div>週二</div>
-          <div>週三</div>
-          <div>週四</div>
-          <div>週五</div>
-          <div class="text-emerald-600">週六</div>
+          <div class="text-rose-500">週日</div><div>週一</div><div>週二</div><div>週三</div><div>週四</div><div>週五</div><div class="text-emerald-600">週六</div>
         </div>
-
-        <div class="grid grid-cols-7 border-l border-slate-200">
-          ${calendarCells}
-        </div>
+        <div class="grid grid-cols-7 border-l border-slate-200">${calendarCells}</div>
       </div>
 
       <div class="lg:col-span-4 space-y-5">
         <div class="bg-gradient-to-br from-pink-50 via-rose-50/70 to-amber-50 rounded-2xl border border-pink-200 p-5 shadow-xs">
           <div class="flex items-center justify-between mb-2">
-            <h3 class="font-black text-pink-900 text-sm flex items-center gap-1.5">
-              <span>🎂</span> ${monthNames[calMonth]}班級壽星榜（自動同步）
-            </h3>
-            <span class="text-[11px] font-bold bg-white text-pink-700 px-2 py-0.5 rounded-full border border-pink-200">
-              共 ${monthBirthdays.length} 位壽星
-            </span>
+            <h3 class="font-black text-pink-900 text-sm flex items-center gap-1.5"><span>🎂</span> ${monthNames[calMonth]}班級壽星榜</h3>
+            <span class="text-[11px] font-bold bg-white text-pink-700 px-2 py-0.5 rounded-full border border-pink-200">共 ${monthBirthdays.length} 位</span>
           </div>
-          <p class="text-[11px] text-pink-800/80 mb-3">系統已自動由學生基本資料匯入生日日期，點擊壽星可前往自介主頁！</p>
-
-          ${monthBirthdays.length === 0 ? `
-            <div class="bg-white/80 rounded-xl p-4 text-center text-xs text-slate-400">
-              本月目前沒有登記生日的同學
-            </div>
-          ` : `
-            <div class="space-y-2">
-              ${monthBirthdays.map(b => `
-                <div onclick="jumpToStudentProfile('${b.studentId}')" class="bg-white/90 hover:bg-white p-3 rounded-xl border border-pink-200/80 flex items-center justify-between transition cursor-pointer shadow-2xs">
-                  <div class="flex items-center gap-2.5">
-                    <span class="text-xs font-mono font-black bg-pink-100 text-pink-700 px-2 py-1 rounded-lg">${b.monthDay}</span>
-                    <div>
-                      <div class="font-bold text-sm text-slate-800">${b.seat}號 ${b.name}</div>
-                      <div class="text-[11px] text-slate-400">祝 ${b.name} 生日快樂 🎉</div>
-                    </div>
-                  </div>
-                  <i data-lucide="chevron-right" class="w-4 h-4 text-pink-400"></i>
+          <div class="space-y-2 mt-3">
+            ${monthBirthdays.map(b => `
+              <div onclick="jumpToStudentProfile('${b.studentId}')" class="bg-white/90 hover:bg-white p-3 rounded-xl border border-pink-200/80 flex items-center justify-between cursor-pointer">
+                <div class="flex items-center gap-2.5">
+                  <span class="text-xs font-mono font-black bg-pink-100 text-pink-700 px-2 py-1 rounded-lg">${b.monthDay}</span>
+                  <div class="font-bold text-sm text-slate-800">${b.seat}號 ${b.name}</div>
                 </div>
-              `).join('')}
-            </div>
-          `}
+                <i data-lucide="chevron-right" class="w-4 h-4 text-pink-400"></i>
+              </div>
+            `).join('')}
+          </div>
         </div>
 
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
-          <h3 class="font-bold text-slate-800 text-base mb-1 flex items-center gap-2">
-            <i data-lucide="timer" class="w-4 h-4 text-rose-500"></i> 近期考試日程與範圍
-          </h3>
-          <p class="text-xs text-slate-400 mb-4">依考試日期由近至遠自動排列</p>
-
-          <div class="space-y-3 max-h-[360px] overflow-y-auto pr-1">
-            ${upcomingExams.length === 0 ? `<div class="text-center text-xs text-slate-400 py-8">目前尚無排定的考試日程</div>` : ''}
+          <h3 class="font-bold text-slate-800 text-base mb-3 flex items-center gap-2"><i data-lucide="timer" class="w-4 h-4 text-rose-500"></i> 近期考試日程</h3>
+          <div class="space-y-3">
             ${upcomingExams.map(ex => `
-              <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-1.5">
-                <div class="flex items-center justify-between gap-2">
-                  <div class="flex items-center gap-1.5">
-                    <span class="text-[11px] font-bold px-2 py-0.5 rounded border ${getExamBadgeColor(ex.type)}">${ex.type}</span>
-                    <span class="text-xs font-bold text-slate-700">${ex.subject}</span>
-                  </div>
+              <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-slate-700">${ex.subject}</span>
                   <span class="text-[11px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">${calcDaysLeft(ex.date)}</span>
                 </div>
                 <div class="font-bold text-sm text-slate-800">${ex.title}</div>
-                <div class="text-xs text-slate-500">📅 日期：${ex.date}（${ex.period || '依課表'}）</div>
-                <div class="text-xs text-slate-600 bg-white p-2 rounded-lg border border-slate-100">
-                  <strong>考試範圍：</strong>${ex.scope}
-                </div>
-                ${isTeacher ? `
-                  <div class="flex justify-end pt-1">
-                    <button onclick="deleteExam('${ex.id}')" class="text-[11px] text-rose-500 hover:underline cursor-pointer">刪除此排考</button>
-                  </div>
-                ` : ''}
+                <div class="text-xs text-slate-500">📅 ${ex.date}｜${ex.scope}</div>
               </div>
             `).join('')}
           </div>
@@ -1676,306 +2165,106 @@ function renderExamCalendar(container) {
   `;
 }
 
-function toggleShowBirthdays() {
-  showBirthdaysOnCalendar = !showBirthdaysOnCalendar;
-  renderCurrentTab();
-}
-
+function toggleShowBirthdays() { showBirthdaysOnCalendar = !showBirthdaysOnCalendar; renderCurrentTab(); }
 function changeCalMonth(delta) {
   calMonth += delta;
-  if (calMonth < 0) {
-    calMonth = 11;
-    calYear--;
-  } else if (calMonth > 11) {
-    calMonth = 0;
-    calYear++;
-  }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  else if (calMonth > 11) { calMonth = 0; calYear++; }
   renderCurrentTab();
 }
-
 function openAddExamModal(defaultDate) {
-  if (currentUser.role !== 'teacher') return;
   showModal(`
     <div class="p-6">
       <h3 class="text-lg font-bold text-slate-800 mb-4">新增班級考試日程</h3>
       <div class="space-y-3">
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="text-xs font-bold text-slate-600 block mb-1">考試日期</label>
-            <input id="examDate" type="date" value="${defaultDate}" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
-          </div>
-          <div>
-            <label class="text-xs font-bold text-slate-600 block mb-1">考試類別</label>
-            <select id="examType" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
-              <option value="平時小考">平時小考</option>
-              <option value="週考/複習考">週考/複習考</option>
-              <option value="期中段考">期中段考</option>
-              <option value="期末段考">期末段考</option>
-              <option value="模擬考">模擬考</option>
-            </select>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="text-xs font-bold text-slate-600 block mb-1">考試科目</label>
-            <input id="examSubj" type="text" placeholder="例如：英文、數學" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
-          </div>
-          <div>
-            <label class="text-xs font-bold text-slate-600 block mb-1">考試節次 / 時間</label>
-            <input id="examPeriod" type="text" placeholder="例如：早自習、第 2 節" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
-          </div>
-        </div>
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">考試名稱</label>
-          <input id="examTitle" type="text" placeholder="例如：第五課單字測驗" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">考試範圍說明</label>
-          <textarea id="examScope" rows="2" placeholder="請輸入課本頁數、章節或講義範圍..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></textarea>
-        </div>
+        <input id="examDate" type="date" value="${defaultDate}" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <input id="examSubj" type="text" placeholder="考試科目" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <input id="examTitle" type="text" placeholder="考試名稱" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        <textarea id="examScope" rows="2" placeholder="考試範圍" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></textarea>
       </div>
       <div class="mt-6 flex justify-end gap-2">
-        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">取消</button>
-        <button onclick="createExam()" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700">加入行事曆</button>
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600">取消</button>
+        <button onclick="createExam()" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg">儲存</button>
       </div>
     </div>
   `);
 }
-
 function createExam() {
   const date = document.getElementById('examDate').value;
-  const type = document.getElementById('examType').value;
   const subject = document.getElementById('examSubj').value.trim();
-  const period = document.getElementById('examPeriod').value.trim();
   const title = document.getElementById('examTitle').value.trim();
   const scope = document.getElementById('examScope').value.trim();
-  if (!date || !subject || !title) return alert('請填寫考試日期、科目與名稱');
-
-  appData.exams.push({
-    id: 'EX' + Date.now(),
-    date, type, subject, period, title,
-    scope: scope || '依課堂宣布範圍'
-  });
+  if (!date || !subject || !title) return;
+  appData.exams.push({ id: 'EX' + Date.now(), date, type: '平時小考', subject, period: '依課表', title, scope: scope || '依課堂宣布' });
   saveData();
   closeModal();
   renderCurrentTab();
 }
 
-function deleteExam(id) {
-  if (currentUser.role !== 'teacher') return;
-  appData.exams = appData.exams.filter(ex => ex.id !== id);
-  saveData();
-  renderCurrentTab();
-}
-
-// ==================== 8. 自我介紹設定與個資總覽 ====================
+// ==================== 11. 自我介紹設定與個資總覽 ====================
 function renderStudentProfilesHub(container) {
   const isTeacher = currentUser.role === 'teacher';
   const targetStudent = appData.students.find(s => s.id === viewingStudentProfileId) || appData.students[0];
   viewingStudentProfileId = targetStudent.id;
-
   const isViewingSelf = !isTeacher && targetStudent.id === currentUser.id;
   const canViewSensitiveInfo = isTeacher || isViewingSelf;
 
-  const pub = targetStudent.publicProfile || {
-    nickname: targetStudent.id.toLowerCase(),
-    mbti: 'ENFP',
-    avatarGrad: 'from-indigo-500 to-purple-600',
-    bio: '尚未填寫個人簡介',
-    tags: [],
-    igHandle: ''
-  };
+  const pub = targetStudent.publicProfile || {};
   const priv = targetStudent.privateInfo || {};
-
-  const officerRole = appData.classOfficers.find(o => o.studentId === targetStudent.id);
-  const cleaningZones = appData.cleaningDuties.filter(c => c.studentIds.includes(targetStudent.id));
 
   container.innerHTML = `
     <div class="max-w-5xl mx-auto space-y-6">
       <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-        <div class="flex items-center justify-between mb-3 px-1">
-          <span class="text-xs font-bold text-slate-500 flex items-center gap-1.5">
-            <i data-lucide="users" class="w-3.5 h-3.5 text-pink-500"></i>
-            高二忠班同學錄（點擊頭像瀏覽公開自介${isTeacher ? '與導師專用個資' : ''}）
-          </span>
-          ${isTeacher ? `
-            <button onclick="exportAllStudentsPrivateCSV()" class="text-xs font-bold text-indigo-600 hover:bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200 flex items-center gap-1 cursor-pointer">
-              <i data-lucide="download" class="w-3.5 h-3.5"></i> 匯出全班聯絡個資清冊 (CSV)
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-slate-500">高二忠班同學錄</span>
+          ${!isTeacher ? `
+            <button onclick="openEditStudentProfileModal('${currentUser.id}', false)" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200 cursor-pointer">
+              編輯我的自介與基本資料
             </button>
-          ` : `
-            <button onclick="openEditStudentProfileModal('${currentUser.id}', false)" class="text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-1 rounded-lg border border-emerald-200 flex items-center gap-1 cursor-pointer">
-              <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> 編輯我的自介與基本資料
-            </button>
-          `}
+          ` : ''}
         </div>
-
-        <div class="flex items-center gap-4 overflow-x-auto pb-2 pt-1 px-1">
-          ${appData.students.map(s => {
-            const isSelected = s.id === targetStudent.id;
-            const sPub = s.publicProfile || {};
-            return `
-              <button onclick="selectStudentProfile('${s.id}')" class="flex flex-col items-center gap-1.5 shrink-0 group cursor-pointer">
-                <div class="w-14 h-14 rounded-full ${isSelected ? 'ig-ring scale-105' : 'p-[2px] bg-slate-200 group-hover:bg-pink-300'} transition">
-                  <div class="w-full h-full rounded-full bg-gradient-to-tr ${sPub.avatarGrad || 'from-slate-500 to-slate-700'} text-white font-black text-base flex items-center justify-center border-2 border-white">
-                    ${s.name.slice(-1)}
-                  </div>
+        <div class="flex items-center gap-4 overflow-x-auto pb-1">
+          ${appData.students.map(s => `
+            <button onclick="viewingStudentProfileId='${s.id}'; renderCurrentTab();" class="flex flex-col items-center gap-1 shrink-0 cursor-pointer">
+              <div class="w-12 h-12 rounded-full ${s.id===targetStudent.id ? 'ig-ring' : 'bg-slate-200 p-[2px]'}">
+                <div class="w-full h-full rounded-full bg-gradient-to-tr ${s.publicProfile?.avatarGrad || 'from-slate-500 to-slate-700'} text-white font-black text-sm flex items-center justify-center border-2 border-white">
+                  ${s.name.slice(-1)}
                 </div>
-                <span class="text-xs ${isSelected ? 'font-black text-slate-900' : 'font-medium text-slate-600'}">
-                  ${s.seat} ${s.name}
-                </span>
-              </button>
-            `;
-          }).join('')}
+              </div>
+              <span class="text-xs font-bold">${s.seat} ${s.name}</span>
+            </button>
+          `).join('')}
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-          <div class="px-6 py-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
-            <div class="flex items-center gap-2">
-              <span class="font-mono font-bold text-sm text-slate-800">${pub.nickname || targetStudent.id.toLowerCase()}</span>
-              <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">公開個人檔案</span>
-            </div>
-            ${isViewingSelf ? `
-              <button onclick="openEditStudentProfileModal('${targetStudent.id}', false)" class="text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-1.5 rounded-lg cursor-pointer transition">
-                編輯個人主頁
-              </button>
-            ` : isTeacher ? `
-              <button onclick="openCareChat('${targetStudent.id}')" class="text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg cursor-pointer flex items-center gap-1">
-                <i data-lucide="send" class="w-3 h-3"></i> 發送私訊
-              </button>
-            ` : ''}
-          </div>
-
-          <div class="p-6 sm:p-7 space-y-5">
-            <div class="flex items-center gap-6">
-              <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full ig-ring shrink-0 shadow-sm">
-                <div class="w-full h-full rounded-full bg-gradient-to-tr ${pub.avatarGrad || 'from-indigo-500 to-purple-600'} text-white font-black text-2xl sm:text-3xl flex items-center justify-center border-4 border-white">
-                  ${targetStudent.name.slice(-2)}
-                </div>
-              </div>
-
-              <div class="flex-1 grid grid-cols-3 text-center divide-x divide-slate-100">
-                <div>
-                  <div class="text-lg sm:text-xl font-black text-slate-800">${targetStudent.seat}號</div>
-                  <div class="text-xs text-slate-400 mt-0.5">班級座號</div>
-                </div>
-                <div>
-                  <div class="text-lg sm:text-xl font-black text-indigo-600">${pub.mbti || '未設定'}</div>
-                  <div class="text-xs text-slate-400 mt-0.5">MBTI 人格</div>
-                </div>
-                <div>
-                  <div class="text-sm sm:text-base font-black text-emerald-600">${officerRole ? officerRole.role : '班級同學'}</div>
-                  <div class="text-xs text-slate-400 mt-0.5">班級職務</div>
-                </div>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-6 space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-full ig-ring">
+              <div class="w-full h-full rounded-full bg-gradient-to-tr ${pub.avatarGrad || 'from-indigo-500 to-purple-600'} text-white font-black text-xl flex items-center justify-center border-2 border-white">
+                ${targetStudent.name.slice(-2)}
               </div>
             </div>
-
-            <div class="space-y-2">
-              <div class="flex flex-wrap items-center gap-2">
-                <h3 class="text-lg font-black text-slate-900">${targetStudent.name}</h3>
-                <span class="text-xs font-mono text-slate-400">(${targetStudent.id})</span>
-                ${pub.igHandle ? `
-                  <span class="inline-flex items-center gap-1 text-xs font-bold text-pink-600 bg-pink-50 px-2.5 py-0.5 rounded-full">
-                    <i data-lucide="instagram" class="w-3 h-3"></i> ${pub.igHandle}
-                  </span>
-                ` : ''}
-              </div>
-
-              <p class="text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50/80 p-4 rounded-2xl border border-slate-100">
-                ${pub.bio || '這位同學還沒有填寫自我介紹喔～'}
-              </p>
-
-              <div class="text-xs bg-emerald-50/70 border border-emerald-100 text-emerald-800 px-3.5 py-2.5 rounded-xl flex items-center justify-between">
-                <span>🧹 負責打掃區域：<strong>${cleaningZones.length > 0 ? cleaningZones.map(z => z.zone).join('、') : '未指派'}</strong></span>
-                <button onclick="switchTab('classInfo')" class="underline font-bold hover:text-emerald-950 cursor-pointer">查看打掃表 →</button>
-              </div>
-            </div>
-
             <div>
-              <div class="text-xs font-bold text-slate-400 mb-2">興趣與關鍵字標籤</div>
-              <div class="flex flex-wrap gap-2">
-                ${(pub.tags && pub.tags.length > 0) ? pub.tags.map(tag => `
-                  <span class="text-xs font-bold px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
-                    # ${tag}
-                  </span>
-                `).join('') : `<span class="text-xs text-slate-400">尚未設定興趣標籤</span>`}
-              </div>
+              <h3 class="text-lg font-black text-slate-900">${targetStudent.seat}號 ${targetStudent.name}</h3>
+              <div class="text-xs text-slate-500">MBTI：${pub.mbti || '未設定'} ｜ 榮譽點數：⭐ ${targetStudent.points || 0} 點</div>
             </div>
           </div>
+          <p class="text-sm text-slate-700 whitespace-pre-line bg-slate-50 p-4 rounded-2xl">${pub.bio || '尚未填寫自介'}</p>
         </div>
 
         <div class="lg:col-span-5">
           ${canViewSensitiveInfo ? `
-            <div class="bg-white rounded-3xl border-2 border-indigo-200 shadow-xs overflow-hidden">
-              <div class="px-5 py-3.5 bg-indigo-600 text-white flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <i data-lucide="shield-alert" class="w-4 h-4"></i>
-                  <span class="font-bold text-sm">${isTeacher ? '導師專用｜學生基本個資檔案' : '我的基本資料（僅導師可見）'}</span>
-                </div>
-                <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-bold">同學不可見</span>
-              </div>
-
-              <div class="p-5 space-y-3.5 text-sm">
-                <div class="p-3 rounded-xl bg-amber-50 border border-amber-200/80 text-xs text-amber-800 flex items-start gap-2">
-                  <i data-lucide="lock" class="w-4 h-4 shrink-0 mt-0.5 text-amber-600"></i>
-                  <span>${isTeacher
-                    ? '此區塊包含家長聯絡方式與出生年月日等敏感個資，系統已設定為「僅教師權限」可查閱。'
-                    : '以下資料僅提供給班導師緊急聯繫使用；其中「出生月日」會自動同步至班級行事曆一起慶生。'
-                  }</span>
-                </div>
-
-                <div class="divide-y divide-slate-100 text-xs sm:text-sm">
-                  <div class="py-2.5 flex justify-between gap-2">
-                    <span class="text-slate-400 font-bold shrink-0">🎂 出生年月日</span>
-                    <span class="font-mono font-bold text-slate-800">${priv.birthday || '<span class="text-rose-500">尚未填寫</span>'}</span>
-                  </div>
-                  <div class="py-2.5 flex justify-between gap-2">
-                    <span class="text-slate-400 font-bold shrink-0">📱 學生本人手機</span>
-                    <span class="font-mono font-bold text-slate-800">${priv.studentPhone || '<span class="text-slate-400">未填寫</span>'}</span>
-                  </div>
-                  <div class="py-2.5 flex justify-between gap-2">
-                    <span class="text-slate-400 font-bold shrink-0">👨‍👩‍👦 家長／監護人</span>
-                    <span class="font-bold text-slate-800">${priv.parentName || '<span class="text-rose-500">尚未填寫</span>'}</span>
-                  </div>
-                  <div class="py-2.5 flex justify-between gap-2 bg-rose-50/60 px-2.5 rounded-lg my-1">
-                    <span class="text-rose-700 font-bold shrink-0">📞 父母聯絡電話</span>
-                    <span class="font-mono font-black text-rose-700">${priv.parentPhone || '<span class="text-rose-400 font-normal">尚未填寫</span>'}</span>
-                  </div>
-                  <div class="py-2.5 flex justify-between gap-2">
-                    <span class="text-slate-400 font-bold shrink-0">🆘 緊急聯絡人</span>
-                    <span class="font-bold text-slate-800">${priv.emergencyRelation || '-'}</span>
-                  </div>
-                  <div class="py-2.5 flex justify-between gap-2">
-                    <span class="text-slate-400 font-bold shrink-0">☎️ 緊急聯絡電話</span>
-                    <span class="font-mono font-bold text-slate-800">${priv.emergencyPhone || '-'}</span>
-                  </div>
-                  <div class="py-2.5 space-y-1">
-                    <div class="text-slate-400 font-bold">🏠 通訊住址</div>
-                    <div class="text-slate-700 text-xs bg-slate-50 p-2 rounded-lg">${priv.address || '尚未填寫'}</div>
-                  </div>
-                  <div class="py-2.5 space-y-1">
-                    <div class="text-slate-400 font-bold">🏥 健康與過敏備註</div>
-                    <div class="text-slate-700 text-xs bg-slate-50 p-2 rounded-lg">${priv.healthNote || '無特殊備註'}</div>
-                  </div>
-                </div>
-
-                ${isViewingSelf ? `
-                  <button onclick="openEditStudentProfileModal('${targetStudent.id}', false)" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-xs cursor-pointer transition">
-                    更新我的基本資料與自介
-                  </button>
-                ` : ''}
-              </div>
+            <div class="bg-white rounded-3xl border-2 border-indigo-200 p-5 space-y-2 text-xs">
+              <div class="font-black text-indigo-700 text-sm mb-2">🔒 導師專用基本個資</div>
+              <div>🎂 出生年月日：<strong>${priv.birthday || '未填寫'}</strong></div>
+              <div>👨‍👩‍👦 家長姓名：<strong>${priv.parentName || '未填寫'}</strong></div>
+              <div class="text-rose-700 font-bold">📞 父母電話：${priv.parentPhone || '未填寫'}</div>
+              <div>🏠 住址：${priv.address || '未填寫'}</div>
             </div>
           ` : `
-            <div class="bg-white rounded-3xl border border-slate-200 p-7 text-center space-y-3 shadow-xs">
-              <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
-                <i data-lucide="lock" class="w-7 h-7"></i>
-              </div>
-              <h4 class="font-bold text-slate-700 text-base">基本個資已受隱私權限保護</h4>
-              <p class="text-xs text-slate-500 leading-relaxed">
-                依據校園個資保護規範，<strong>${targetStudent.name}</strong> 的父母電話、緊急聯絡人與住址等資料<strong>僅限班導師端查閱</strong>，同學之間僅能瀏覽左側的 IG 公開自我介紹。
-              </p>
+            <div class="bg-white rounded-3xl border border-slate-200 p-6 text-center text-xs text-slate-500">
+              🔒 父母電話與個資僅限班導師查閱
             </div>
           `}
         </div>
@@ -1984,171 +2273,45 @@ function renderStudentProfilesHub(container) {
   `;
 }
 
-function selectStudentProfile(studentId) {
-  viewingStudentProfileId = studentId;
-  renderCurrentTab();
-}
-
 function openEditStudentProfileModal(studentId, isFirstTimeGuide = false) {
   const st = appData.students.find(s => s.id === studentId);
   if (!st) return;
   const pub = st.publicProfile || { nickname: '', mbti: 'ENFP', avatarGrad: 'from-emerald-500 to-teal-600', bio: '', tags: [], igHandle: '' };
   const priv = st.privateInfo || { birthday: '', studentPhone: '', parentName: '', parentPhone: '', emergencyRelation: '', emergencyPhone: '', address: '', healthNote: '' };
 
-  const grads = [
-    { label: '翠綠清新', val: 'from-emerald-500 to-teal-600' },
-    { label: '星空藍紫', val: 'from-blue-500 to-indigo-600' },
-    { label: '落日粉橘', val: 'from-pink-500 to-rose-500' },
-    { label: '暖陽金橘', val: 'from-amber-500 to-orange-600' },
-    { label: '夢幻紫羅蘭', val: 'from-purple-500 to-fuchsia-600' }
-  ];
-
   showModal(`
     <div class="p-6 max-h-[88vh] overflow-y-auto">
-      <div class="flex items-center justify-between mb-3">
+      <h3 class="text-lg font-black text-slate-800 mb-4">${st.seat}號 ${st.name} 的個人檔案設定</h3>
+      <form onsubmit="saveStudentProfile(event, '${st.id}')" class="space-y-4">
         <div>
-          <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
-            ${isFirstTimeGuide ? '👋 歡迎加入！初次使用請完善個人資料' : '✏️ 編輯個人檔案'}
-          </span>
-          <h3 class="text-lg font-black text-slate-800 mt-1">${st.seat}號 ${st.name} 的個人檔案設定</h3>
+          <label class="text-xs font-bold text-slate-600 block mb-1">自我介紹 Bio</label>
+          <textarea id="profBio" rows="3" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">${pub.bio}</textarea>
         </div>
-        ${!isFirstTimeGuide ? `<button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer">✕</button>` : ''}
-      </div>
-
-      <form onsubmit="saveStudentProfile(event, '${st.id}')" class="space-y-5">
-        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
-          <div class="text-xs font-black text-pink-600 flex items-center gap-1.5">
-            <i data-lucide="instagram" class="w-4 h-4"></i> 一、IG 風格公開個人簡介（全班同學可見）
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="text-xs font-bold text-slate-600 block mb-1">個人代號 / 暱稱</label>
-              <input id="profNickname" type="text" required value="${pub.nickname}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-            </div>
-            <div>
-              <label class="text-xs font-bold text-slate-600 block mb-1">MBTI 人格類型</label>
-              <select id="profMbti" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-                ${['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTJ','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP'].map(m =>
-                  `<option value="${m}" ${pub.mbti===m?'selected':''}>${m}</option>`
-                ).join('')}
-              </select>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="text-xs font-bold text-slate-600 block mb-1">頭像背景配色</label>
-              <select id="profGrad" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-                ${grads.map(g => `<option value="${g.val}" ${pub.avatarGrad===g.val?'selected':''}>${g.label}</option>`).join('')}
-              </select>
-            </div>
-            <div>
-              <label class="text-xs font-bold text-slate-600 block mb-1">Instagram 帳號 (選填)</label>
-              <input id="profIg" type="text" value="${pub.igHandle || ''}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-            </div>
-          </div>
-
+        <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="text-xs font-bold text-slate-600 block mb-1">自我介紹 Bio</label>
-            <textarea id="profBio" rows="3" required class="w-full border border-slate-300 bg-white rounded-lg px-3 py-2 text-sm">${pub.bio}</textarea>
+            <label class="text-xs font-bold text-slate-600 block mb-1">出生年月日</label>
+            <input id="privBirth" type="date" required value="${priv.birthday}" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm">
           </div>
-
           <div>
-            <label class="text-xs font-bold text-slate-600 block mb-1">興趣標籤（逗號分隔）</label>
-            <input id="profTags" type="text" value="${(pub.tags || []).join(', ')}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
+            <label class="text-xs font-bold text-slate-600 block mb-1">父母聯絡電話</label>
+            <input id="privParentPhone" type="tel" required value="${priv.parentPhone}" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm">
           </div>
         </div>
-
-        <div class="bg-indigo-50/70 p-4 rounded-2xl border border-indigo-200 space-y-3">
-          <div class="text-xs font-black text-indigo-800 flex items-center gap-1.5">
-            <i data-lucide="lock" class="w-4 h-4"></i> 二、學生基本聯絡資料（🔒 僅班導師端可見，生日將同步至班級行事曆）
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="text-xs font-bold text-slate-700 block mb-1">出生年月日 <span class="text-rose-500">*</span></label>
-              <input id="privBirth" type="date" required value="${priv.birthday}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-            </div>
-            <div>
-              <label class="text-xs font-bold text-slate-700 block mb-1">學生本人手機</label>
-              <input id="privStPhone" type="tel" value="${priv.studentPhone}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="text-xs font-bold text-slate-700 block mb-1">家長／監護人姓名與稱謂 <span class="text-rose-500">*</span></label>
-              <input id="privParentName" type="text" required value="${priv.parentName}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-            </div>
-            <div>
-              <label class="text-xs font-bold text-slate-700 block mb-1">父母聯絡電話 <span class="text-rose-500">*</span></label>
-              <input id="privParentPhone" type="tel" required value="${priv.parentPhone}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="text-xs font-bold text-slate-700 block mb-1">第二緊急聯絡人</label>
-              <input id="privEmergRel" type="text" value="${priv.emergencyRelation}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-            </div>
-            <div>
-              <label class="text-xs font-bold text-slate-700 block mb-1">緊急聯絡電話</label>
-              <input id="privEmergPhone" type="tel" value="${priv.emergencyPhone}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-            </div>
-          </div>
-
-          <div>
-            <label class="text-xs font-bold text-slate-700 block mb-1">通訊住址</label>
-            <input id="privAddress" type="text" value="${priv.address}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-          </div>
-
-          <div>
-            <label class="text-xs font-bold text-slate-700 block mb-1">特殊健康狀況或過敏備註</label>
-            <input id="privHealth" type="text" value="${priv.healthNote}" class="w-full border border-slate-300 bg-white rounded-lg px-3 py-1.5 text-sm">
-          </div>
-        </div>
-
-        <div class="flex justify-end gap-2 pt-1">
-          ${!isFirstTimeGuide ? `<button type="button" onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer">取消</button>` : ''}
-          <button type="submit" class="px-6 py-2.5 text-sm bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md cursor-pointer">
-            儲存並同步至行事曆
-          </button>
+        <div class="flex justify-end gap-2 pt-2">
+          ${!isFirstTimeGuide ? `<button type="button" onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600">取消</button>` : ''}
+          <button type="submit" class="px-5 py-2 text-sm bg-emerald-600 text-white font-bold rounded-xl">儲存</button>
         </div>
       </form>
     </div>
   `);
-  lucide.createIcons();
 }
 
 function saveStudentProfile(e, studentId) {
   e.preventDefault();
   const st = appData.students.find(s => s.id === studentId);
-  if (!st) return;
-
-  const rawTags = document.getElementById('profTags').value;
-  const parsedTags = rawTags.split(/[,，、]/).map(t => t.trim()).filter(Boolean);
-
-  st.publicProfile = {
-    nickname: document.getElementById('profNickname').value.trim(),
-    mbti: document.getElementById('profMbti').value,
-    avatarGrad: document.getElementById('profGrad').value,
-    igHandle: document.getElementById('profIg').value.trim(),
-    bio: document.getElementById('profBio').value.trim(),
-    tags: parsedTags
-  };
-
-  st.privateInfo = {
-    birthday: document.getElementById('privBirth').value,
-    studentPhone: document.getElementById('privStPhone').value.trim(),
-    parentName: document.getElementById('privParentName').value.trim(),
-    parentPhone: document.getElementById('privParentPhone').value.trim(),
-    emergencyRelation: document.getElementById('privEmergRel').value.trim(),
-    emergencyPhone: document.getElementById('privEmergPhone').value.trim(),
-    address: document.getElementById('privAddress').value.trim(),
-    healthNote: document.getElementById('privHealth').value.trim()
-  };
-
+  st.publicProfile.bio = document.getElementById('profBio').value.trim();
+  st.privateInfo.birthday = document.getElementById('privBirth').value;
+  st.privateInfo.parentPhone = document.getElementById('privParentPhone').value.trim();
   st.profileCompleted = true;
   saveData();
   closeModal();
@@ -2156,44 +2319,18 @@ function saveStudentProfile(e, studentId) {
   switchTab('profiles');
 }
 
-function exportAllStudentsPrivateCSV() {
-  if (currentUser.role !== 'teacher') return;
-  let csv = '\uFEFF座號,學號,姓名,出生年月日,學生手機,家長姓名,父母聯絡電話,緊急聯絡人,緊急電話,通訊住址,健康備註\n';
-  appData.students.forEach(s => {
-    const p = s.privateInfo || {};
-    csv += `${s.seat},${s.id},${s.name},${p.birthday||'-'},${p.studentPhone||'-'},${p.parentName||'-'},${p.parentPhone||'-'},${p.emergencyRelation||'-'},${p.emergencyPhone||'-'},"${p.address||'-'}","${p.healthNote||'-'}"\n`;
-  });
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = `高二忠班_學生基本個資與家長聯絡清冊_${TODAY_STR}.csv`;
-  link.click();
-}
-
-// ==================== 9. 迷因卡片 & 點名與心情關懷 ====================
+// ==================== 12. 點名與心情關懷（自動寫入精確到校時間憑證） ====================
 function renderMemeFortuneCard(meme) {
   if (!meme) return '';
   return `
-    <div class="rounded-3xl border-2 ${meme.borderColor || 'border-amber-300'} bg-gradient-to-br ${meme.bgGrad || 'from-amber-50 to-orange-50'} p-5 shadow-md text-left relative overflow-hidden">
-      <div class="flex items-center justify-between gap-2 mb-3">
-        <span class="text-xs font-black px-3 py-1 rounded-full shadow-2xs ${meme.luckColor || 'bg-amber-500 text-white'}">
-          🎋 ${meme.luck}
-        </span>
-        <span class="text-[11px] font-mono text-slate-500 bg-white/70 px-2 py-0.5 rounded-md">今日幸運籤詩</span>
-      </div>
-      <div class="relative rounded-2xl overflow-hidden shadow-xs bg-white p-2 border border-slate-200/80">
-        <div class="text-center font-black text-slate-900 text-sm sm:text-base tracking-tight py-1.5 px-2 bg-slate-100 rounded-t-xl">
-          「${meme.topCaption}」
-        </div>
+    <div class="rounded-3xl border-2 ${meme.borderColor || 'border-amber-300'} bg-gradient-to-br ${meme.bgGrad || 'from-amber-50 to-orange-50'} p-5 shadow-md text-left">
+      <span class="text-xs font-black px-3 py-1 rounded-full ${meme.luckColor || 'bg-amber-500 text-white'}">🎋 ${meme.luck}</span>
+      <div class="mt-3 rounded-2xl bg-white p-2 border border-slate-200">
+        <div class="text-center font-black text-slate-900 text-sm py-1.5 bg-slate-100 rounded-t-xl">「${meme.topCaption}」</div>
         <div class="my-1.5 flex items-center justify-center">${meme.svg}</div>
-        <div class="text-center font-black text-indigo-900 text-sm sm:text-base tracking-tight py-1.5 px-2 bg-amber-100/70 rounded-b-xl">
-          ${meme.bottomCaption}
-        </div>
+        <div class="text-center font-black text-indigo-900 text-sm py-1.5 bg-amber-100/70 rounded-b-xl">${meme.bottomCaption}</div>
       </div>
-      <div class="mt-3.5 bg-white/85 backdrop-blur-xs rounded-2xl p-3.5 border border-white space-y-1.5 text-xs">
-        <div class="text-slate-700 font-bold">📜 籤詩指引：${meme.advice}</div>
-        <div class="text-amber-700 font-bold">🍀 今日開運小物：${meme.luckyItem}</div>
-      </div>
+      <div class="mt-3 bg-white/85 rounded-xl p-3 text-xs text-slate-700 font-bold">📜 ${meme.advice}</div>
     </div>
   `;
 }
@@ -2205,38 +2342,22 @@ function renderAttendance(container) {
   if (currentUser.role === 'student') {
     const myRec = todayRecords[currentUser.id];
     if (myRec) {
-      const m = myRec.mood;
-      const qInfo = m ? QUADRANT_INFO[m.q] : null;
       const drawnMeme = appData.memeFortunes.find(item => item.id === myRec.fortuneId) || appData.memeFortunes[0];
-
       container.innerHTML = `
-        <div class="max-w-4xl mx-auto mt-2 space-y-5">
-          <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-xs">
-            <div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-slate-100">
-              <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-                  <i data-lucide="check-circle-2" class="w-7 h-7"></i>
-                </div>
-                <div>
-                  <h3 class="text-lg font-black text-slate-800">${TODAY_STR} 簽到完成！已為你抽出今日幸運迷因籤</h3>
-                  <p class="text-xs text-slate-500 mt-0.5">打卡時間：<span class="font-mono">${myRec.time}</span></p>
-                </div>
-              </div>
-              <button onclick="resetMyTodayCheckIn()" class="text-xs text-slate-400 hover:text-indigo-600 underline cursor-pointer">重新打卡</button>
+        <div class="max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100">
+            <div>
+              <h3 class="text-lg font-black text-slate-800">✅ 今日到校簽到完成！</h3>
+              <p class="text-xs text-slate-500 mt-0.5">
+                伺服器記錄到校時間：<strong class="font-mono text-indigo-700">${myRec.exactTimestamp || (TODAY_STR + ' ' + myRec.time)}</strong>
+                （已同步寫入「每日打卡紀錄」）
+              </p>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6 items-center">
-              <div class="lg:col-span-7 pop-in">${renderMemeFortuneCard(drawnMeme)}</div>
-              <div class="lg:col-span-5 space-y-4">
-                ${m ? `
-                  <div class="p-5 rounded-2xl border ${qInfo.badge} space-y-2.5">
-                    <div class="text-xs font-bold opacity-80">今日情緒量表紀錄</div>
-                    <div class="text-2xl font-black">${m.zh} (${m.en})</div>
-                    ${m.note ? `<div class="text-xs bg-white/90 p-3 rounded-xl mt-2 text-slate-700">💬 給老師的話：${m.note}</div>` : ''}
-                  </div>
-                ` : ''}
-              </div>
-            </div>
+            <button onclick="switchTab('checkinLogs')" class="text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200 px-3 py-1.5 rounded-lg cursor-pointer">
+              查看歷史到校憑證 →
+            </button>
           </div>
+          <div class="max-w-md mx-auto pop-in">${renderMemeFortuneCard(drawnMeme)}</div>
         </div>
       `;
       return;
@@ -2250,26 +2371,27 @@ function renderAttendance(container) {
         const isSelected = tempSelectedMood && tempSelectedMood.r === r && tempSelectedMood.c === c;
         gridHtml += `
           <button type="button" onclick="selectMoodCell(${r}, ${c})"
-            class="p-1.5 rounded-md border text-center transition cursor-pointer flex flex-col items-center justify-center leading-tight min-h-[44px] ${qStyle} ${isSelected ? 'ring-3 ring-slate-900 scale-105 z-10 font-black shadow-md' : ''}">
-            <span class="text-[11px] font-bold tracking-tight">${item.zh}</span>
+            class="p-1.5 rounded-md border text-center transition cursor-pointer min-h-[42px] ${qStyle} ${isSelected ? 'ring-3 ring-slate-900 scale-105 z-10 font-black' : ''}">
+            <span class="text-[11px] font-bold">${item.zh}</span>
           </button>
         `;
       }
     }
 
     container.innerHTML = `
-      <div class="max-w-5xl mx-auto space-y-5">
-        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
-          <h3 class="text-lg font-bold text-slate-800 mb-3">🎯 點選今日情緒量表完成打卡並抽幸運迷因籤</h3>
-          <div class="overflow-x-auto pb-2">
-            <div class="min-w-[680px] grid grid-cols-10 gap-1">${gridHtml}</div>
-          </div>
-          <div class="mt-4 pt-4 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
-            <input id="moodNoteInput" type="text" placeholder="想跟老師補充的悄悄話（選填）" class="flex-1 w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
-            <button onclick="studentCheckIn()" ${!tempSelectedMood ? 'disabled' : ''} class="px-6 py-3 rounded-xl font-bold text-sm bg-emerald-600 text-white disabled:bg-slate-200 disabled:text-slate-400 cursor-pointer">
-              送出打卡並抽幸運籤 🎋
-            </button>
-          </div>
+      <div class="max-w-5xl mx-auto bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-bold text-slate-800">🎯 點選今日情緒量表完成簽到（將自動記錄精確到校時間）</h3>
+          <span class="text-xs font-bold text-slate-500">準時門檻：${ON_TIME_CUTOFF} 前</span>
+        </div>
+        <div class="overflow-x-auto pb-2">
+          <div class="min-w-[680px] grid grid-cols-10 gap-1">${gridHtml}</div>
+        </div>
+        <div class="pt-3 border-t border-slate-200 flex gap-3">
+          <input id="moodNoteInput" type="text" placeholder="想跟老師補充的悄悄話（選填）" class="flex-1 border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+          <button onclick="studentCheckIn()" ${!tempSelectedMood ? 'disabled' : ''} class="px-6 py-2.5 rounded-xl font-bold text-sm bg-emerald-600 text-white disabled:bg-slate-200 disabled:text-slate-400 cursor-pointer">
+            確認到校打卡 🎋
+          </button>
         </div>
       </div>
     `;
@@ -2278,47 +2400,45 @@ function renderAttendance(container) {
       <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
           <span class="font-bold text-slate-700">今日班級點名與心情總表 (${TODAY_STR})</span>
+          <button onclick="switchTab('checkinLogs')" class="text-xs font-bold text-sky-700 hover:underline cursor-pointer">檢視全班歷史打卡時間憑證 →</button>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b border-slate-200 text-xs text-slate-400 bg-slate-50">
-                <th class="py-3 px-4">座號</th>
-                <th class="py-3 px-4">姓名</th>
-                <th class="py-3 px-4">出席狀態</th>
-                <th class="py-3 px-4">今日情緒量表</th>
-                <th class="py-3 px-4">學生留言</th>
-                <th class="py-3 px-4 text-right">操作</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 text-sm">
-              ${appData.students.map(s => {
-                const rec = todayRecords[s.id] || { status: 'absent', time: '-', mood: null };
-                const m = rec.mood;
-                const qInfo = m ? QUADRANT_INFO[m.q] : null;
-                return `
-                  <tr class="hover:bg-slate-50">
-                    <td class="py-3 px-4 font-mono text-slate-500">${s.seat}</td>
-                    <td class="py-3 px-4 font-bold text-slate-800">${s.name}</td>
-                    <td class="py-3 px-4">
-                      <select onchange="teacherUpdateAttendance('${s.id}', this.value)" class="text-xs font-bold px-2.5 py-1 rounded-md border">
-                        <option value="present" ${rec.status==='present'?'selected':''}>✅ 準時出席</option>
-                        <option value="late" ${rec.status==='late'?'selected':''}>⚠️ 遲到</option>
-                        <option value="leave" ${rec.status==='leave'?'selected':''}>📋 請假</option>
-                        <option value="absent" ${rec.status==='absent'?'selected':''}>❌ 未到</option>
-                      </select>
-                    </td>
-                    <td class="py-3 px-4">${m ? `<span class="text-xs font-bold px-2 py-0.5 rounded border ${qInfo.badge}">${m.zh}</span>` : '-'}</td>
-                    <td class="py-3 px-4 text-xs text-slate-600">${m?.note || '-'}</td>
-                    <td class="py-3 px-4 text-right">
-                      <button onclick="openCareChat('${s.id}')" class="text-xs font-bold text-indigo-600 hover:underline cursor-pointer">私訊</button>
-                    </td>
-                  </tr>
-                `;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-slate-200 text-xs text-slate-400 bg-slate-50">
+              <th class="py-3 px-4">座號</th>
+              <th class="py-3 px-4">姓名</th>
+              <th class="py-3 px-4">出席狀態</th>
+              <th class="py-3 px-4">到校時間</th>
+              <th class="py-3 px-4">今日情緒</th>
+              <th class="py-3 px-4 text-right">操作</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-sm">
+            ${appData.students.map(s => {
+              const rec = todayRecords[s.id] || { status: 'absent', time: '-', mood: null };
+              const m = rec.mood;
+              return `
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3 px-4 font-mono">${s.seat}</td>
+                  <td class="py-3 px-4 font-bold">${s.name}</td>
+                  <td class="py-3 px-4">
+                    <select onchange="teacherUpdateAttendance('${s.id}', this.value)" class="text-xs font-bold px-2.5 py-1 rounded-md border">
+                      <option value="present" ${rec.status==='present'?'selected':''}>✅ 準時出席</option>
+                      <option value="late" ${rec.status==='late'?'selected':''}>⚠️ 遲到</option>
+                      <option value="leave" ${rec.status==='leave'?'selected':''}>📋 請假</option>
+                      <option value="absent" ${rec.status==='absent'?'selected':''}>❌ 未到</option>
+                    </select>
+                  </td>
+                  <td class="py-3 px-4 font-mono text-xs">${rec.time || '-'}</td>
+                  <td class="py-3 px-4 text-xs">${m ? m.zh : '-'}</td>
+                  <td class="py-3 px-4 text-right">
+                    <button onclick="openCareChat('${s.id}')" class="text-xs font-bold text-indigo-600 hover:underline cursor-pointer">私訊</button>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
       </div>
     `;
   }
@@ -2326,7 +2446,7 @@ function renderAttendance(container) {
 
 function selectMoodCell(r, c) {
   const item = MOOD_METER_GRID[r][c];
-  tempSelectedMood = { r, c, zh: item.zh, en: item.en, q: item.q, energy: 10 - r, pleasantness: c + 1 };
+  tempSelectedMood = { r, c, zh: item.zh, en: item.en, q: item.q };
   renderCurrentTab();
 }
 
@@ -2334,10 +2454,18 @@ function studentCheckIn() {
   if (!tempSelectedMood) return;
   const moodNote = document.getElementById('moodNoteInput')?.value.trim() || '';
   const randomMeme = appData.memeFortunes[Math.floor(Math.random() * appData.memeFortunes.length)];
+  const now = new Date();
+  const timeHMS = now.toTimeString().split(' ')[0];
+  const timeHM = timeHMS.slice(0, 5);
+  const status = timeHM <= ON_TIME_CUTOFF ? 'present' : 'late';
+
   if (!appData.attendance[TODAY_STR]) appData.attendance[TODAY_STR] = {};
   appData.attendance[TODAY_STR][currentUser.id] = {
-    status: 'present',
-    time: new Date().toTimeString().slice(0, 5),
+    status,
+    time: timeHMS,
+    exactTimestamp: `${TODAY_STR} ${timeHMS}`,
+    source: '學生自主系統簽到',
+    note: moodNote,
     mood: { ...tempSelectedMood, note: moodNote },
     fortuneId: randomMeme.id
   };
@@ -2346,21 +2474,16 @@ function studentCheckIn() {
   renderCurrentTab();
 }
 
-function resetMyTodayCheckIn() {
-  delete appData.attendance[TODAY_STR][currentUser.id];
-  saveData();
-  renderCurrentTab();
-}
-
 function teacherUpdateAttendance(studentId, status) {
   if (!appData.attendance[TODAY_STR]) appData.attendance[TODAY_STR] = {};
-  const old = appData.attendance[TODAY_STR][studentId] || { time: new Date().toTimeString().slice(0, 5), mood: null };
-  appData.attendance[TODAY_STR][studentId] = { ...old, status };
+  const nowHMS = new Date().toTimeString().split(' ')[0];
+  const old = appData.attendance[TODAY_STR][studentId] || { time: nowHMS, exactTimestamp: `${TODAY_STR} ${nowHMS}`, mood: null };
+  appData.attendance[TODAY_STR][studentId] = { ...old, status, source: `導師手動調整狀態 (${currentUser.name})` };
   saveData();
   renderCurrentTab();
 }
 
-// ==================== 10. 每日時事看板 ====================
+// ==================== 13. 每日時事看板・課表・作業提醒・每日課程最新公告・導師一對一私訊 ====================
 function renderDailyNewsBoard(container) {
   const activeNews = appData.dailyNews.find(n => n.id === selectedNewsId) || appData.dailyNews[0];
   const isLikedByMe = activeNews.likes.includes(currentUser.id);
@@ -2381,11 +2504,7 @@ function renderDailyNewsBoard(container) {
           <i data-lucide="heart" class="w-5 h-5 ${isLikedByMe ? 'fill-rose-500 text-rose-500' : ''}"></i> ${activeNews.likes.length} 個讚
         </button>
         <div class="pt-4 border-t border-slate-100 space-y-3">
-          ${activeNews.comments.map(c => `
-            <div class="text-sm bg-slate-50 p-3 rounded-xl">
-              <strong class="text-slate-900">${c.authorName}：</strong><span>${c.text}</span>
-            </div>
-          `).join('')}
+          ${activeNews.comments.map(c => `<div class="text-sm bg-slate-50 p-3 rounded-xl"><strong>${c.authorName}：</strong><span>${c.text}</span></div>`).join('')}
           <form onsubmit="submitNewsComment(event, '${activeNews.id}')" class="flex gap-2 pt-2">
             <input id="igCommentInput" type="text" required placeholder="發表你的觀點..." class="flex-1 bg-slate-100 rounded-full px-4 py-2 text-sm">
             <button type="submit" class="text-sm font-black text-[#06C755] px-3 cursor-pointer">發佈</button>
@@ -2414,11 +2533,8 @@ function submitNewsComment(e, newsId) {
     id: 'C' + Date.now(),
     authorId: currentUser.id,
     authorName: currentUser.role === 'teacher' ? currentUser.name : `${currentUser.seat}號 ${currentUser.name}`,
-    role: currentUser.role,
     text,
-    time: new Date().toTimeString().slice(0, 5),
-    likes: [],
-    replies: []
+    time: new Date().toTimeString().slice(0, 5)
   });
   saveData();
   renderCurrentTab();
@@ -2435,7 +2551,6 @@ function openCareChat(studentId) {
   switchTab('messages');
 }
 
-// ==================== 11. 課表・作業提醒・每日課程最新公告・導師一對一私訊・名冊 ====================
 function renderTimetable(container) {
   const days = ['週一', '週二', '週三', '週四', '週五'];
   const periods = [1, 2, 3, 4, 5, 6, 7];
@@ -2549,7 +2664,7 @@ function createHomeworkReminder() {
   const dueDate = document.getElementById('hwRemDate').value;
   const title = document.getElementById('hwRemTitle').value.trim();
   const note = document.getElementById('hwRemNote').value.trim();
-  if (!subject || !title) return alert('請填寫完整資訊');
+  if (!subject || !title) return;
   appData.homeworkReminders.push({ id: 'HW' + Date.now(), subject, dueDate, title, note, checkedBy: [] });
   saveData();
   closeModal();
@@ -2668,37 +2783,7 @@ function updateUnreadBadge() {
   }
 }
 
-function renderRoster(container) {
-  if (currentUser.role !== 'teacher') return;
-  container.innerHTML = `
-    <div class="max-w-5xl mx-auto bg-white rounded-xl border border-slate-200 overflow-hidden">
-      <table class="w-full text-left border-collapse">
-        <thead>
-          <tr class="border-b border-slate-200 text-xs text-slate-400 bg-slate-50">
-            <th class="py-3 px-4">座號</th>
-            <th class="py-3 px-4">學號</th>
-            <th class="py-3 px-4">姓名</th>
-            <th class="py-3 px-4">出生年月日 (已匯入行事曆)</th>
-            <th class="py-3 px-4">父母電話 (僅師可見)</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100 text-sm">
-          ${appData.students.map(s => `
-            <tr>
-              <td class="py-3 px-4 font-mono">${s.seat}</td>
-              <td class="py-3 px-4 font-mono font-bold text-indigo-600">${s.id}</td>
-              <td class="py-3 px-4 font-bold">${s.name}</td>
-              <td class="py-3 px-4 font-mono text-xs text-pink-700 font-bold">🎂 ${s.privateInfo?.birthday || '未填寫'}</td>
-              <td class="py-3 px-4 font-mono text-xs text-rose-700 font-bold">${s.privateInfo?.parentPhone || '-'}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-  `;
-}
-
-// ==================== 12. 通用 Modal 控制 ====================
+// ==================== 14. 通用 Modal 控制 ====================
 function showModal(html) {
   const backdrop = document.getElementById('modalBackdrop');
   document.getElementById('modalContent').innerHTML = html;
