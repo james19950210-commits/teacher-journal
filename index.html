@@ -3,146 +3,223 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>智學雲｜師生教學互動與班級管理平台</title>
+  <title>智學雲｜校園數位學習與班級管理平台</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body { font-family: 'Noto Sans TC', sans-serif; }
-    .tab-active { background-color: #eef2ff; color: #4f46e5; font-weight: 700; border-right: 4px solid #4f46e5; }
+    .tab-active { background-color: #eef2ff; color: #4338ca; font-weight: 700; border-right: 4px solid #4338ca; }
+    .student-tab-active { background-color: #ecfdf5; color: #047857; font-weight: 700; border-right: 4px solid #047857; }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    .portal-bg {
+      background-color: #f0f7ff;
+      background-image: radial-gradient(#bae6fd 1px, transparent 1px), radial-gradient(#e0e7ff 1px, #f0f7ff 1px);
+      background-size: 40px 40px;
+      background-position: 0 0, 20px 20px;
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-screen overflow-hidden">
 
-  <!-- ==================== 登入 / 註冊驗證畫面 ==================== -->
-  <div id="authScreen" class="fixed inset-0 bg-gradient-to-br from-slate-100 via-indigo-50/60 to-emerald-50/40 flex items-center justify-center p-4 z-50 overflow-y-auto">
-    <div class="bg-white rounded-3xl shadow-xl border border-slate-200/80 max-w-md w-full overflow-hidden my-auto">
-      <!-- 頂部 Logo 區 -->
-      <div class="p-7 pb-5 text-center border-b border-slate-100">
-        <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center mx-auto mb-3 shadow-md">
-          <i data-lucide="graduation-cap" class="w-7 h-7"></i>
+  <!-- ==================== 類因材網風格：校園入口與帳號登入畫面 ==================== -->
+  <div id="authScreen" class="fixed inset-0 portal-bg flex flex-col justify-between overflow-y-auto z-50">
+    <!-- 頂部校園平台導覽列 -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-sky-100 px-6 py-3.5 flex items-center justify-between sticky top-0 z-10">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-500 text-white flex items-center justify-center shadow-sm">
+          <i data-lucide="book-open" class="w-6 h-6"></i>
         </div>
-        <h1 class="text-2xl font-bold text-slate-800 tracking-wide">智學雲 EduCloud</h1>
-        <p class="text-xs text-slate-400 mt-1">高二忠班 師生教學互動與班級管理平台</p>
-      </div>
-
-      <!-- 登入 / 註冊 模式切換 -->
-      <div class="px-7 pt-5">
-        <div class="grid grid-cols-2 bg-slate-100 p-1 rounded-xl">
-          <button id="authTabLogin" onclick="switchAuthMode('login')" class="py-2 text-sm font-bold rounded-lg bg-white text-slate-800 shadow-xs transition cursor-pointer">
-            帳號登入
-          </button>
-          <button id="authTabRegister" onclick="switchAuthMode('register')" class="py-2 text-sm font-bold rounded-lg text-slate-500 hover:text-slate-800 transition cursor-pointer">
-            建立新帳戶
-          </button>
-        </div>
-
-        <!-- 身分選擇（教師 / 學生） -->
-        <div class="mt-4">
-          <label class="text-xs font-bold text-slate-500 block mb-2">請選擇您的身分</label>
-          <div class="grid grid-cols-2 gap-3">
-            <button type="button" id="roleCardTeacher" onclick="selectAuthRole('teacher')" class="p-3 rounded-xl border-2 border-indigo-600 bg-indigo-50/60 text-left transition cursor-pointer">
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-lg">👨‍🏫</span>
-                <span class="w-4 h-4 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px]">✓</span>
-              </div>
-              <div class="font-bold text-sm text-indigo-900">教師帳戶</div>
-              <div class="text-[11px] text-indigo-600/80">管理點名、課表、公告</div>
-            </button>
-
-            <button type="button" id="roleCardStudent" onclick="selectAuthRole('student')" class="p-3 rounded-xl border-2 border-slate-200 bg-white hover:border-slate-300 text-left transition cursor-pointer">
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-lg">🎓</span>
-                <span class="w-4 h-4 rounded-full border border-slate-300"></span>
-              </div>
-              <div class="font-bold text-sm text-slate-700">學生帳戶</div>
-              <div class="text-[11px] text-slate-400">每日打卡、交作業、私訊</div>
-            </button>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-black text-xl tracking-tight text-slate-800">智學雲</span>
+            <span class="text-xs font-bold bg-sky-100 text-sky-700 px-2 py-0.5 rounded-full">校園數位班級入口網</span>
           </div>
+          <p class="text-[11px] text-slate-400">Adaptive Class & Learning Management Portal</p>
         </div>
       </div>
+      <div class="hidden sm:flex items-center gap-4 text-xs text-slate-500 font-medium">
+        <span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i> 師生單一帳號驗證</span>
+        <span id="portalDate" class="font-mono bg-slate-100 px-2.5 py-1 rounded-md"></span>
+      </div>
+    </header>
 
-      <!-- 登入表單 -->
-      <form id="loginForm" onsubmit="handleLogin(event)" class="p-7 pt-5 space-y-4">
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">帳號 / 學號（教師請輸入教師帳號）</label>
-          <input id="loginUsername" type="text" required placeholder="例如：teacher 或 S01" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+    <!-- 中央雙欄登入主體 -->
+    <div class="max-w-5xl w-full mx-auto px-4 py-8 my-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      
+      <!-- 左側：教育平台視覺與系統公告欄（仿因材網入口資訊區） -->
+      <div class="lg:col-span-6 space-y-5">
+        <div class="inline-flex items-center gap-2 bg-white border border-sky-200 text-sky-700 px-3.5 py-1.5 rounded-full text-xs font-bold shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
+          115 學年度第一學期｜高二忠班專屬教學平台
         </div>
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">密碼</label>
-          <input id="loginPassword" type="password" required placeholder="請輸入密碼" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-        </div>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-800 leading-tight">
+          智慧化班級點名、<br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">課表同步與師生互動</span>
+        </h2>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          整合每日到校簽到打卡、班級課表查詢、即時課程公告、作業線上批改與師生一對一私訊輔導，依登入身分自動配置專屬操作權限。
+        </p>
 
-        <button type="submit" id="loginSubmitBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer">
-          以教師身分登入系統
-        </button>
-
-        <!-- 快速測試帳號提示 -->
-        <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 text-xs text-slate-500 space-y-1.5">
-          <div class="font-bold text-slate-700 flex items-center justify-between">
-            <span>⚡ 預設測試帳號（點擊自動填入）：</span>
+        <!-- 權限差異說明卡片 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div class="bg-white/90 p-4 rounded-2xl border border-indigo-100 shadow-2xs">
+            <div class="flex items-center gap-2 font-bold text-indigo-700 text-sm mb-1.5">
+              <i data-lucide="award" class="w-4 h-4"></i> 教師管理權限
+            </div>
+            <ul class="text-xs text-slate-600 space-y-1">
+              <li>• 檢視全班出缺勤與匯出報表</li>
+              <li>• 匯入／編輯班級課表與發布公告</li>
+              <li>• 派發作業、線上評分與管理名冊</li>
+            </ul>
           </div>
-          <div class="flex flex-wrap gap-2">
-            <button type="button" onclick="quickFillLogin('teacher', 'teacher', '1234')" class="px-2.5 py-1 bg-indigo-100/80 text-indigo-700 rounded-md font-medium hover:bg-indigo-200/70 cursor-pointer">
-              教師：teacher / 1234
+          <div class="bg-white/90 p-4 rounded-2xl border border-emerald-100 shadow-2xs">
+            <div class="flex items-center gap-2 font-bold text-emerald-700 text-sm mb-1.5">
+              <i data-lucide="user-check" class="w-4 h-4"></i> 學生學習權限
+            </div>
+            <ul class="text-xs text-slate-600 space-y-1">
+              <li>• 每日上課簽到打卡與個人紀錄</li>
+              <li>• 檢視班級課表與確認最新公告</li>
+              <li>• 線上繳交作業與導師一對一私訊</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右側：身分分流登入 / 註冊卡片 -->
+      <div class="lg:col-span-6">
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden max-w-md mx-auto">
+          
+          <!-- 頂部身分大頁籤（類似因材網「教師登入 / 學生登入」頁籤） -->
+          <div class="grid grid-cols-2 text-center font-bold text-sm border-b border-slate-200">
+            <button type="button" id="portalRoleTeacher" onclick="selectPortalRole('teacher')" class="py-4 flex items-center justify-center gap-2 bg-indigo-600 text-white transition cursor-pointer">
+              <i data-lucide="briefcase" class="w-4 h-4"></i>
+              <span>教師帳號登入</span>
             </button>
-            <button type="button" onclick="quickFillLogin('student', 'S01', '1234')" class="px-2.5 py-1 bg-emerald-100/80 text-emerald-700 rounded-md font-medium hover:bg-emerald-200/70 cursor-pointer">
-              學生(林子軒)：S01 / 1234
+            <button type="button" id="portalRoleStudent" onclick="selectPortalRole('student')" class="py-4 flex items-center justify-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200/70 transition cursor-pointer">
+              <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+              <span>學生帳號登入</span>
             </button>
           </div>
-        </div>
-      </form>
 
-      <!-- 註冊表單 -->
-      <form id="registerForm" onsubmit="handleRegister(event)" class="p-7 pt-5 space-y-3.5 hidden">
-        <div id="regStudentFields" class="grid grid-cols-2 gap-3 hidden">
-          <div>
-            <label class="text-xs font-bold text-slate-600 block mb-1">班級座號</label>
-            <input id="regSeat" type="text" placeholder="例如：07" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm">
+          <div class="p-7">
+            <!-- 登入 / 註冊切換標題 -->
+            <div class="flex items-center justify-between mb-5">
+              <div>
+                <h3 id="authFormTitle" class="text-lg font-bold text-slate-800">教師身分驗證登入</h3>
+                <p id="authFormSubtitle" class="text-xs text-slate-400 mt-0.5">請輸入您的教師專用帳號與密碼</p>
+              </div>
+              <button type="button" id="toggleAuthModeBtn" onclick="toggleAuthMode()" class="text-xs font-bold text-indigo-600 hover:underline cursor-pointer">
+                + 建立新帳戶
+              </button>
+            </div>
+
+            <!-- 登入表單 -->
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+              <div>
+                <label id="loginIdLabel" class="text-xs font-bold text-slate-600 block mb-1.5">教師帳號</label>
+                <div class="relative">
+                  <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3"></i>
+                  <input id="loginUsername" type="text" required placeholder="請輸入教師帳號 (預設: teacher)" class="w-full border border-slate-300 rounded-xl pl-10 pr-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+              </div>
+
+              <div>
+                <label class="text-xs font-bold text-slate-600 block mb-1.5">登入密碼</label>
+                <div class="relative">
+                  <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3"></i>
+                  <input id="loginPassword" type="password" required placeholder="請輸入密碼 (預設: 1234)" class="w-full border border-slate-300 rounded-xl pl-10 pr-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+              </div>
+
+              <!-- 簡易圖形數字驗證碼（增加校園入口真實感） -->
+              <div>
+                <label class="text-xs font-bold text-slate-600 block mb-1.5">安全驗證碼</label>
+                <div class="flex gap-2.5">
+                  <input id="loginCaptchaInput" type="text" required maxlength="4" placeholder="輸入右側 4 碼" class="flex-1 border border-slate-300 rounded-xl px-3.5 py-2 text-sm font-mono tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  <button type="button" onclick="generateCaptcha()" id="captchaDisplay" title="點擊重新產生驗證碼" class="px-4 py-2 bg-slate-100 border border-slate-300 rounded-xl font-mono font-black text-base tracking-widest text-slate-700 select-none hover:bg-slate-200 cursor-pointer">
+                    2026
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" id="loginSubmitBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2">
+                登入教師管理系統
+              </button>
+
+              <!-- 快速體驗帳號列 -->
+              <div class="pt-3 border-t border-slate-100">
+                <div class="text-[11px] text-slate-400 mb-2 font-medium">快速體驗（點擊自動帶入帳號密碼與驗證碼）：</div>
+                <div class="grid grid-cols-2 gap-2">
+                  <button type="button" onclick="quickFill('teacher', 'teacher', '1234')" class="py-1.5 px-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold text-center transition cursor-pointer">
+                    👨‍🏫 教師 (teacher)
+                  </button>
+                  <button type="button" onclick="quickFill('student', 'S01', '1234')" class="py-1.5 px-2.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold text-center transition cursor-pointer">
+                    🎓 學生 (S01 林子軒)
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <!-- 註冊表單 -->
+            <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-3.5 hidden">
+              <!-- 學生專屬註冊欄位 -->
+              <div id="regStudentFields" class="grid grid-cols-2 gap-3 hidden">
+                <div>
+                  <label class="text-xs font-bold text-slate-600 block mb-1">班級座號</label>
+                  <input id="regSeat" type="text" placeholder="如：07" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm">
+                </div>
+                <div>
+                  <label class="text-xs font-bold text-slate-600 block mb-1">學生學號 (帳號)</label>
+                  <input id="regStudentId" type="text" placeholder="如：S07" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm">
+                </div>
+              </div>
+
+              <!-- 教師專屬註冊欄位 -->
+              <div id="regTeacherFields" class="space-y-3">
+                <div>
+                  <label class="text-xs font-bold text-slate-600 block mb-1">教師登入帳號</label>
+                  <input id="regTeacherUsername" type="text" placeholder="請設定英文或數字帳號" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                </div>
+                <div>
+                  <label class="text-xs font-bold text-slate-600 block mb-1">學校教師授權碼 <span class="text-slate-400 font-normal">(預設：8888)</span></label>
+                  <input id="regTeacherCode" type="text" placeholder="請輸入教師授權碼" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+                </div>
+              </div>
+
+              <div>
+                <label class="text-xs font-bold text-slate-600 block mb-1">真實姓名</label>
+                <input id="regName" type="text" required placeholder="請輸入姓名" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+              </div>
+
+              <div>
+                <label class="text-xs font-bold text-slate-600 block mb-1">設定登入密碼</label>
+                <input id="regPassword" type="password" required placeholder="請設定密碼" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
+              </div>
+
+              <button type="submit" id="regSubmitBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2">
+                完成建立帳戶並登入
+              </button>
+            </form>
           </div>
-          <div>
-            <label class="text-xs font-bold text-slate-600 block mb-1">學號（作為登入帳號）</label>
-            <input id="regStudentId" type="text" placeholder="例如：S07" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm">
-          </div>
         </div>
-
-        <div id="regTeacherAccountField">
-          <label class="text-xs font-bold text-slate-600 block mb-1">教師登入帳號</label>
-          <input id="regTeacherUsername" type="text" placeholder="請設定英文或數字帳號" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
-        </div>
-
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">真實姓名 / 稱謂</label>
-          <input id="regName" type="text" required placeholder="例如：王大明 或 李老師" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
-        </div>
-
-        <div>
-          <label class="text-xs font-bold text-slate-600 block mb-1">設定密碼</label>
-          <input id="regPassword" type="password" required placeholder="請設定登入密碼" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
-        </div>
-
-        <div id="regInviteCodeField">
-          <label class="text-xs font-bold text-slate-600 block mb-1">教師註冊驗證碼 <span class="text-slate-400 font-normal">(預設：8888)</span></label>
-          <input id="regInviteCode" type="text" placeholder="防止學生誤註冊為教師" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm">
-        </div>
-
-        <button type="submit" id="regSubmitBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition text-sm mt-2 cursor-pointer">
-          建立教師帳戶並進入系統
-        </button>
-      </form>
+      </div>
     </div>
+
+    <footer class="text-center py-3 text-[11px] text-slate-400">
+      智學雲校園教學互動系統 © 2026｜教師與學生權限分級架構
+    </footer>
   </div>
 
-  <!-- ==================== 主系統介面 (登入後顯示) ==================== -->
+  <!-- ==================== 主系統介面 (依權限動態渲染選單與功能) ==================== -->
   <div id="mainApp" class="h-screen flex overflow-hidden hidden">
     <!-- 側邊導覽列 -->
     <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 z-20">
       <div>
         <!-- Brand -->
         <div class="p-5 border-b border-slate-100 flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shadow-sm">
+          <div id="brandIconBox" class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shadow-sm">
             <i data-lucide="graduation-cap" class="w-5 h-5"></i>
           </div>
           <div>
@@ -151,88 +228,62 @@
           </div>
         </div>
 
-        <!-- 目前登入帳號資訊卡 -->
+        <!-- 登入身分與權限狀態卡 -->
         <div class="p-4 bg-slate-50 border-b border-slate-200">
-          <div class="flex items-center justify-between mb-1">
-            <span id="sidebarRoleTag" class="text-[11px] font-bold px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700">教師權限</span>
+          <div class="flex items-center justify-between mb-1.5">
+            <span id="sidebarRoleBadge" class="text-[11px] font-bold px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700">教師管理端</span>
             <button onclick="logout()" class="text-xs text-rose-500 hover:text-rose-700 font-bold flex items-center gap-1 cursor-pointer">
-              <i data-lucide="log-out" class="w-3.5 h-3.5"></i> 登出
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i> 安全登出
             </button>
           </div>
-          <div id="sidebarUserName" class="font-bold text-sm text-slate-800 mt-1.5">導師：陳老師</div>
-          <div id="sidebarUserAccount" class="text-xs text-slate-400 font-mono">帳號：teacher</div>
+          <div id="sidebarUserName" class="font-bold text-sm text-slate-800">陳老師</div>
+          <div id="sidebarUserMeta" class="text-xs text-slate-400 font-mono mt-0.5">帳號：teacher</div>
         </div>
 
-        <!-- 導覽選單 -->
-        <nav class="py-3 space-y-1">
-          <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition tab-active cursor-pointer">
-            <i data-lucide="user-check" class="w-4 h-4"></i>
-            <span>每日點名與打卡</span>
-          </button>
-          <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-            <i data-lucide="calendar-days" class="w-4 h-4"></i>
-            <span>班級課表系統</span>
-          </button>
-          <button onclick="switchTab('announcements')" id="nav-announcements" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-            <i data-lucide="megaphone" class="w-4 h-4"></i>
-            <span>課程公告發布</span>
-          </button>
-          <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-            <i data-lucide="book-open-check" class="w-4 h-4"></i>
-            <span>每日作業與繳交</span>
-          </button>
-          <button onclick="switchTab('messages')" id="nav-messages" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-            <div class="flex items-center gap-3">
-              <i data-lucide="message-square-text" class="w-4 h-4"></i>
-              <span>師生一對一私訊</span>
-            </div>
-            <span id="unreadBadge" class="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
-          </button>
+        <!-- 動態權限導覽選單 -->
+        <nav id="sidebarNav" class="py-3 space-y-1">
+          <!-- 由 JS 依據教師/學生權限動態生成 -->
         </nav>
       </div>
 
-      <!-- 底部狀態 -->
+      <!-- 底部日期與連線狀態 -->
       <div class="p-4 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
         <span id="currentDateDisplay"></span>
-        <span class="flex items-center gap-1 text-emerald-600 font-medium"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>已連線</span>
+        <span class="flex items-center gap-1 text-emerald-600 font-medium"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>權限已驗證</span>
       </div>
     </aside>
 
     <!-- 主內容區塊 -->
     <main class="flex-1 flex flex-col h-full overflow-hidden">
-      <!-- 頂部 Header -->
       <header class="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between shrink-0">
-        <h2 id="pageTitle" class="text-xl font-bold text-slate-800">每日點名與打卡</h2>
+        <div class="flex items-center gap-3">
+          <h2 id="pageTitle" class="text-xl font-bold text-slate-800">每日點名與打卡</h2>
+          <span id="permissionHint" class="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium"></span>
+        </div>
         <div class="flex items-center gap-4">
           <div id="liveClock" class="text-sm font-mono bg-slate-100 px-3 py-1 rounded-md text-slate-600 font-medium"></div>
-          <div id="userProfileBadge" class="flex items-center gap-2 bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full text-xs font-bold">
-          </div>
+          <div id="userProfileBadge" class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold"></div>
         </div>
       </header>
 
-      <!-- 動態內容容器 -->
-      <div id="contentArea" class="flex-1 overflow-y-auto p-8">
-      </div>
+      <div id="contentArea" class="flex-1 overflow-y-auto p-8"></div>
     </main>
   </div>
 
   <!-- 通用 Modal 彈窗 -->
   <div id="modalBackdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center z-50 p-4">
-    <div id="modalContent" class="bg-white rounded-2xl shadow-xl max-w-lg w-full overflow-hidden">
-    </div>
+    <div id="modalContent" class="bg-white rounded-2xl shadow-xl max-w-lg w-full overflow-hidden"></div>
   </div>
 
 <script>
-// ==================== 1. 初始資料庫與帳戶狀態管理 ====================
+// ==================== 1. 資料庫與權限設定 ====================
 const TODAY_STR = new Date().toISOString().split('T')[0];
-const TEACHER_INVITE_CODE = '8888';
+const TEACHER_AUTH_CODE = '8888';
 
 const DEFAULT_DATA = {
-  // 教師帳戶列表
   teachers: [
-    { username: 'teacher', password: '1234', name: '陳老師' }
+    { username: 'teacher', password: '1234', name: '陳老師', title: '高二忠班導師' }
   ],
-  // 學生帳戶列表（同時作為點名與作業名冊）
   students: [
     { id: 'S01', password: '1234', seat: '01', name: '林子軒' },
     { id: 'S02', password: '1234', seat: '02', name: '陳思妤' },
@@ -269,6 +320,7 @@ const DEFAULT_DATA = {
       category: '考試日程',
       content: '請各位同學注意，下週三、四舉行第一次期中考。國文考至第四課，請提前準備文言文注釋。',
       pinned: true,
+      author: '陳老師',
       date: TODAY_STR,
       readBy: ['S01', 'S02']
     },
@@ -278,6 +330,7 @@ const DEFAULT_DATA = {
       category: '重要通知',
       content: '請尚未繳交家長同意書的同學，於本週五放學前交給班長彙整。',
       pinned: false,
+      author: '陳老師',
       date: TODAY_STR,
       readBy: ['S01']
     }
@@ -298,7 +351,7 @@ const DEFAULT_DATA = {
       id: 'H02',
       subject: '數學',
       title: '習作 2-1 三角函數練習題 (第1~10題)',
-      dueDate: '2026-11-25',
+      dueDate: '2026-11-28',
       description: '請完成習作後拍照上傳雲端連結，或填寫計算答案。',
       submissions: {}
     }
@@ -306,7 +359,7 @@ const DEFAULT_DATA = {
   messages: {
     'S03': [
       { sender: 'student', text: '老師早安，今天早上公車拋錨所以晚到十分鐘，不好意思！', time: '08:40', read: true },
-      { sender: 'teacher', text: '好的，老師知道了，路上安全最重要，進教室先安靜入座。', time: '08:43', read: true }
+      { sender: 'teacher', authorName: '陳老師', text: '好的，老師知道了，路上安全最重要，進教室先安靜入座。', time: '08:43', read: true }
     ],
     'S04': [
       { sender: 'student', text: '老師您好，我今天家裡有事需要請假一天，家長昨晚有傳簡訊了。', time: '07:50', read: false }
@@ -314,21 +367,25 @@ const DEFAULT_DATA = {
   }
 };
 
-let appData = JSON.parse(localStorage.getItem('eduCloudData_v2')) || DEFAULT_DATA;
-let currentUser = JSON.parse(sessionStorage.getItem('eduCloudSession')) || null; // { role: 'teacher'|'student', id: '', name: '', seat?: '' }
-let authMode = 'login'; // 'login' | 'register'
-let authSelectedRole = 'teacher'; // 'teacher' | 'student'
+let appData = JSON.parse(localStorage.getItem('eduCloud_v3')) || DEFAULT_DATA;
+let currentUser = JSON.parse(sessionStorage.getItem('eduCloudSession_v3')) || null;
+let portalRole = 'teacher'; // 'teacher' | 'student'
+let isRegisterMode = false;
+let currentCaptcha = '';
 let currentTab = 'attendance';
 let selectedChatStudentId = appData.students[0]?.id || 'S01';
 
 function saveData() {
-  localStorage.setItem('eduCloudData_v2', JSON.stringify(appData));
+  localStorage.setItem('eduCloud_v3', JSON.stringify(appData));
   if (currentUser) updateUnreadBadge();
 }
 
-// ==================== 2. 登入與註冊邏輯 ====================
+// ==================== 2. 登入入口與驗證邏輯 ====================
 function init() {
+  document.getElementById('portalDate').textContent = TODAY_STR;
   document.getElementById('currentDateDisplay').textContent = TODAY_STR;
+  generateCaptcha();
+
   setInterval(() => {
     const now = new Date();
     const clockEl = document.getElementById('liveClock');
@@ -344,102 +401,111 @@ function init() {
   }
 }
 
-function switchAuthMode(mode) {
-  authMode = mode;
-  const tabLogin = document.getElementById('authTabLogin');
-  const tabReg = document.getElementById('authTabRegister');
-  const loginForm = document.getElementById('loginForm');
-  const regForm = document.getElementById('registerForm');
-
-  if (mode === 'login') {
-    tabLogin.className = 'py-2 text-sm font-bold rounded-lg bg-white text-slate-800 shadow-xs transition cursor-pointer';
-    tabReg.className = 'py-2 text-sm font-bold rounded-lg text-slate-500 hover:text-slate-800 transition cursor-pointer';
-    loginForm.classList.remove('hidden');
-    regForm.classList.add('hidden');
-  } else {
-    tabReg.className = 'py-2 text-sm font-bold rounded-lg bg-white text-slate-800 shadow-xs transition cursor-pointer';
-    tabLogin.className = 'py-2 text-sm font-bold rounded-lg text-slate-500 hover:text-slate-800 transition cursor-pointer';
-    regForm.classList.remove('hidden');
-    loginForm.classList.add('hidden');
-  }
-  updateAuthRoleUI();
+function generateCaptcha() {
+  currentCaptcha = Math.floor(1000 + Math.random() * 9000).toString();
+  const el = document.getElementById('captchaDisplay');
+  if (el) el.textContent = currentCaptcha;
 }
 
-function selectAuthRole(role) {
-  authSelectedRole = role;
-  updateAuthRoleUI();
-}
-
-function updateAuthRoleUI() {
-  const cardT = document.getElementById('roleCardTeacher');
-  const cardS = document.getElementById('roleCardStudent');
+function selectPortalRole(role) {
+  portalRole = role;
+  const tabT = document.getElementById('portalRoleTeacher');
+  const tabS = document.getElementById('portalRoleStudent');
+  const title = document.getElementById('authFormTitle');
+  const subtitle = document.getElementById('authFormSubtitle');
+  const idLabel = document.getElementById('loginIdLabel');
+  const idInput = document.getElementById('loginUsername');
   const loginBtn = document.getElementById('loginSubmitBtn');
   const regBtn = document.getElementById('regSubmitBtn');
+  const toggleBtn = document.getElementById('toggleAuthModeBtn');
 
-  // 註冊欄位切換
-  const regStudentFields = document.getElementById('regStudentFields');
-  const regTeacherAccountField = document.getElementById('regTeacherAccountField');
-  const regInviteCodeField = document.getElementById('regInviteCodeField');
-
-  if (authSelectedRole === 'teacher') {
-    cardT.className = 'p-3 rounded-xl border-2 border-indigo-600 bg-indigo-50/60 text-left transition cursor-pointer';
-    cardT.querySelector('span:last-child').className = 'w-4 h-4 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px]';
-    cardT.querySelector('span:last-child').textContent = '✓';
-
-    cardS.className = 'p-3 rounded-xl border-2 border-slate-200 bg-white hover:border-slate-300 text-left transition cursor-pointer';
-    cardS.querySelector('span:last-child').className = 'w-4 h-4 rounded-full border border-slate-300';
-    cardS.querySelector('span:last-child').textContent = '';
-
-    loginBtn.textContent = '以教師身分登入系統';
-    loginBtn.className = 'w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer';
-    regBtn.textContent = '建立教師帳戶並進入系統';
-    regBtn.className = 'w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition text-sm mt-2 cursor-pointer';
-
-    regStudentFields.classList.add('hidden');
-    regTeacherAccountField.classList.remove('hidden');
-    regInviteCodeField.classList.remove('hidden');
+  if (role === 'teacher') {
+    tabT.className = 'py-4 flex items-center justify-center gap-2 bg-indigo-600 text-white transition cursor-pointer';
+    tabS.className = 'py-4 flex items-center justify-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200/70 transition cursor-pointer';
+    title.textContent = isRegisterMode ? '建立教師管理帳戶' : '教師身分驗證登入';
+    subtitle.textContent = '具備全班點名管理、課表匯入、公告與批改權限';
+    idLabel.textContent = '教師帳號';
+    idInput.placeholder = '請輸入教師帳號 (預設: teacher)';
+    loginBtn.className = 'w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
+    loginBtn.textContent = '登入教師管理系統';
+    regBtn.className = 'w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
+    toggleBtn.className = 'text-xs font-bold text-indigo-600 hover:underline cursor-pointer';
+    document.getElementById('regTeacherFields').classList.remove('hidden');
+    document.getElementById('regStudentFields').classList.add('hidden');
   } else {
-    cardS.className = 'p-3 rounded-xl border-2 border-emerald-600 bg-emerald-50/60 text-left transition cursor-pointer';
-    cardS.querySelector('span:last-child').className = 'w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]';
-    cardS.querySelector('span:last-child').textContent = '✓';
-
-    cardT.className = 'p-3 rounded-xl border-2 border-slate-200 bg-white hover:border-slate-300 text-left transition cursor-pointer';
-    cardT.querySelector('span:last-child').className = 'w-4 h-4 rounded-full border border-slate-300';
-    cardT.querySelector('span:last-child').textContent = '';
-
-    loginBtn.textContent = '以學生身分登入系統';
-    loginBtn.className = 'w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer';
-    regBtn.textContent = '建立學生帳戶並進入系統';
-    regBtn.className = 'w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition text-sm mt-2 cursor-pointer';
-
-    regStudentFields.classList.remove('hidden');
-    regTeacherAccountField.classList.add('hidden');
-    regInviteCodeField.classList.add('hidden');
+    tabS.className = 'py-4 flex items-center justify-center gap-2 bg-emerald-600 text-white transition cursor-pointer';
+    tabT.className = 'py-4 flex items-center justify-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200/70 transition cursor-pointer';
+    title.textContent = isRegisterMode ? '建立學生學習帳戶' : '學生身分驗證登入';
+    subtitle.textContent = '具備每日上課打卡、課表查詢、交作業與私訊功能';
+    idLabel.textContent = '學生學號';
+    idInput.placeholder = '請輸入學生學號 (例如: S01)';
+    loginBtn.className = 'w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
+    loginBtn.textContent = '登入學生學習系統';
+    regBtn.className = 'w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
+    toggleBtn.className = 'text-xs font-bold text-emerald-600 hover:underline cursor-pointer';
+    document.getElementById('regStudentFields').classList.remove('hidden');
+    document.getElementById('regTeacherFields').classList.add('hidden');
   }
 }
 
-function quickFillLogin(role, user, pass) {
-  selectAuthRole(role);
+function toggleAuthMode() {
+  isRegisterMode = !isRegisterMode;
+  const loginForm = document.getElementById('loginForm');
+  const regForm = document.getElementById('registerForm');
+  const toggleBtn = document.getElementById('toggleAuthModeBtn');
+
+  if (isRegisterMode) {
+    loginForm.classList.add('hidden');
+    regForm.classList.remove('hidden');
+    toggleBtn.textContent = '← 返回帳號登入';
+  } else {
+    regForm.classList.add('hidden');
+    loginForm.classList.remove('hidden');
+    toggleBtn.textContent = '+ 建立新帳戶';
+  }
+  selectPortalRole(portalRole);
+}
+
+function quickFill(role, user, pass) {
+  if (isRegisterMode) toggleAuthMode();
+  selectPortalRole(role);
   document.getElementById('loginUsername').value = user;
   document.getElementById('loginPassword').value = pass;
+  document.getElementById('loginCaptchaInput').value = currentCaptcha;
 }
 
 function handleLogin(e) {
   e.preventDefault();
   const username = document.getElementById('loginUsername').value.trim();
   const password = document.getElementById('loginPassword').value.trim();
+  const captcha = document.getElementById('loginCaptchaInput').value.trim();
 
-  if (authSelectedRole === 'teacher') {
+  if (captcha !== currentCaptcha) {
+    alert('安全驗證碼輸入錯誤，請重新輸入！');
+    generateCaptcha();
+    document.getElementById('loginCaptchaInput').value = '';
+    return;
+  }
+
+  if (portalRole === 'teacher') {
     const teacher = appData.teachers.find(t => t.username === username && t.password === password);
-    if (!teacher) return alert('教師帳號或密碼錯誤！請確認是否已建立教師帳戶。');
+    if (!teacher) {
+      alert('教師帳號或密碼錯誤！（若為學生請切換至「學生帳號登入」頁籤）');
+      generateCaptcha();
+      return;
+    }
     currentUser = { role: 'teacher', id: teacher.username, name: teacher.name };
   } else {
     const student = appData.students.find(s => s.id.toLowerCase() === username.toLowerCase() && s.password === password);
-    if (!student) return alert('學生學號或密碼錯誤！請確認是否已建立學生帳戶。');
+    if (!student) {
+      alert('學生學號或密碼錯誤！（若為教師請切換至「教師帳號登入」頁籤）');
+      generateCaptcha();
+      return;
+    }
     currentUser = { role: 'student', id: student.id, name: student.name, seat: student.seat };
   }
 
-  sessionStorage.setItem('eduCloudSession', JSON.stringify(currentUser));
+  sessionStorage.setItem('eduCloudSession_v3', JSON.stringify(currentUser));
   enterMainApp();
 }
 
@@ -448,11 +514,11 @@ function handleRegister(e) {
   const name = document.getElementById('regName').value.trim();
   const password = document.getElementById('regPassword').value.trim();
 
-  if (authSelectedRole === 'teacher') {
+  if (portalRole === 'teacher') {
     const username = document.getElementById('regTeacherUsername').value.trim();
-    const inviteCode = document.getElementById('regInviteCode').value.trim();
-    if (!username) return alert('請輸入教師登入帳號');
-    if (inviteCode !== TEACHER_INVITE_CODE) return alert('教師註冊驗證碼錯誤！（預設驗證碼為 8888）');
+    const code = document.getElementById('regTeacherCode').value.trim();
+    if (!username) return alert('請設定教師登入帳號');
+    if (code !== TEACHER_AUTH_CODE) return alert('學校教師授權碼錯誤！（預設授權碼為 8888）');
     if (appData.teachers.some(t => t.username === username)) return alert('此教師帳號已被註冊！');
 
     appData.teachers.push({ username, password, name });
@@ -461,73 +527,136 @@ function handleRegister(e) {
   } else {
     const seat = document.getElementById('regSeat').value.trim().padStart(2, '0');
     const studentId = document.getElementById('regStudentId').value.trim().toUpperCase();
-    if (!seat || !studentId) return alert('請填寫完整座號與學號');
-    if (appData.students.some(s => s.id.toUpperCase() === studentId)) return alert('此學號已被註冊，請直接登入！');
+    if (!seat || !studentId) return alert('請填寫班級座號與學號');
+    if (appData.students.some(s => s.id.toUpperCase() === studentId)) return alert('此學號已註冊，請直接登入！');
 
     appData.students.push({ id: studentId, password, seat, name });
-    // 依座號排序名冊
     appData.students.sort((a, b) => a.seat.localeCompare(b.seat));
     saveData();
     currentUser = { role: 'student', id: studentId, name, seat };
   }
 
-  sessionStorage.setItem('eduCloudSession', JSON.stringify(currentUser));
-  alert(`帳戶建立成功！歡迎 ${name} 進入智學雲系統。`);
+  sessionStorage.setItem('eduCloudSession_v3', JSON.stringify(currentUser));
+  alert(`帳戶建立成功！系統已自動為您登入（權限：${currentUser.role === 'teacher' ? '教師管理端' : '學生學習端'}）。`);
   enterMainApp();
 }
 
 function logout() {
-  sessionStorage.removeItem('eduCloudSession');
+  sessionStorage.removeItem('eduCloudSession_v3');
   currentUser = null;
   document.getElementById('mainApp').classList.add('hidden');
   document.getElementById('authScreen').classList.remove('hidden');
   document.getElementById('loginPassword').value = '';
+  document.getElementById('loginCaptchaInput').value = '';
+  generateCaptcha();
   lucide.createIcons();
 }
 
+// ==================== 3. 權限分流初始化主介面 ====================
 function enterMainApp() {
   document.getElementById('authScreen').classList.add('hidden');
   document.getElementById('mainApp').classList.remove('hidden');
 
-  const roleTag = document.getElementById('sidebarRoleTag');
+  const isTeacher = currentUser.role === 'teacher';
+  const brandBox = document.getElementById('brandIconBox');
+  const roleBadge = document.getElementById('sidebarRoleBadge');
   const userNameEl = document.getElementById('sidebarUserName');
-  const userAccEl = document.getElementById('sidebarUserAccount');
+  const userMetaEl = document.getElementById('sidebarUserMeta');
   const profileBadge = document.getElementById('userProfileBadge');
+  const sidebarNav = document.getElementById('sidebarNav');
 
-  if (currentUser.role === 'teacher') {
-    roleTag.textContent = '教師管理權限';
-    roleTag.className = 'text-[11px] font-bold px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700';
+  if (isTeacher) {
+    brandBox.className = 'w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shadow-sm';
+    roleBadge.textContent = '👨‍🏫 教師管理端';
+    roleBadge.className = 'text-[11px] font-bold px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700';
     userNameEl.textContent = currentUser.name;
-    userAccEl.textContent = `教師帳號：${currentUser.id}`;
-    profileBadge.innerHTML = `<i data-lucide="shield-check" class="w-4 h-4"></i><span>教師：${currentUser.name}</span>`;
+    userMetaEl.textContent = `教師帳號：${currentUser.id}`;
+    profileBadge.innerHTML = `<i data-lucide="shield-check" class="w-4 h-4"></i><span>教師權限：${currentUser.name}</span>`;
     profileBadge.className = 'flex items-center gap-2 bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full text-xs font-bold';
+
+    // 教師專屬導覽選單（包含學生帳號名冊管理）
+    sidebarNav.innerHTML = `
+      <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="clipboard-check" class="w-4 h-4"></i><span>全班點名與出缺勤</span>
+      </button>
+      <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="calendar-cog" class="w-4 h-4"></i><span>班級課表編輯/匯入</span>
+      </button>
+      <button onclick="switchTab('announcements')" id="nav-announcements" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="megaphone" class="w-4 h-4"></i><span>課程公告發布管理</span>
+      </button>
+      <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="file-check-2" class="w-4 h-4"></i><span>作業派發與線上批改</span>
+      </button>
+      <button onclick="switchTab('messages')" id="nav-messages" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="message-square-text" class="w-4 h-4"></i><span>學生一對一私訊輔導</span></div>
+        <span id="unreadBadge" class="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+      </button>
+      <button onclick="switchTab('roster')" id="nav-roster" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="users" class="w-4 h-4"></i><span>學生帳號與名冊管理</span>
+      </button>
+    `;
   } else {
-    roleTag.textContent = '學生個人帳戶';
-    roleTag.className = 'text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700';
+    brandBox.className = 'w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold shadow-sm';
+    roleBadge.textContent = '🎓 學生學習端';
+    roleBadge.className = 'text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700';
     userNameEl.textContent = `${currentUser.seat}號 ${currentUser.name}`;
-    userAccEl.textContent = `學生學號：${currentUser.id}`;
-    profileBadge.innerHTML = `<i data-lucide="user" class="w-4 h-4"></i><span>學生：${currentUser.seat}號 ${currentUser.name}</span>`;
+    userMetaEl.textContent = `學生學號：${currentUser.id}`;
+    profileBadge.innerHTML = `<i data-lucide="user" class="w-4 h-4"></i><span>學生權限：${currentUser.seat}號 ${currentUser.name}</span>`;
     profileBadge.className = 'flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-bold';
+
+    // 學生專屬導覽選單（唯讀課表/公告、個人打卡/交作業/私訊導師）
+    sidebarNav.innerHTML = `
+      <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="fingerprint" class="w-4 h-4"></i><span>每日上課簽到打卡</span>
+      </button>
+      <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="calendar-days" class="w-4 h-4"></i><span>班級課表查詢</span>
+      </button>
+      <button onclick="switchTab('announcements')" id="nav-announcements" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="bell" class="w-4 h-4"></i><span>課程最新公告</span>
+      </button>
+      <button onclick="switchTab('homework')" id="nav-homework" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <i data-lucide="book-open-check" class="w-4 h-4"></i><span>我的每日作業與成績</span>
+      </button>
+      <button onclick="switchTab('messages')" id="nav-messages" class="w-full flex items-center justify-between px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+        <div class="flex items-center gap-3"><i data-lucide="message-circle" class="w-4 h-4"></i><span>與導師一對一私訊</span></div>
+        <span id="unreadBadge" class="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+      </button>
+    `;
   }
 
   updateUnreadBadge();
   switchTab('attendance');
 }
 
-// ==================== 3. 導覽分頁控制 ====================
 function switchTab(tab) {
   currentTab = tab;
-  document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('tab-active'));
-  document.getElementById(`nav-${tab}`).classList.add('tab-active');
+  const activeClass = currentUser.role === 'teacher' ? 'tab-active' : 'student-tab-active';
+  document.querySelectorAll('#sidebarNav button').forEach(btn => btn.classList.remove('tab-active', 'student-tab-active'));
+  const targetNav = document.getElementById(`nav-${tab}`);
+  if (targetNav) targetNav.classList.add(activeClass);
 
-  const titles = {
-    attendance: '每日點名與打卡',
-    timetable: '班級課表系統',
-    announcements: '課程公告發布',
-    homework: '每日作業與繳交',
-    messages: '師生一對一私訊'
+  const teacherTitles = {
+    attendance: ['全班點名與出缺勤管理', '教師可調整學生狀態並匯出報表'],
+    timetable: ['班級課表管理系統', '教師可點擊編輯節次或批次匯入課表'],
+    announcements: ['課程公告發布管理', '教師可發布、置頂與刪除班級公告'],
+    homework: ['作業派發與線上批改', '教師可派發新作業並批改學生繳交內容'],
+    messages: ['學生一對一私訊輔導', '與班上每位學生的獨立私密對話頻道'],
+    roster: ['學生帳號與名冊管理', '教師可檢視已註冊學生或重設學生密碼']
   };
-  document.getElementById('pageTitle').textContent = titles[tab];
+
+  const studentTitles = {
+    attendance: ['每日上課簽到打卡', '學生每日線上回傳到校打卡狀態'],
+    timetable: ['班級課表查詢', '唯讀檢視本學期班級每週課表'],
+    announcements: ['課程最新公告', '檢視老師發布的重要通知並標記已讀'],
+    homework: ['我的每日作業與成績', '線上繳交作業並檢視老師評分與評語'],
+    messages: ['與導師一對一私訊', '僅你與班導師可見的專屬私密對話']
+  };
+
+  const [title, hint] = currentUser.role === 'teacher' ? teacherTitles[tab] : studentTitles[tab];
+  document.getElementById('pageTitle').textContent = title;
+  document.getElementById('permissionHint').textContent = hint;
   renderCurrentTab();
 }
 
@@ -538,6 +667,7 @@ function renderCurrentTab() {
   else if (currentTab === 'announcements') renderAnnouncements(container);
   else if (currentTab === 'homework') renderHomework(container);
   else if (currentTab === 'messages') renderMessages(container);
+  else if (currentTab === 'roster' && currentUser.role === 'teacher') renderRoster(container);
   lucide.createIcons();
 }
 
@@ -587,7 +717,7 @@ function renderAttendance(container) {
       <div class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div class="bg-white p-5 rounded-xl border border-slate-200">
-            <div class="text-xs font-bold text-slate-400">全班註冊學生</div>
+            <div class="text-xs font-bold text-slate-400">全班應到人數</div>
             <div class="text-2xl font-bold text-slate-800 mt-1">${appData.students.length} 人</div>
           </div>
           <div class="bg-emerald-50/70 p-5 rounded-xl border border-emerald-200">
@@ -618,7 +748,7 @@ function renderAttendance(container) {
                 <th class="py-3 px-4">學號</th>
                 <th class="py-3 px-4">姓名</th>
                 <th class="py-3 px-4">打卡時間</th>
-                <th class="py-3 px-4">出席狀態 (教師可調整)</th>
+                <th class="py-3 px-4">出席狀態 (教師權限可修改)</th>
                 <th class="py-3 px-4">備註</th>
               </tr>
             </thead>
@@ -671,6 +801,7 @@ function studentCheckIn() {
 }
 
 function teacherUpdateAttendance(studentId, status) {
+  if (currentUser.role !== 'teacher') return;
   if (!appData.attendance[TODAY_STR]) appData.attendance[TODAY_STR] = {};
   const old = appData.attendance[TODAY_STR][studentId] || { time: new Date().toTimeString().slice(0, 5), note: '' };
   appData.attendance[TODAY_STR][studentId] = {
@@ -709,19 +840,25 @@ function renderTimetable(container) {
     { num: 6, time: '14:10 - 15:00' },
     { num: 7, time: '15:10 - 16:00' }
   ];
+  const isTeacher = currentUser.role === 'teacher';
 
   container.innerHTML = `
     <div class="space-y-4">
-      ${currentUser.role === 'teacher' ? `
+      ${isTeacher ? `
         <div class="bg-white p-4 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-3">
           <div class="text-sm text-slate-600">
-            <span class="font-bold text-slate-800">💡 教師課表管理：</span>點擊任意課表格子可直接編輯課程，或批次匯入課表檔案。
+            <span class="font-bold text-indigo-700">🔑 教師編輯模式：</span>點擊任意課表格子可直接修改課程，或批次匯入課表 CSV。
           </div>
           <button onclick="openImportTimetableModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center gap-1.5 cursor-pointer">
             <i data-lucide="upload" class="w-3.5 h-3.5"></i> 批次匯入課表 (CSV)
           </button>
         </div>
-      ` : ''}
+      ` : `
+        <div class="bg-emerald-50/70 p-3.5 rounded-xl border border-emerald-200 text-xs text-emerald-800 flex items-center gap-2">
+          <i data-lucide="info" class="w-4 h-4 shrink-0"></i>
+          <span>目前為<strong>學生檢視模式（唯讀）</strong>，如需調課請聯繫任課教師或班導師。</span>
+        </div>
+      `}
 
       <div class="bg-white rounded-xl border border-slate-200 overflow-x-auto shadow-xs">
         <table class="w-full text-center border-collapse min-w-[700px]">
@@ -742,14 +879,14 @@ function renderTimetable(container) {
                   const key = `${dayIdx}-${p.num}`;
                   const cell = appData.timetable[key];
                   return `
-                    <td onclick="${currentUser.role === 'teacher' ? `openEditCellModal('${key}')` : ''}" 
-                        class="p-2.5 border-r border-slate-200 align-middle transition ${currentUser.role === 'teacher' ? 'cursor-pointer hover:bg-indigo-50/60' : ''}">
+                    <td onclick="${isTeacher ? `openEditCellModal('${key}')` : ''}" 
+                        class="p-2.5 border-r border-slate-200 align-middle transition ${isTeacher ? 'cursor-pointer hover:bg-indigo-50/60' : ''}">
                       ${cell && cell.subject ? `
-                        <div class="bg-indigo-50/80 border border-indigo-100 rounded-lg p-2">
-                          <div class="font-bold text-indigo-900">${cell.subject}</div>
-                          <div class="text-xs text-indigo-600/80 mt-0.5">${cell.teacher || ''} ${cell.room ? `· ${cell.room}` : ''}</div>
+                        <div class="${isTeacher ? 'bg-indigo-50/80 border-indigo-100 text-indigo-900' : 'bg-emerald-50/60 border-emerald-100 text-emerald-900'} border rounded-lg p-2">
+                          <div class="font-bold">${cell.subject}</div>
+                          <div class="text-xs opacity-75 mt-0.5">${cell.teacher || ''} ${cell.room ? `· ${cell.room}` : ''}</div>
                         </div>
-                      ` : `<span class="text-xs text-slate-300">${currentUser.role === 'teacher' ? '+ 新增' : '-'}</span>`}
+                      ` : `<span class="text-xs text-slate-300">${isTeacher ? '+ 新增' : '-'}</span>`}
                     </td>
                   `;
                 }).join('')}
@@ -763,6 +900,7 @@ function renderTimetable(container) {
 }
 
 function openEditCellModal(key) {
+  if (currentUser.role !== 'teacher') return;
   const [d, p] = key.split('-');
   const dayNames = ['', '週一', '週二', '週三', '週四', '週五'];
   const cell = appData.timetable[key] || { subject: '', teacher: '', room: '' };
@@ -805,6 +943,7 @@ function saveTimetableCell(key) {
 }
 
 function openImportTimetableModal() {
+  if (currentUser.role !== 'teacher') return;
   showModal(`
     <div class="p-6">
       <h3 class="text-lg font-bold text-slate-800 mb-2">批次匯入班級課表</h3>
@@ -848,10 +987,11 @@ function processImportTimetable() {
 // ==================== 6. 模組三：課程公告發布 ====================
 function renderAnnouncements(container) {
   const sorted = [...appData.announcements].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+  const isTeacher = currentUser.role === 'teacher';
 
   container.innerHTML = `
     <div class="max-w-4xl mx-auto space-y-5">
-      ${currentUser.role === 'teacher' ? `
+      ${isTeacher ? `
         <div class="flex justify-end">
           <button onclick="openNewAnnouncementModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold px-4 py-2.5 rounded-xl shadow-xs flex items-center gap-2 cursor-pointer">
             <i data-lucide="plus" class="w-4 h-4"></i> 發布新課程公告
@@ -873,7 +1013,7 @@ function renderAnnouncements(container) {
                   </div>
                   <h3 class="text-lg font-bold text-slate-800">${ann.title}</h3>
                 </div>
-                ${currentUser.role === 'teacher' ? `
+                ${isTeacher ? `
                   <button onclick="deleteAnnouncement('${ann.id}')" class="text-slate-400 hover:text-rose-500 p-1 cursor-pointer" title="刪除公告">
                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                   </button>
@@ -887,8 +1027,8 @@ function renderAnnouncements(container) {
               </div>
               <p class="text-sm text-slate-600 mt-3 leading-relaxed whitespace-pre-line">${ann.content}</p>
               <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-                <span>發布者：${ann.author || '班導師 陳老師'}</span>
-                <span>已讀人數：${ann.readBy.length} / ${appData.students.length} 人</span>
+                <span>發布教師：${ann.author || '陳老師'}</span>
+                <span>學生已讀率：${ann.readBy.length} / ${appData.students.length} 人</span>
               </div>
             </div>
           `;
@@ -899,6 +1039,7 @@ function renderAnnouncements(container) {
 }
 
 function openNewAnnouncementModal() {
+  if (currentUser.role !== 'teacher') return;
   showModal(`
     <div class="p-6">
       <h3 class="text-lg font-bold text-slate-800 mb-4">發布課程公告</h3>
@@ -965,6 +1106,7 @@ function markAnnouncementRead(id) {
 }
 
 function deleteAnnouncement(id) {
+  if (currentUser.role !== 'teacher') return;
   appData.announcements = appData.announcements.filter(a => a.id !== id);
   saveData();
   renderCurrentTab();
@@ -972,9 +1114,11 @@ function deleteAnnouncement(id) {
 
 // ==================== 7. 模組四：每日作業與繳交 ====================
 function renderHomework(container) {
+  const isTeacher = currentUser.role === 'teacher';
+
   container.innerHTML = `
     <div class="max-w-4xl mx-auto space-y-5">
-      ${currentUser.role === 'teacher' ? `
+      ${isTeacher ? `
         <div class="flex justify-end">
           <button onclick="openNewHomeworkModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold px-4 py-2.5 rounded-xl shadow-xs flex items-center gap-2 cursor-pointer">
             <i data-lucide="file-plus-2" class="w-4 h-4"></i> 派發新作業
@@ -999,7 +1143,7 @@ function renderHomework(container) {
                   <p class="text-sm text-slate-600 mt-2">${hw.description}</p>
                 </div>
 
-                ${currentUser.role === 'teacher' ? `
+                ${isTeacher ? `
                   <button onclick="openGradeHomeworkModal('${hw.id}')" class="shrink-0 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-3.5 py-2 rounded-lg cursor-pointer">
                     檢視繳交與批改 (${subCount}/${appData.students.length})
                   </button>
@@ -1010,7 +1154,7 @@ function renderHomework(container) {
                 `}
               </div>
 
-              ${currentUser.role === 'student' && mySub ? `
+              ${!isTeacher && mySub ? `
                 <div class="mt-4 p-3.5 bg-slate-50 rounded-lg border border-slate-200 text-xs space-y-1">
                   <div class="font-bold text-slate-700">我的繳交內容（${mySub.time}）：</div>
                   <div class="text-slate-600">${mySub.content}</div>
@@ -1026,6 +1170,7 @@ function renderHomework(container) {
 }
 
 function openNewHomeworkModal() {
+  if (currentUser.role !== 'teacher') return;
   showModal(`
     <div class="p-6">
       <h3 class="text-lg font-bold text-slate-800 mb-4">派發每日作業</h3>
@@ -1107,6 +1252,7 @@ function submitHomework(hwId) {
 }
 
 function openGradeHomeworkModal(hwId) {
+  if (currentUser.role !== 'teacher') return;
   const hw = appData.homework.find(h => h.id === hwId);
   showModal(`
     <div class="p-6 max-h-[85vh] overflow-y-auto">
@@ -1296,15 +1442,126 @@ function updateUnreadBadge() {
     count = list.filter(m => m.sender === 'teacher' && !m.read).length;
   }
   const badge = document.getElementById('unreadBadge');
-  if (count > 0) {
-    badge.textContent = count;
-    badge.classList.remove('hidden');
-  } else {
-    badge.classList.add('hidden');
+  if (badge) {
+    if (count > 0) {
+      badge.textContent = count;
+      badge.classList.remove('hidden');
+    } else {
+      badge.classList.add('hidden');
+    }
   }
 }
 
-// ==================== 9. 通用 Modal 控制 ====================
+// ==================== 9. 模組六（教師專屬權限）：學生帳號與名冊管理 ====================
+function renderRoster(container) {
+  if (currentUser.role !== 'teacher') return;
+  container.innerHTML = `
+    <div class="max-w-4xl mx-auto space-y-4">
+      <div class="bg-indigo-50/70 border border-indigo-200 rounded-xl p-4 flex items-center justify-between">
+        <div class="text-xs text-indigo-800">
+          <strong>🔐 教師專屬管理模組：</strong>此頁面僅教師權限可見。您可檢視全班已建立之學生帳號、重設忘記的學生密碼，或直接新增學生名冊。
+        </div>
+        <button onclick="openAddStudentModal()" class="shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-lg cursor-pointer">
+          + 手動新增學生帳號
+        </button>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-slate-200 text-xs text-slate-400 bg-slate-50">
+              <th class="py-3 px-4">座號</th>
+              <th class="py-3 px-4">登入學號 (帳號)</th>
+              <th class="py-3 px-4">學生姓名</th>
+              <th class="py-3 px-4">目前密碼</th>
+              <th class="py-3 px-4 text-right">管理操作</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-sm">
+            ${appData.students.map(s => `
+              <tr class="hover:bg-slate-50">
+                <td class="py-3 px-4 font-mono text-slate-500">${s.seat}</td>
+                <td class="py-3 px-4 font-mono font-bold text-indigo-600">${s.id}</td>
+                <td class="py-3 px-4 font-bold text-slate-800">${s.name}</td>
+                <td class="py-3 px-4 font-mono text-xs text-slate-500">${s.password}</td>
+                <td class="py-3 px-4 text-right space-x-2">
+                  <button onclick="resetStudentPassword('${s.id}')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2.5 py-1 rounded-md cursor-pointer">重設為 1234</button>
+                  <button onclick="deleteStudentAccount('${s.id}')" class="text-xs bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold px-2.5 py-1 rounded-md cursor-pointer">移除</button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function resetStudentPassword(id) {
+  const st = appData.students.find(s => s.id === id);
+  if (st) {
+    st.password = '1234';
+    saveData();
+    renderCurrentTab();
+    alert(`已將 ${st.name} (${st.id}) 的密碼重設為 1234`);
+  }
+}
+
+function deleteStudentAccount(id) {
+  if (!confirm(`確定要移除學號 ${id} 的學生帳號嗎？`)) return;
+  appData.students = appData.students.filter(s => s.id !== id);
+  saveData();
+  renderCurrentTab();
+}
+
+function openAddStudentModal() {
+  showModal(`
+    <div class="p-6">
+      <h3 class="text-lg font-bold text-slate-800 mb-4">教師手動新增學生帳戶</h3>
+      <div class="space-y-3">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-bold text-slate-600 block mb-1">座號</label>
+            <input id="newStSeat" type="text" placeholder="如：07" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-600 block mb-1">學號 (登入帳號)</label>
+            <input id="newStId" type="text" placeholder="如：S07" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">學生姓名</label>
+          <input id="newStName" type="text" placeholder="請輸入姓名" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 block mb-1">預設密碼</label>
+          <input id="newStPass" type="text" value="1234" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">取消</button>
+        <button onclick="createStudentByTeacher()" class="px-4 py-2 text-sm bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700">新增帳戶</button>
+      </div>
+    </div>
+  `);
+}
+
+function createStudentByTeacher() {
+  const seat = document.getElementById('newStSeat').value.trim().padStart(2, '0');
+  const id = document.getElementById('newStId').value.trim().toUpperCase();
+  const name = document.getElementById('newStName').value.trim();
+  const password = document.getElementById('newStPass').value.trim() || '1234';
+  if (!seat || !id || !name) return alert('請完整填寫座號、學號與姓名');
+  if (appData.students.some(s => s.id === id)) return alert('此學號已存在');
+
+  appData.students.push({ id, seat, name, password });
+  appData.students.sort((a, b) => a.seat.localeCompare(b.seat));
+  saveData();
+  closeModal();
+  renderCurrentTab();
+}
+
+// ==================== 10. 通用 Modal 控制 ====================
 function showModal(html) {
   const backdrop = document.getElementById('modalBackdrop');
   document.getElementById('modalContent').innerHTML = html;
