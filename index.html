@@ -52,10 +52,10 @@
         </div>
         <h2 class="text-3xl sm:text-4xl font-black text-slate-800 leading-tight">
           智慧化班級點名、<br>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">課表聯絡簿與考試行事曆</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">情緒關懷與教學互動</span>
         </h2>
         <p class="text-sm text-slate-600 leading-relaxed">
-          整合每日到校簽到打卡、班級課表查詢、課程公告、隔日作業聯絡簿提醒、班級考試行事曆與師生一對一私訊輔導，依登入身分自動配置專屬操作權限。
+          結合 Marc Brackett 情緒量表（Mood Meter）每日簽到打卡、班級課表查詢、隔日作業聯絡簿、考試行事曆與師生一對一私訊輔導，協助導師即時掌握學生身心狀態。
         </p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
@@ -64,9 +64,9 @@
               <i data-lucide="award" class="w-4 h-4"></i> 教師管理權限
             </div>
             <ul class="text-xs text-slate-600 space-y-1">
-              <li>• 檢視全班出缺勤與匯出報表</li>
-              <li>• 匯入／編輯課表、公告與考試排程</li>
-              <li>• 發布隔日作業提醒與管理學生名冊</li>
+              <li>• 全班點名與情緒量表四象限關懷總覽</li>
+              <li>• 匯入／編輯課表、作業提醒與考試排程</li>
+              <li>• 一鍵私訊關懷低愉悅度學生與名冊管理</li>
             </ul>
           </div>
           <div class="bg-white/90 p-4 rounded-2xl border border-emerald-100 shadow-2xs">
@@ -74,9 +74,9 @@
               <i data-lucide="user-check" class="w-4 h-4"></i> 學生學習權限
             </div>
             <ul class="text-xs text-slate-600 space-y-1">
-              <li>• 每日上課簽到打卡與課表查詢</li>
-              <li>• 檢視隔日應交作業聯絡簿並勾選完成</li>
-              <li>• 查看班級考試行事曆與私訊導師</li>
+              <li>• 每日點選情緒量表完成上課打卡</li>
+              <li>• 檢視班級課表、考試行事曆與公告</li>
+              <li>• 確認隔日應交作業與導師一對一私訊</li>
             </ul>
           </div>
         </div>
@@ -143,8 +143,8 @@
                   <button type="button" onclick="quickFill('teacher', 'teacher', '1234')" class="py-1.5 px-2.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold text-center transition cursor-pointer">
                     👨‍🏫 教師 (teacher)
                   </button>
-                  <button type="button" onclick="quickFill('student', 'S01', '1234')" class="py-1.5 px-2.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold text-center transition cursor-pointer">
-                    🎓 學生 (S01 林子軒)
+                  <button type="button" onclick="quickFill('student', 'S05', '1234')" class="py-1.5 px-2.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold text-center transition cursor-pointer">
+                    🎓 學生 (S05 王柏翰-未打卡)
                   </button>
                 </div>
               </div>
@@ -234,7 +234,7 @@
     <main class="flex-1 flex flex-col h-full overflow-hidden">
       <header class="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between shrink-0">
         <div class="flex items-center gap-3">
-          <h2 id="pageTitle" class="text-xl font-bold text-slate-800">每日點名與打卡</h2>
+          <h2 id="pageTitle" class="text-xl font-bold text-slate-800">每日點名與心情量表</h2>
           <span id="permissionHint" class="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium"></span>
         </div>
         <div class="flex items-center gap-4">
@@ -253,7 +253,74 @@
   </div>
 
 <script>
-// ==================== 1. 日期工具與初始資料庫 ====================
+// ==================== 1. Marc Brackett 情緒量表 (Mood Meter) 10x10 完整資料 ====================
+// row: 0(最高活力) ~ 9(最低活力), col: 0(最低愉悅) ~ 9(最高愉悅)
+// 象限定義:
+// red: row 0..4, col 0..4 (高活力、低愉悅 -> 紅區：需留意壓力/焦慮/生氣)
+// yellow: row 0..4, col 5..9 (高活力、高愉悅 -> 黃區：正向積極)
+// blue: row 5..9, col 0..4 (低活力、低愉悅 -> 藍區：需關心低落/疲憊/難過)
+// green: row 5..9, col 5..9 (低活力、高愉悅 -> 綠區：平靜安詳)
+const MOOD_METER_GRID = [
+  // Row 0 (最高活力)
+  [
+    { zh: '勃然大怒的', en: 'Enraged', q: 'red' }, { zh: '驚慌失措的', en: 'Panicked', q: 'red' }, { zh: '備感壓力的', en: 'Stressful', q: 'red' }, { zh: '緊張不安的', en: 'Jittery', q: 'red' }, { zh: '震驚的', en: 'Shocked', q: 'red' },
+    { zh: '驚喜的', en: 'Surprised', q: 'yellow' }, { zh: '振奮的', en: 'Upbeat', q: 'yellow' }, { zh: '歡慶的', en: 'Festive', q: 'yellow' }, { zh: '心花怒放的', en: 'Exhilarated', q: 'yellow' }, { zh: '欣喜若狂的', en: 'Ecstatic', q: 'yellow' }
+  ],
+  // Row 1
+  [
+    { zh: '憤怒的', en: 'Livid', q: 'red' }, { zh: '氣沖沖地', en: 'Furious', q: 'red' }, { zh: '沮喪的', en: 'Frustrated', q: 'red' }, { zh: '神經緊繃的', en: 'Tense', q: 'red' }, { zh: '錯愕的', en: 'Stunned', q: 'red' },
+    { zh: '亢奮的', en: 'Hyper', q: 'yellow' }, { zh: '愉悅的', en: 'Cheerful', q: 'yellow' }, { zh: '有動力的', en: 'Motivated', q: 'yellow' }, { zh: '受到啟發的', en: 'Inspired', q: 'yellow' }, { zh: '興高采烈的', en: 'Elated', q: 'yellow' }
+  ],
+  // Row 2
+  [
+    { zh: '火冒三丈的', en: 'Fuming', q: 'red' }, { zh: '受到驚嚇的', en: 'Anxious', q: 'red' }, { zh: '生氣的', en: 'Angry', q: 'red' }, { zh: '緊張的', en: 'Nervous', q: 'red' }, { zh: '坐立難安的', en: 'Restless', q: 'red' },
+    { zh: '精力充沛的', en: 'Energized', q: 'yellow' }, { zh: '生氣勃勃的', en: 'Lively', q: 'yellow' }, { zh: '興奮的', en: 'Excited', q: 'yellow' }, { zh: '樂觀的', en: 'Optimistic', q: 'yellow' }, { zh: '熱情洋溢的', en: 'Enthusiastic', q: 'yellow' }
+  ],
+  // Row 3
+  [
+    { zh: '焦慮的', en: 'Anxious', q: 'red' }, { zh: '憂慮不安的', en: 'Apprehensive', q: 'red' }, { zh: '擔心的', en: 'Worried', q: 'red' }, { zh: '被激怒的', en: 'Irritated', q: 'red' }, { zh: '被惹惱的', en: 'Annoyed', q: 'red' },
+    { zh: '開心的', en: 'Pleased', q: 'yellow' }, { zh: '集中的', en: 'Focused', q: 'yellow' }, { zh: '快樂的', en: 'Happy', q: 'yellow' }, { zh: '驕傲的', en: 'Proud', q: 'yellow' }, { zh: '興奮激動的', en: 'Thrilled', q: 'yellow' }
+  ],
+  // Row 4
+  [
+    { zh: '反感的', en: 'Repulsed', q: 'red' }, { zh: '困擾的', en: 'Trouble', q: 'red' }, { zh: '在意的', en: 'Concerned', q: 'red' }, { zh: '忐忑不安的', en: 'Uneasy', q: 'red' }, { zh: '不太高興', en: 'Peeved', q: 'red' },
+    { zh: '令人愉悅的', en: 'Pleasant', q: 'yellow' }, { zh: '欣喜的', en: 'Joyful', q: 'yellow' }, { zh: '有希望的', en: 'Hopeful', q: 'yellow' }, { zh: '好玩的', en: 'Playful', q: 'yellow' }, { zh: '幸福的', en: 'Blissful', q: 'yellow' }
+  ],
+  // Row 5
+  [
+    { zh: '厭惡的', en: 'Disgusted', q: 'blue' }, { zh: '死氣沉沉', en: 'Glum', q: 'blue' }, { zh: '失望的', en: 'Disappointed', q: 'blue' }, { zh: '低落的', en: 'Down', q: 'blue' }, { zh: '提不起勁的', en: 'Apathetic', q: 'blue' },
+    { zh: '自在的', en: 'At Ease', q: 'green' }, { zh: '隨和的', en: 'Easygoing', q: 'green' }, { zh: '知足的', en: 'Content', q: 'green' }, { zh: '充滿愛的', en: 'Loving', q: 'green' }, { zh: '心滿意足的', en: 'Fulfilled', q: 'green' }
+  ],
+  // Row 6
+  [
+    { zh: '悲觀的', en: 'Pessimistic', q: 'blue' }, { zh: '鬱鬱寡歡', en: 'Morose', q: 'blue' }, { zh: '洩氣的', en: 'Discouraged', q: 'blue' }, { zh: '難過的', en: 'Sad', q: 'blue' }, { zh: '無聊的', en: 'Bored', q: 'blue' },
+    { zh: '平靜的', en: 'Calm', q: 'green' }, { zh: '安全的', en: 'Secure', q: 'green' }, { zh: '滿意的', en: 'Satisfied', q: 'green' }, { zh: '滿懷感激的', en: 'Grateful', q: 'green' }, { zh: '感動的', en: 'Touched', q: 'green' }
+  ],
+  // Row 7
+  [
+    { zh: '疏離的', en: 'Alienated', q: 'blue' }, { zh: '悲慘的', en: 'Miserable', q: 'blue' }, { zh: '孤單的', en: 'Lonely', q: 'blue' }, { zh: '心灰意冷', en: 'Disheartened', q: 'blue' }, { zh: '疲累的', en: 'Tired', q: 'blue' },
+    { zh: '放鬆的', en: 'Relaxed', q: 'green' }, { zh: '冷靜的', en: 'Chill', q: 'green' }, { zh: '寧靜的', en: 'Restful', q: 'green' }, { zh: '有福氣的', en: 'Blessed', q: 'green' }, { zh: '平衡的', en: 'Balanced', q: 'green' }
+  ],
+  // Row 8
+  [
+    { zh: '消沉的', en: 'Despondent', q: 'blue' }, { zh: '抑鬱的', en: 'Depressed', q: 'blue' }, { zh: '悶悶不樂', en: 'Sullen', q: 'blue' }, { zh: '精疲力竭', en: 'Exhausted', q: 'blue' }, { zh: '疲勞的', en: 'Fatigued', q: 'blue' },
+    { zh: '柔和的', en: 'Mellow', q: 'green' }, { zh: '沉思的', en: 'Thoughtful', q: 'green' }, { zh: '平和的', en: 'Peaceful', q: 'green' }, { zh: '舒服的', en: 'Comfortable', q: 'green' }, { zh: '無憂無慮', en: 'Carefree', q: 'green' }
+  ],
+  // Row 9 (最低活力)
+  [
+    { zh: '絕望的', en: 'Despairing', q: 'blue' }, { zh: '無望的', en: 'Hopeless', q: 'blue' }, { zh: '孤寂的', en: 'Desolate', q: 'blue' }, { zh: '疲憊不堪的', en: 'Spent', q: 'blue' }, { zh: '被榨乾的的', en: 'Drained', q: 'blue' },
+    { zh: '昏昏欲睡', en: 'Sleepy', q: 'green' }, { zh: '安於現狀的', en: 'Complacent', q: 'green' }, { zh: '平靜的', en: 'Tranquil', q: 'green' }, { zh: '舒適的', en: 'Cozy', q: 'green' }, { zh: '安詳的', en: 'Serene', q: 'green' }
+  ]
+];
+
+const QUADRANT_INFO = {
+  red: { label: '紅區｜高活力・低愉悅', careNeeded: true, badge: 'bg-rose-100 text-rose-800 border-rose-300', cellBg: 'bg-rose-200/80 hover:bg-rose-300 text-rose-950 border-rose-300/60', tip: '建議主動關心是否有課業壓力、焦慮或人際衝突' },
+  yellow: { label: '黃區｜高活力・高愉悅', careNeeded: false, badge: 'bg-amber-100 text-amber-800 border-amber-300', cellBg: 'bg-amber-200/80 hover:bg-amber-300 text-amber-950 border-amber-300/60', tip: '精神飽滿、學習動機高' },
+  blue: { label: '藍區｜低活力・低愉悅', careNeeded: true, badge: 'bg-sky-100 text-sky-800 border-sky-300', cellBg: 'bg-sky-200/80 hover:bg-sky-300 text-sky-950 border-sky-300/60', tip: '建議溫暖傾聽，留意是否身體疲累或心情低落' },
+  green: { label: '綠區｜低活力・高愉悅', careNeeded: false, badge: 'bg-emerald-100 text-emerald-800 border-emerald-300', cellBg: 'bg-emerald-200/80 hover:bg-emerald-300 text-emerald-950 border-emerald-300/60', tip: '情緒穩定平和、適合專注學習' }
+};
+
+// ==================== 2. 日期工具與初始資料庫 ====================
 function getOffsetDateStr(offsetDays) {
   const d = new Date();
   d.setDate(d.getDate() + offsetDays);
@@ -281,10 +348,22 @@ const DEFAULT_DATA = {
   ],
   attendance: {
     [TODAY_STR]: {
-      'S01': { status: 'present', time: '08:05', note: '' },
-      'S02': { status: 'present', time: '08:12', note: '' },
-      'S03': { status: 'late', time: '08:42', note: '公車誤點' },
-      'S04': { status: 'leave', time: '-', note: '事假（已核准）' }
+      'S01': {
+        status: 'present', time: '08:05', note: '',
+        mood: { zh: '集中的', en: 'Focused', q: 'yellow', energy: 7, pleasantness: 7, note: '昨晚睡得很飽，準備好上數學課！' }
+      },
+      'S02': {
+        status: 'present', time: '08:12', note: '',
+        mood: { zh: '平靜的', en: 'Calm', q: 'green', energy: 4, pleasantness: 6, note: '' }
+      },
+      'S03': {
+        status: 'late', time: '08:42', note: '公車誤點',
+        mood: { zh: '備感壓力的', en: 'Stressful', q: 'red', energy: 10, pleasantness: 3, note: '早起趕公車又想到下週要考英文，有點緊張' }
+      },
+      'S04': {
+        status: 'present', time: '08:20', note: '',
+        mood: { zh: '精疲力竭', en: 'Exhausted', q: 'blue', energy: 2, pleasantness: 4, note: '昨晚複習功課到比較晚，今天有點累' }
+      }
     }
   },
   timetable: {
@@ -322,7 +401,6 @@ const DEFAULT_DATA = {
       readBy: ['S01']
     }
   ],
-  // 隔日作業聯絡簿提醒（純提醒清單，不需上傳檔案，學生可自訂勾選確認）
   homeworkReminders: [
     {
       id: 'HW01',
@@ -349,7 +427,6 @@ const DEFAULT_DATA = {
       checkedBy: []
     }
   ],
-  // 班級考試行事曆
   exams: [
     {
       id: 'EX01',
@@ -392,32 +469,31 @@ const DEFAULT_DATA = {
     'S03': [
       { sender: 'student', text: '老師早安，今天早上公車拋錨所以晚到十分鐘，不好意思！', time: '08:40', read: true },
       { sender: 'teacher', authorName: '陳老師', text: '好的，老師知道了，路上安全最重要，進教室先安靜入座。', time: '08:43', read: true }
-    ],
-    'S04': [
-      { sender: 'student', text: '老師您好，我今天家裡有事需要請假一天，家長昨晚有傳簡訊了。', time: '07:50', read: false }
     ]
   }
 };
 
-let appData = JSON.parse(localStorage.getItem('eduCloud_v4')) || DEFAULT_DATA;
-let currentUser = JSON.parse(sessionStorage.getItem('eduCloudSession_v4')) || null;
+let appData = JSON.parse(localStorage.getItem('eduCloud_v5')) || DEFAULT_DATA;
+let currentUser = JSON.parse(sessionStorage.getItem('eduCloudSession_v5')) || null;
 let portalRole = 'teacher';
 let isRegisterMode = false;
 let currentCaptcha = '';
 let currentTab = 'attendance';
 let selectedChatStudentId = appData.students[0]?.id || 'S01';
 
+// 學生打卡暫存選擇的情緒
+let tempSelectedMood = null; // { r, c, zh, en, q, energy, pleasantness }
+
 // 考試行事曆目前檢視年月
 let calYear = new Date().getFullYear();
-let calMonth = new Date().getMonth(); // 0-11
-let selectedCalDate = null;
+let calMonth = new Date().getMonth();
 
 function saveData() {
-  localStorage.setItem('eduCloud_v4', JSON.stringify(appData));
+  localStorage.setItem('eduCloud_v5', JSON.stringify(appData));
   if (currentUser) updateUnreadBadge();
 }
 
-// ==================== 2. 登入入口與驗證邏輯 ====================
+// ==================== 3. 登入入口與驗證邏輯 ====================
 function init() {
   document.getElementById('portalDate').textContent = TODAY_STR;
   document.getElementById('currentDateDisplay').textContent = TODAY_STR;
@@ -460,7 +536,7 @@ function selectPortalRole(role) {
     tabT.className = 'py-4 flex items-center justify-center gap-2 bg-indigo-600 text-white transition cursor-pointer';
     tabS.className = 'py-4 flex items-center justify-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200/70 transition cursor-pointer';
     title.textContent = isRegisterMode ? '建立教師管理帳戶' : '教師身分驗證登入';
-    subtitle.textContent = '具備全班點名管理、課表匯入、作業提醒與考試行事曆權限';
+    subtitle.textContent = '具備全班點名與情緒關懷總覽、課表與考試管理權限';
     idLabel.textContent = '教師帳號';
     idInput.placeholder = '請輸入教師帳號 (預設: teacher)';
     loginBtn.className = 'w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
@@ -473,7 +549,7 @@ function selectPortalRole(role) {
     tabS.className = 'py-4 flex items-center justify-center gap-2 bg-emerald-600 text-white transition cursor-pointer';
     tabT.className = 'py-4 flex items-center justify-center gap-2 bg-slate-100 text-slate-600 hover:bg-slate-200/70 transition cursor-pointer';
     title.textContent = isRegisterMode ? '建立學生學習帳戶' : '學生身分驗證登入';
-    subtitle.textContent = '具備每日打卡、隔日作業提醒、考試行事曆與私訊導師功能';
+    subtitle.textContent = '具備每日心情打卡、課表查詢、作業提醒與私訊功能';
     idLabel.textContent = '學生學號';
     idInput.placeholder = '請輸入學生學號 (例如: S01)';
     loginBtn.className = 'w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition text-sm cursor-pointer mt-2';
@@ -542,7 +618,7 @@ function handleLogin(e) {
     currentUser = { role: 'student', id: student.id, name: student.name, seat: student.seat };
   }
 
-  sessionStorage.setItem('eduCloudSession_v4', JSON.stringify(currentUser));
+  sessionStorage.setItem('eduCloudSession_v5', JSON.stringify(currentUser));
   enterMainApp();
 }
 
@@ -573,14 +649,15 @@ function handleRegister(e) {
     currentUser = { role: 'student', id: studentId, name, seat };
   }
 
-  sessionStorage.setItem('eduCloudSession_v4', JSON.stringify(currentUser));
+  sessionStorage.setItem('eduCloudSession_v5', JSON.stringify(currentUser));
   alert(`帳戶建立成功！系統已自動為您登入。`);
   enterMainApp();
 }
 
 function logout() {
-  sessionStorage.removeItem('eduCloudSession_v4');
+  sessionStorage.removeItem('eduCloudSession_v5');
   currentUser = null;
+  tempSelectedMood = null;
   document.getElementById('mainApp').classList.add('hidden');
   document.getElementById('authScreen').classList.remove('hidden');
   document.getElementById('loginPassword').value = '';
@@ -589,7 +666,7 @@ function logout() {
   lucide.createIcons();
 }
 
-// ==================== 3. 權限分流初始化主介面 ====================
+// ==================== 4. 權限分流初始化主介面 ====================
 function enterMainApp() {
   document.getElementById('authScreen').classList.add('hidden');
   document.getElementById('mainApp').classList.remove('hidden');
@@ -613,7 +690,7 @@ function enterMainApp() {
 
     sidebarNav.innerHTML = `
       <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <i data-lucide="clipboard-check" class="w-4 h-4"></i><span>全班點名與出缺勤</span>
+        <i data-lucide="heart-handshake" class="w-4 h-4"></i><span>每日點名與心情關懷</span>
       </button>
       <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="calendar-cog" class="w-4 h-4"></i><span>班級課表編輯/匯入</span>
@@ -646,7 +723,7 @@ function enterMainApp() {
 
     sidebarNav.innerHTML = `
       <button onclick="switchTab('attendance')" id="nav-attendance" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
-        <i data-lucide="fingerprint" class="w-4 h-4"></i><span>每日上課簽到打卡</span>
+        <i data-lucide="smile-plus" class="w-4 h-4"></i><span>每日打卡與心情量表</span>
       </button>
       <button onclick="switchTab('timetable')" id="nav-timetable" class="w-full flex items-center gap-3 px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 transition cursor-pointer">
         <i data-lucide="calendar-days" class="w-4 h-4"></i><span>班級課表查詢</span>
@@ -679,7 +756,7 @@ function switchTab(tab) {
   if (targetNav) targetNav.classList.add(activeClass);
 
   const teacherTitles = {
-    attendance: ['全班點名與出缺勤管理', '教師可調整學生狀態並匯出報表'],
+    attendance: ['每日點名與情緒量表關懷總覽', '即時掌握學生出缺勤與 Mood Meter 身心狀態'],
     timetable: ['班級課表管理系統', '教師可點擊編輯節次或批次匯入課表'],
     homework: ['隔日作業聯絡簿發布', '發布隔天與近期應繳交的紙本/實體作業提醒'],
     exams: ['班級考試行事曆管理', '登錄小考、週考與段考日期及考試範圍'],
@@ -689,7 +766,7 @@ function switchTab(tab) {
   };
 
   const studentTitles = {
-    attendance: ['每日上課簽到打卡', '學生每日線上回傳到校打卡狀態'],
+    attendance: ['每日上課打卡與情緒量表', '透過 Mood Meter 覺察今日情緒並完成簽到'],
     timetable: ['班級課表查詢', '唯讀檢視本學期班級每週課表'],
     homework: ['隔日應交作業提醒', '確認明天與近期該帶到學校繳交的作業清單'],
     exams: ['班級考試行事曆', '檢視近期小考與段考日程、倒數天數與範圍'],
@@ -715,143 +792,368 @@ function renderCurrentTab() {
   lucide.createIcons();
 }
 
-// ==================== 4. 模組一：每日點名與打卡 ====================
+// ==================== 5. 模組一：每日點名與情緒量表 (Mood Meter) ====================
 function renderAttendance(container) {
   if (!appData.attendance[TODAY_STR]) appData.attendance[TODAY_STR] = {};
   const todayRecords = appData.attendance[TODAY_STR];
 
   if (currentUser.role === 'student') {
     const myRec = todayRecords[currentUser.id];
-    container.innerHTML = `
-      <div class="max-w-xl mx-auto mt-6">
-        <div class="bg-white rounded-2xl border border-slate-200 p-8 text-center shadow-xs">
-          <div class="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4">
-            <i data-lucide="clock" class="w-8 h-8"></i>
-          </div>
-          <h3 class="text-xl font-bold text-slate-800 mb-1">${TODAY_STR} 上課簽到</h3>
-          <p class="text-sm text-slate-500 mb-6">你好，${currentUser.seat}號 ${currentUser.name}！每日 08:30 前完成打卡為「準時出席」。</p>
-          
-          ${myRec ? `
-            <div class="p-4 rounded-xl ${myRec.status === 'present' ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-amber-50 border border-amber-200 text-amber-800'} mb-4">
-              <div class="font-bold text-lg mb-1">
-                ${myRec.status === 'present' ? '✅ 今日已完成準時打卡' : myRec.status === 'late' ? '⚠️ 今日打卡狀態：遲到' : '📋 今日狀態：請假'}
-              </div>
-              <div class="text-sm opacity-80">簽到時間：${myRec.time} ${myRec.note ? `（備註：${myRec.note}）` : ''}</div>
+    if (myRec) {
+      // 學生已完成今日打卡與情緒回報
+      const m = myRec.mood;
+      const qInfo = m ? QUADRANT_INFO[m.q] : null;
+      container.innerHTML = `
+        <div class="max-w-2xl mx-auto mt-4">
+          <div class="bg-white rounded-3xl border border-slate-200 p-8 text-center shadow-xs space-y-5">
+            <div class="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
+              <i data-lucide="check-circle-2" class="w-9 h-9"></i>
             </div>
-          ` : `
-            <button onclick="studentCheckIn()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2 text-lg cursor-pointer">
-              <i data-lucide="fingerprint" class="w-6 h-6"></i>
-              立即回傳今日上課打卡
+            <div>
+              <h3 class="text-xl font-bold text-slate-800">${TODAY_STR} 上課簽到與心情紀錄完成</h3>
+              <p class="text-sm text-slate-500 mt-1">
+                狀態：<strong>${myRec.status === 'present' ? '準時出席' : myRec.status === 'late' ? '遲到' : '請假'}</strong> ｜ 打卡時間：<span class="font-mono">${myRec.time}</span>
+              </p>
+            </div>
+
+            ${m ? `
+              <div class="p-5 rounded-2xl border ${qInfo.badge} text-left max-w-md mx-auto space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold opacity-80">今日情緒量表 (Mood Meter)</span>
+                  <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-white/70">${qInfo.label}</span>
+                </div>
+                <div class="text-2xl font-black">${m.zh} <span class="text-sm font-medium opacity-75">(${m.en})</span></div>
+                <div class="text-xs opacity-85">活力指數：${m.energy}/10 ｜ 愉悅指數：${m.pleasantness}/10</div>
+                ${m.note ? `<div class="text-xs bg-white/80 p-2.5 rounded-xl mt-2 text-slate-700">💬 給老師的話：${m.note}</div>` : ''}
+              </div>
+            ` : ''}
+
+            <div class="pt-2">
+              <button onclick="resetMyTodayCheckIn()" class="text-xs text-slate-400 hover:text-indigo-600 underline cursor-pointer">
+                重新選擇今日心情狀態
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    // 學生尚未打卡：顯示完整 10x10 情緒量表 (Mood Meter) 互動網格
+    let gridHtml = '';
+    for (let r = 0; r < 10; r++) {
+      for (let c = 0; c < 10; c++) {
+        const item = MOOD_METER_GRID[r][c];
+        const qStyle = QUADRANT_INFO[item.q].cellBg;
+        const isSelected = tempSelectedMood && tempSelectedMood.r === r && tempSelectedMood.c === c;
+        const energyVal = 10 - r;
+        const pleasantVal = c + 1;
+        gridHtml += `
+          <button type="button"
+            onclick="selectMoodCell(${r}, ${c})"
+            class="p-1.5 rounded-md border text-center transition cursor-pointer flex flex-col items-center justify-center leading-tight min-h-[46px] ${qStyle} ${
+              isSelected ? 'ring-3 ring-slate-900 scale-105 z-10 font-black shadow-md' : ''
+            }">
+            <span class="text-[11px] font-bold tracking-tight">${item.zh}</span>
+            <span class="text-[9px] opacity-75 font-mono hidden sm:block">${item.en}</span>
+          </button>
+        `;
+      }
+    }
+
+    container.innerHTML = `
+      <div class="max-w-5xl mx-auto space-y-5">
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <div>
+              <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <span>🎯 步驟一：請點選最符合你現在感受的「情緒量表 (Mood Meter)」格子</span>
+              </h3>
+              <p class="text-xs text-slate-500 mt-0.5">參考 Marc Brackett 情緒量表：越上方代表「活力越高」，越右方代表「愉悅度越高」。老師會透過你的選擇了解是否需要關心你喔！</p>
+            </div>
+            <div class="flex flex-wrap gap-1.5 text-[11px] font-bold">
+              <span class="px-2 py-1 rounded bg-rose-100 text-rose-800">紅區：高活力/低愉悅</span>
+              <span class="px-2 py-1 rounded bg-amber-100 text-amber-800">黃區：高活力/高愉悅</span>
+              <span class="px-2 py-1 rounded bg-sky-100 text-sky-800">藍區：低活力/低愉悅</span>
+              <span class="px-2 py-1 rounded bg-emerald-100 text-emerald-800">綠區：低活力/高愉悅</span>
+            </div>
+          </div>
+
+          <!-- 座標軸與 10x10 情緒網格 -->
+          <div class="flex gap-2 items-stretch overflow-x-auto pb-2">
+            <!-- Y 軸：活力指標 -->
+            <div class="flex flex-col justify-between items-center py-2 px-1 bg-slate-100 rounded-lg text-[11px] font-bold text-slate-600 shrink-0 select-none">
+              <span>高活力</span>
+              <span class="text-slate-400">↑</span>
+              <span class="[writing-mode:vertical-rl] tracking-widest text-xs text-slate-700">活力能量</span>
+              <span class="text-slate-400">↓</span>
+              <span>低活力</span>
+            </div>
+
+            <div class="flex-1 min-w-[680px]">
+              <div class="grid grid-cols-10 gap-1">
+                ${gridHtml}
+              </div>
+              <!-- X 軸：愉悅度指標 -->
+              <div class="mt-2 flex items-center justify-between px-3 py-1.5 bg-slate-100 rounded-lg text-[11px] font-bold text-slate-600 select-none">
+                <span>← 低愉悅度 (Low Pleasantness)</span>
+                <span class="text-slate-700">愉悅程度</span>
+                <span>高愉悅度 (High Pleasantness) →</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 步驟二：確認選擇並填寫一句話 -->
+          <div class="mt-5 pt-5 border-t border-slate-200 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+            <div class="flex-1">
+              ${tempSelectedMood ? `
+                <div class="flex flex-wrap items-center gap-2 mb-2">
+                  <span class="text-xs font-bold text-slate-500">已選擇情緒：</span>
+                  <span class="text-sm font-black px-3 py-1 rounded-lg border ${QUADRANT_INFO[tempSelectedMood.q].badge}">
+                    ${tempSelectedMood.zh} (${tempSelectedMood.en})
+                  </span>
+                  <span class="text-xs text-slate-400 font-mono">活力 ${tempSelectedMood.energy}/10 ・ 愉悅 ${tempSelectedMood.pleasantness}/10</span>
+                </div>
+                <input id="moodNoteInput" type="text" placeholder="想跟老師補充的原因或悄悄話（選填，例如：昨晚沒睡好、期待體育課...）" class="w-full border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              ` : `
+                <div class="text-sm text-amber-600 font-bold flex items-center gap-2">
+                  <i data-lucide="mouse-pointer-click" class="w-4 h-4"></i>
+                  <span>請先在上方情緒量表中點選一個最貼近你現在心情的詞彙！</span>
+                </div>
+              `}
+            </div>
+
+            <button onclick="studentCheckIn()" ${!tempSelectedMood ? 'disabled' : ''} class="shrink-0 px-6 py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition shadow-md ${
+              tempSelectedMood ? 'bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer' : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+            }">
+              <i data-lucide="fingerprint" class="w-5 h-5"></i>
+              送出心情並完成今日打卡
             </button>
-          `}
+          </div>
         </div>
       </div>
     `;
   } else {
+    // ==================== 教師端：點名統計 + 情緒量表關懷雷達 ====================
     let presentCount = 0, lateCount = 0, leaveCount = 0, absentCount = 0;
+    let qCounts = { red: 0, yellow: 0, blue: 0, green: 0 };
+    let careStudents = []; // 紅區或藍區需要老師關心的學生
+
     appData.students.forEach(s => {
       const r = todayRecords[s.id];
       if (!r || r.status === 'absent') absentCount++;
       else if (r.status === 'present') presentCount++;
       else if (r.status === 'late') lateCount++;
       else if (r.status === 'leave') leaveCount++;
+
+      if (r && r.mood && r.mood.q) {
+        qCounts[r.mood.q]++;
+        if (r.mood.q === 'red' || r.mood.q === 'blue') {
+          careStudents.push({ student: s, rec: r });
+        }
+      }
     });
 
     container.innerHTML = `
       <div class="space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div class="bg-white p-5 rounded-xl border border-slate-200">
-            <div class="text-xs font-bold text-slate-400">全班應到人數</div>
-            <div class="text-2xl font-bold text-slate-800 mt-1">${appData.students.length} 人</div>
+        <!-- 1. 出缺勤與情緒象限統計卡 -->
+        <div class="grid grid-cols-2 lg:grid-cols-6 gap-3">
+          <div class="bg-white p-4 rounded-xl border border-slate-200">
+            <div class="text-xs font-bold text-slate-400">準時 / 遲到 / 未到</div>
+            <div class="text-xl font-black text-slate-800 mt-1">${presentCount} / ${lateCount} / <span class="text-rose-600">${absentCount}</span></div>
           </div>
-          <div class="bg-emerald-50/70 p-5 rounded-xl border border-emerald-200">
-            <div class="text-xs font-bold text-emerald-600">準時出席</div>
-            <div class="text-2xl font-bold text-emerald-700 mt-1">${presentCount} 人</div>
+          <div class="bg-rose-50 p-4 rounded-xl border border-rose-200">
+            <div class="text-xs font-bold text-rose-700">🔴 紅區 (焦慮/壓力)</div>
+            <div class="text-xl font-black text-rose-800 mt-1">${qCounts.red} 人</div>
           </div>
-          <div class="bg-amber-50/70 p-5 rounded-xl border border-amber-200">
-            <div class="text-xs font-bold text-amber-600">遲到 / 請假</div>
-            <div class="text-2xl font-bold text-amber-700 mt-1">${lateCount} / ${leaveCount} 人</div>
+          <div class="bg-sky-50 p-4 rounded-xl border border-sky-200">
+            <div class="text-xs font-bold text-sky-700">🔵 藍區 (低落/疲憊)</div>
+            <div class="text-xl font-black text-sky-800 mt-1">${qCounts.blue} 人</div>
           </div>
-          <div class="bg-rose-50/70 p-5 rounded-xl border border-rose-200">
-            <div class="text-xs font-bold text-rose-600">尚未打卡 (缺席)</div>
-            <div class="text-2xl font-bold text-rose-700 mt-1">${absentCount} 人</div>
+          <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
+            <div class="text-xs font-bold text-amber-700">🟡 黃區 (開心/有動力)</div>
+            <div class="text-xl font-black text-amber-800 mt-1">${qCounts.yellow} 人</div>
+          </div>
+          <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+            <div class="text-xs font-bold text-emerald-700">🟢 綠區 (平靜/放鬆)</div>
+            <div class="text-xl font-black text-emerald-800 mt-1">${qCounts.green} 人</div>
+          </div>
+          <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 flex flex-col justify-center">
+            <div class="text-xs font-bold text-indigo-700">💛 今日優先關懷</div>
+            <div class="text-xl font-black text-indigo-900 mt-1">${careStudents.length} 位同學</div>
           </div>
         </div>
 
-        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
-            <span class="font-bold text-slate-700">今日班級點名名冊 (${TODAY_STR})</span>
-            <button onclick="exportAttendanceCSV()" class="text-xs bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 cursor-pointer">
-              <i data-lucide="download" class="w-3.5 h-3.5"></i> 匯出點名 CSV
-            </button>
-          </div>
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b border-slate-200 text-xs text-slate-400 bg-slate-50">
-                <th class="py-3 px-4">座號</th>
-                <th class="py-3 px-4">學號</th>
-                <th class="py-3 px-4">姓名</th>
-                <th class="py-3 px-4">打卡時間</th>
-                <th class="py-3 px-4">出席狀態 (教師權限可修改)</th>
-                <th class="py-3 px-4">備註</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 text-sm">
-              ${appData.students.map(s => {
-                const rec = todayRecords[s.id] || { status: 'absent', time: '-', note: '' };
+        <!-- 2. 優先關懷提醒區（自動篩選紅區與藍區學生） -->
+        ${careStudents.length > 0 ? `
+          <div class="bg-gradient-to-r from-rose-50 via-amber-50/50 to-sky-50 rounded-2xl border border-rose-200/80 p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                <i data-lucide="heart-pulse" class="w-4 h-4 text-rose-600"></i>
+                今日情緒量表「建議關心名單」（位於紅區低愉悅高活力／藍區低愉悅低活力）
+              </h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              ${careStudents.map(({ student, rec }) => {
+                const qInfo = QUADRANT_INFO[rec.mood.q];
                 return `
-                  <tr class="hover:bg-slate-50/80">
-                    <td class="py-3 px-4 font-mono text-slate-500">${s.seat}</td>
-                    <td class="py-3 px-4 font-mono text-xs text-slate-400">${s.id}</td>
-                    <td class="py-3 px-4 font-bold text-slate-800">${s.name}</td>
-                    <td class="py-3 px-4 font-mono text-xs text-slate-500">${rec.time}</td>
-                    <td class="py-3 px-4">
-                      <select onchange="teacherUpdateAttendance('${s.id}', this.value)" class="text-xs font-bold px-2.5 py-1 rounded-md border ${
-                        rec.status === 'present' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                        rec.status === 'late' ? 'bg-amber-50 text-amber-700 border-amber-200' :
-                        rec.status === 'leave' ? 'bg-sky-50 text-sky-700 border-sky-200' :
-                        'bg-rose-50 text-rose-700 border-rose-200'
-                      }">
-                        <option value="present" ${rec.status==='present'?'selected':''}>✅ 準時出席</option>
-                        <option value="late" ${rec.status==='late'?'selected':''}>⚠️ 遲到</option>
-                        <option value="leave" ${rec.status==='leave'?'selected':''}>📋 請假</option>
-                        <option value="absent" ${rec.status==='absent'?'selected':''}>❌ 缺席/未打卡</option>
-                      </select>
-                    </td>
-                    <td class="py-3 px-4 text-xs text-slate-500">${rec.note || '-'}</td>
-                  </tr>
+                  <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs flex items-start justify-between gap-3">
+                    <div class="space-y-1">
+                      <div class="flex items-center gap-2">
+                        <span class="font-bold text-sm text-slate-800">${student.seat}號 ${student.name}</span>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded border ${qInfo.badge}">
+                          ${rec.mood.zh} (${rec.mood.en})
+                        </span>
+                      </div>
+                      <p class="text-xs text-slate-600">
+                        ${rec.mood.note ? `💬 學生留言：「${rec.mood.note}」` : `<span class="text-slate-400 italic">學生未填寫補充留言</span>`}
+                      </p>
+                      <p class="text-[11px] text-indigo-600 font-medium">💡 關懷建議：${qInfo.tip}</p>
+                    </div>
+                    <button onclick="openCareChat('${student.id}')" class="shrink-0 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1 cursor-pointer">
+                      <i data-lucide="message-circle-heart" class="w-3.5 h-3.5"></i> 私訊關心
+                    </button>
+                  </div>
                 `;
               }).join('')}
-            </tbody>
-          </table>
+            </div>
+          </div>
+        ` : ''}
+
+        <!-- 3. 全班點名與今日心情完整名冊 -->
+        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
+            <span class="font-bold text-slate-700">今日班級點名與心情紀錄總表 (${TODAY_STR})</span>
+            <button onclick="exportAttendanceCSV()" class="text-xs bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> 匯出點名與心情 CSV
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[820px]">
+              <thead>
+                <tr class="border-b border-slate-200 text-xs text-slate-400 bg-slate-50">
+                  <th class="py-3 px-4">座號</th>
+                  <th class="py-3 px-4">姓名</th>
+                  <th class="py-3 px-4">打卡時間</th>
+                  <th class="py-3 px-4">出席狀態</th>
+                  <th class="py-3 px-4">今日情緒量表 (Mood Meter)</th>
+                  <th class="py-3 px-4">學生心情留言</th>
+                  <th class="py-3 px-4 text-right">關懷互動</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-sm">
+                ${appData.students.map(s => {
+                  const rec = todayRecords[s.id] || { status: 'absent', time: '-', note: '', mood: null };
+                  const m = rec.mood;
+                  const qInfo = m ? QUADRANT_INFO[m.q] : null;
+                  return `
+                    <tr class="hover:bg-slate-50/80">
+                      <td class="py-3 px-4 font-mono text-slate-500">${s.seat}</td>
+                      <td class="py-3 px-4 font-bold text-slate-800">${s.name}</td>
+                      <td class="py-3 px-4 font-mono text-xs text-slate-500">${rec.time}</td>
+                      <td class="py-3 px-4">
+                        <select onchange="teacherUpdateAttendance('${s.id}', this.value)" class="text-xs font-bold px-2.5 py-1 rounded-md border ${
+                          rec.status === 'present' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                          rec.status === 'late' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                          rec.status === 'leave' ? 'bg-sky-50 text-sky-700 border-sky-200' :
+                          'bg-rose-50 text-rose-700 border-rose-200'
+                        }">
+                          <option value="present" ${rec.status==='present'?'selected':''}>✅ 準時出席</option>
+                          <option value="late" ${rec.status==='late'?'selected':''}>⚠️ 遲到</option>
+                          <option value="leave" ${rec.status==='leave'?'selected':''}>📋 請假</option>
+                          <option value="absent" ${rec.status==='absent'?'selected':''}>❌ 缺席/未打卡</option>
+                        </select>
+                      </td>
+                      <td class="py-3 px-4">
+                        ${m ? `
+                          <span class="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-lg border ${qInfo.badge}">
+                            ${m.zh} <span class="font-normal opacity-75">(${m.en})</span>
+                          </span>
+                        ` : `<span class="text-xs text-slate-300">尚未回報</span>`}
+                      </td>
+                      <td class="py-3 px-4 text-xs text-slate-600 max-w-[220px] truncate" title="${m?.note || ''}">
+                        ${m?.note || '-'}
+                      </td>
+                      <td class="py-3 px-4 text-right">
+                        <button onclick="openCareChat('${s.id}')" class="text-xs font-bold text-indigo-600 hover:bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200 cursor-pointer">
+                          私訊
+                        </button>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     `;
   }
 }
 
+function selectMoodCell(r, c) {
+  const item = MOOD_METER_GRID[r][c];
+  tempSelectedMood = {
+    r, c,
+    zh: item.zh,
+    en: item.en,
+    q: item.q,
+    energy: 10 - r,
+    pleasantness: c + 1
+  };
+  renderCurrentTab();
+}
+
 function studentCheckIn() {
+  if (!tempSelectedMood) return alert('請先在情緒量表中點選一個心情格子！');
+  const noteInput = document.getElementById('moodNoteInput');
+  const moodNote = noteInput ? noteInput.value.trim() : '';
+
   const now = new Date();
   const timeStr = now.toTimeString().slice(0, 5);
   const isLate = now.getHours() > 8 || (now.getHours() === 8 && now.getMinutes() > 30);
+
   if (!appData.attendance[TODAY_STR]) appData.attendance[TODAY_STR] = {};
   appData.attendance[TODAY_STR][currentUser.id] = {
     status: isLate ? 'late' : 'present',
     time: timeStr,
-    note: isLate ? '系統判定超過 08:30' : ''
+    note: isLate ? '超過 08:30 打卡' : '',
+    mood: {
+      zh: tempSelectedMood.zh,
+      en: tempSelectedMood.en,
+      q: tempSelectedMood.q,
+      energy: tempSelectedMood.energy,
+      pleasantness: tempSelectedMood.pleasantness,
+      note: moodNote
+    }
   };
+  tempSelectedMood = null;
   saveData();
   renderCurrentTab();
+}
+
+function resetMyTodayCheckIn() {
+  if (!confirm('確定要重新填寫今日的心情量表嗎？')) return;
+  if (appData.attendance[TODAY_STR]) {
+    delete appData.attendance[TODAY_STR][currentUser.id];
+    saveData();
+    renderCurrentTab();
+  }
+}
+
+function openCareChat(studentId) {
+  selectedChatStudentId = studentId;
+  switchTab('messages');
 }
 
 function teacherUpdateAttendance(studentId, status) {
   if (currentUser.role !== 'teacher') return;
   if (!appData.attendance[TODAY_STR]) appData.attendance[TODAY_STR] = {};
-  const old = appData.attendance[TODAY_STR][studentId] || { time: new Date().toTimeString().slice(0, 5), note: '' };
+  const old = appData.attendance[TODAY_STR][studentId] || { time: new Date().toTimeString().slice(0, 5), note: '', mood: null };
   appData.attendance[TODAY_STR][studentId] = {
+    ...old,
     status,
-    time: status === 'absent' ? '-' : (old.time === '-' ? new Date().toTimeString().slice(0, 5) : old.time),
-    note: old.note
+    time: status === 'absent' ? '-' : (old.time === '-' ? new Date().toTimeString().slice(0, 5) : old.time)
   };
   saveData();
   renderCurrentTab();
@@ -859,20 +1161,24 @@ function teacherUpdateAttendance(studentId, status) {
 
 function exportAttendanceCSV() {
   const todayRecords = appData.attendance[TODAY_STR] || {};
-  let csv = '\uFEFF座號,學號,姓名,日期,狀態,打卡時間,備註\n';
+  let csv = '\uFEFF座號,學號,姓名,日期,出席狀態,打卡時間,情緒象限,今日情緒詞彙,學生心情留言\n';
+  const qMap = { red: '紅區(高活力低愉悅)', yellow: '黃區(高活力高愉悅)', blue: '藍區(低活力低愉悅)', green: '綠區(低活力高愉悅)' };
   appData.students.forEach(s => {
-    const r = todayRecords[s.id] || { status: 'absent', time: '-', note: '' };
+    const r = todayRecords[s.id] || { status: 'absent', time: '-', mood: null };
     const statusMap = { present: '準時出席', late: '遲到', leave: '請假', absent: '缺席' };
-    csv += `${s.seat},${s.id},${s.name},${TODAY_STR},${statusMap[r.status]},${r.time},${r.note}\n`;
+    const qText = r.mood ? qMap[r.mood.q] : '-';
+    const moodText = r.mood ? `${r.mood.zh}(${r.mood.en})` : '-';
+    const moodNote = r.mood?.note ? r.mood.note.replace(/,/g, '，') : '-';
+    csv += `${s.seat},${s.id},${s.name},${TODAY_STR},${statusMap[r.status]},${r.time},${qText},${moodText},${moodNote}\n`;
   });
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = `點名紀錄_${TODAY_STR}.csv`;
+  link.download = `點名與心情紀錄_${TODAY_STR}.csv`;
   link.click();
 }
 
-// ==================== 5. 模組二：班級課表系統 ====================
+// ==================== 6. 模組二：班級課表系統 ====================
 function renderTimetable(container) {
   const days = ['週一', '週二', '週三', '週四', '週五'];
   const periods = [
@@ -1028,7 +1334,7 @@ function processImportTimetable() {
   renderCurrentTab();
 }
 
-// ==================== 6. 模組三：隔日作業聯絡簿提醒 (無上傳功能) ====================
+// ==================== 7. 模組三：隔日作業聯絡簿提醒 (無上傳功能) ====================
 function renderHomeworkReminders(container) {
   const isTeacher = currentUser.role === 'teacher';
   const sortedList = [...appData.homeworkReminders].sort((a, b) => a.dueDate.localeCompare(b.dueDate));
@@ -1081,7 +1387,6 @@ function renderHomeworkReminders(container) {
 
   container.innerHTML = `
     <div class="max-w-4xl mx-auto space-y-6">
-      <!-- 頂部說明與教師發布按鈕 -->
       <div class="bg-white p-4 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-3">
         <div class="text-xs text-slate-600 flex items-center gap-2">
           <i data-lucide="info" class="w-4 h-4 text-indigo-500 shrink-0"></i>
@@ -1094,7 +1399,6 @@ function renderHomeworkReminders(container) {
         ` : ''}
       </div>
 
-      <!-- 明天應交專區 -->
       <div class="space-y-3">
         <h3 class="text-sm font-bold text-amber-700 flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-amber-500"></span>
@@ -1107,7 +1411,6 @@ function renderHomeworkReminders(container) {
         `}
       </div>
 
-      <!-- 近期其他日期作業 -->
       ${otherItems.length > 0 ? `
         <div class="space-y-3 pt-2">
           <h3 class="text-sm font-bold text-slate-600 flex items-center gap-2">
@@ -1189,16 +1492,14 @@ function deleteHomeworkReminder(hwId) {
   renderCurrentTab();
 }
 
-// ==================== 7. 模組四（全新）：班級考試行事曆 ====================
+// ==================== 8. 模組四：班級考試行事曆 ====================
 function renderExamCalendar(container) {
   const isTeacher = currentUser.role === 'teacher';
   const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
 
-  // 計算當月第一天星期幾與總天數
-  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0(日)-6(六)
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
   const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
 
-  // 取得近期即將到來的考試（大於等於今天）
   const upcomingExams = [...appData.exams]
     .filter(ex => ex.date >= TODAY_STR)
     .sort((a, b) => a.date.localeCompare(b.date));
@@ -1218,7 +1519,6 @@ function renderExamCalendar(container) {
     return `倒數 ${diff} 天`;
   };
 
-  // 生成月曆格子
   let calendarCells = '';
   for (let i = 0; i < firstDay; i++) {
     calendarCells += `<div class="min-h-[92px] bg-slate-50/60 border-b border-r border-slate-200 p-1.5"></div>`;
@@ -1235,7 +1535,6 @@ function renderExamCalendar(container) {
           <span class="text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center ${
             isToday ? 'bg-indigo-600 text-white' : 'text-slate-700'
           }">${day}</span>
-          ${isTeacher ? `<span class="text-[10px] text-slate-300 opacity-0 hover:opacity-100">+排考</span>` : ''}
         </div>
         <div class="space-y-1 mt-1">
           ${dayExams.map(ex => `
@@ -1250,7 +1549,6 @@ function renderExamCalendar(container) {
 
   container.innerHTML = `
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <!-- 左側 8 欄：月曆檢視 -->
       <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
         <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/70">
           <div class="flex items-center gap-3">
@@ -1271,7 +1569,6 @@ function renderExamCalendar(container) {
           `}
         </div>
 
-        <!-- 星期表頭 -->
         <div class="grid grid-cols-7 bg-slate-100/80 border-b border-slate-200 text-center text-xs font-bold text-slate-600 py-2">
           <div class="text-rose-500">週日</div>
           <div>週一</div>
@@ -1282,13 +1579,11 @@ function renderExamCalendar(container) {
           <div class="text-emerald-600">週六</div>
         </div>
 
-        <!-- 日期網格 -->
         <div class="grid grid-cols-7 border-l border-slate-200">
           ${calendarCells}
         </div>
       </div>
 
-      <!-- 右側 4 欄：近期考試倒數與範圍清單 -->
       <div class="lg:col-span-4 space-y-4">
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
           <h3 class="font-bold text-slate-800 text-base mb-1 flex items-center gap-2">
@@ -1413,7 +1708,7 @@ function deleteExam(id) {
   renderCurrentTab();
 }
 
-// ==================== 8. 模組五：課程公告發布 ====================
+// ==================== 9. 模組五：課程公告發布 ====================
 function renderAnnouncements(container) {
   const sorted = [...appData.announcements].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
   const isTeacher = currentUser.role === 'teacher';
@@ -1541,7 +1836,7 @@ function deleteAnnouncement(id) {
   renderCurrentTab();
 }
 
-// ==================== 9. 模組六：師生一對一私訊 ====================
+// ==================== 10. 模組六：師生一對一私訊 ====================
 function renderMessages(container) {
   if (currentUser.role === 'student') {
     const chatList = appData.messages[currentUser.id] || [];
@@ -1591,6 +1886,7 @@ function renderMessages(container) {
     activeChat.forEach(m => { if (m.sender === 'student') m.read = true; });
     saveData();
     const activeStudent = appData.students.find(s => s.id === selectedChatStudentId) || appData.students[0];
+    const studentTodayRec = (appData.attendance[TODAY_STR] || {})[activeStudent.id];
 
     container.innerHTML = `
       <div class="h-full flex bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
@@ -1601,10 +1897,15 @@ function renderMessages(container) {
               const msgs = appData.messages[s.id] || [];
               const unread = msgs.filter(m => m.sender === 'student' && !m.read).length;
               const lastMsg = msgs[msgs.length - 1];
+              const sRec = (appData.attendance[TODAY_STR] || {})[s.id];
+              const needCare = sRec && sRec.mood && (sRec.mood.q === 'red' || sRec.mood.q === 'blue');
               return `
                 <button onclick="selectChatStudent('${s.id}')" class="w-full p-3.5 text-left hover:bg-white transition flex items-center justify-between cursor-pointer ${selectedChatStudentId === s.id ? 'bg-white border-l-4 border-indigo-600' : ''}">
                   <div class="overflow-hidden">
-                    <div class="font-bold text-sm text-slate-800">${s.seat}號 ${s.name}</div>
+                    <div class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+                      <span>${s.seat}號 ${s.name}</span>
+                      ${needCare ? `<span class="w-2 h-2 rounded-full bg-rose-500" title="今日情緒位於需關懷區"></span>` : ''}
+                    </div>
                     <div class="text-xs text-slate-400 truncate mt-0.5">${lastMsg ? lastMsg.text : '尚無訊息'}</div>
                   </div>
                   ${unread > 0 ? `<span class="bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">${unread}</span>` : ''}
@@ -1615,9 +1916,19 @@ function renderMessages(container) {
         </div>
 
         <div class="flex-1 flex flex-col">
-          <div class="p-4 border-b border-slate-200 bg-white flex items-center justify-between">
-            <div class="font-bold text-slate-800">與 ${activeStudent.seat}號 ${activeStudent.name} (${activeStudent.id}) 的一對一對話</div>
-            <span class="text-xs text-slate-400">私密對話紀錄</span>
+          <div class="p-4 border-b border-slate-200 bg-white flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <div class="font-bold text-slate-800">與 ${activeStudent.seat}號 ${activeStudent.name} (${activeStudent.id}) 的一對一對話</div>
+              ${studentTodayRec && studentTodayRec.mood ? `
+                <div class="text-xs text-slate-500 mt-0.5">
+                  今日心情：<span class="font-bold text-indigo-700">${studentTodayRec.mood.zh}</span>
+                  ${studentTodayRec.mood.note ? `（留言：${studentTodayRec.mood.note}）` : ''}
+                </div>
+              ` : ''}
+            </div>
+            <button onclick="insertTeacherCareMsg('${activeStudent.name}')" class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-3 py-1.5 rounded-lg cursor-pointer">
+              💛 插入暖心關懷範本
+            </button>
           </div>
 
           <div id="chatBox" class="flex-1 p-5 overflow-y-auto space-y-3 bg-slate-50/40">
@@ -1656,6 +1967,12 @@ function selectChatStudent(id) {
 function insertQuickLeaveMsg() {
   const input = document.getElementById('msgInput');
   input.value = `老師您好，我是 ${currentUser.seat}號 ${currentUser.name}，我今天（${TODAY_STR}）因＿＿＿需要請假一天，再請老師核准，謝謝老師！`;
+  input.focus();
+}
+
+function insertTeacherCareMsg(studentName) {
+  const input = document.getElementById('msgInput');
+  input.value = `${studentName}同學你好，老師看到你今天簽到時的心情狀態，想關心一下你還好嗎？如果有課業壓力或需要聊聊，下課隨時可以來找老師喔！`;
   input.focus();
 }
 
@@ -1699,7 +2016,7 @@ function updateUnreadBadge() {
   }
 }
 
-// ==================== 10. 模組七（教師專屬權限）：學生帳號與名冊管理 ====================
+// ==================== 11. 模組七（教師專屬權限）：學生帳號與名冊管理 ====================
 function renderRoster(container) {
   if (currentUser.role !== 'teacher') return;
   container.innerHTML = `
@@ -1808,7 +2125,7 @@ function createStudentByTeacher() {
   renderCurrentTab();
 }
 
-// ==================== 11. 通用 Modal 控制 ====================
+// ==================== 12. 通用 Modal 控制 ====================
 function showModal(html) {
   const backdrop = document.getElementById('modalBackdrop');
   document.getElementById('modalContent').innerHTML = html;
